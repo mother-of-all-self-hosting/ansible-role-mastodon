@@ -33,7 +33,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --network={{ mastodon_sidekiq_container_network }} \
       --env-file={{ mastodon_base_path }}/env \
       --label-file={{ mastodon_sidekiq_base_path }}/labels \
-      --mount type=bind,src={{ mastodon_sidekiq_data_path }},dst=/mastodon/public/system \
+      --mount type=bind,src={{ mastodon_data_path }},dst=/mastodon/public/system \
       {% for volume in mastodon_sidekiq_container_additional_volumes %}
       --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options else '' }} \
       {% endfor %}

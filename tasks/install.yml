@@ -15,9 +15,10 @@
     group: "{{ mastodon_gid }}"
   with_items:
     - "{{ mastodon_base_path }}"
+    - "{{ mastodon_data_path }}"
     - "{{ mastodon_sidekiq_base_path }}"
-    - "{{ mastodon_sidekiq_data_path }}"
     - "{{ mastodon_streaming_base_path }}"
+    - "{{ mastodon_web_base_path }}"
 
 - name: Ensure Mastodon Traefik labels are installed
   ansible.builtin.template:
