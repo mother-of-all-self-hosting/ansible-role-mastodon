@@ -18,79 +18,79 @@ SPDX-FileCopyrightText: 2024 - 2025 Suguru Hirahara
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Setting up HedgeDoc
+# Setting up Mastodon
 
-This is an [Ansible](https://www.ansible.com/) role which installs [HedgeDoc 2](https://docs.hedgedoc.dev/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
+This is an [Ansible](https://www.ansible.com/) role which installs [Mastodon](https://docs.mastodon.dev/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
 
-HedgeDoc 2 is a self-hosted collaborative online markdown editor.
+Mastodon is a self-hosted collaborative online markdown editor.
 
-See the project's [documentation](https://docs.hedgedoc.dev/) to learn what HedgeDoc 2 does and why it might be useful to you.
+See the project's [documentation](https://docs.mastodon.dev/) to learn what Mastodon does and why it might be useful to you.
 
 >[!WARNING]
-> HedgeDoc 2 is currently alpha. Alpha releases come with no guarantees regarding upgradeability. It is very likely that you will need to wipe the database between alpha releases. As there is currently no migration path from HedgeDoc 1, it is recommended to set up a separate instance to test HedgeDoc 2.
+> Mastodon is currently alpha. Alpha releases come with no guarantees regarding upgradeability. It is very likely that you will need to wipe the database between alpha releases. As there is currently no migration path from Mastodon 1, it is recommended to set up a separate instance to test Mastodon.
 
 ## Adjusting the playbook configuration
 
-To enable HedgeDoc 2 with this role, add the following configuration to your `vars.yml` file.
+To enable Mastodon with this role, add the following configuration to your `vars.yml` file.
 
 **Note**: the path should be something like `inventory/host_vars/mash.example.com/vars.yml` if you use the [MASH Ansible playbook](https://github.com/mother-of-all-self-hosting/mash-playbook).
 
 ```yaml
 ########################################################################
 #                                                                      #
-# hedgedoc                                                             #
+# mastodon                                                             #
 #                                                                      #
 ########################################################################
 
-hedgedoc_enabled: true
+mastodon_enabled: true
 
 ########################################################################
 #                                                                      #
-# /hedgedoc                                                            #
+# /mastodon                                                            #
 #                                                                      #
 ########################################################################
 ```
 
 ### Set the hostname
 
-To enable HedgeDoc 2 you need to set the hostname as well. To do so, add the following configuration to your `vars.yml` file. Make sure to replace `example.com` with your own value.
+To enable Mastodon you need to set the hostname as well. To do so, add the following configuration to your `vars.yml` file. Make sure to replace `example.com` with your own value.
 
 ```yaml
-hedgedoc_hostname: "example.com"
+mastodon_hostname: "example.com"
 ```
 
 After adjusting the hostname, make sure to adjust your DNS records to point the domain to your backend.
 
-**Note**: hosting HedgeDoc 2 under a subpath (by configuring the `hedgedoc_path_prefix` variable) does not seem to be possible due to HedgeDoc's technical limitations.
+**Note**: hosting Mastodon under a subpath (by configuring the `mastodon_path_prefix` variable) does not seem to be possible due to Mastodon's technical limitations.
 
 ### Set a random string for encryption key
 
 You also need to specify a random string to encrypt session data. To do so, add the following configuration to your `vars.yml` file. The value can be generated with `pwgen -s 64 1` or in another way.
 
 ```yaml
-hedgedoc_backend_environment_variables_hd_session_secret: YOUR_SECRET_KEY_HERE
+mastodon_backend_environment_variables_hd_session_secret: YOUR_SECRET_KEY_HERE
 ```
 
 ### Specify database
 
-It is necessary to select database used by HedgeDoc 2 from MariaDB and Postgres. Currently SQLite is not supported by this role.
+It is necessary to select database used by Mastodon from MariaDB and Postgres. Currently SQLite is not supported by this role.
 
 To use Postgres, add the following configuration to your `vars.yml` file:
 
 ```yaml
-hedgedoc_database_type: postgres
+mastodon_database_type: postgres
 ```
 
 Set `mariadb` to use MariaDB.
 
-For other settings, check variables such as `hedgedoc_database_*` on [`defaults/main.yml`](../defaults/main.yml).
+For other settings, check variables such as `mastodon_database_*` on [`defaults/main.yml`](../defaults/main.yml).
 
 ### Enabling signing up
 
 By default this role is configured to disable signing up for an account on the service. To enable it, add the following configuration to your `vars.yml` file:
 
 ```yaml
-hedgedoc_backend_environment_variables_hd_auth_local_enable_register: true
+mastodon_backend_environment_variables_hd_auth_local_enable_register: true
 ```
 
 ### Extending the configuration
@@ -99,7 +99,7 @@ There are some additional things you may wish to configure about the component.
 
 Take a look at:
 
-- [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `hedgedoc_environment_variables_additional_variables` variable
+- [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `mastodon_environment_variables_additional_variables` variable
 
 ## Installing
 
@@ -113,14 +113,14 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 
 ## Usage
 
-After running the command for installation, HedgeDoc instance becomes available at `https://example.com`.
+After running the command for installation, Mastodon instance becomes available at `https://example.com`.
 
 To get started, open the frontend's URL with a web browser, and register the account.
 
-Since account registration is disabled by default, you need to enable it first by setting `hedgedoc_backend_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
+Since account registration is disabled by default, you need to enable it first by setting `mastodon_backend_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
 
 ## Troubleshooting
 
 ### Check the service's logs
 
-You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the backend with SSH, and running `journalctl -fu hedgedoc-backend` (or how you/your playbook named the service, e.g. `mash-hedgedoc-backend`) for the backend and `journalctl -fu hedgedoc-frontend` (or how you/your playbook named the service, e.g. `mash-hedgedoc-frontend`) for the frontend, respectively.
+You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the backend with SSH, and running `journalctl -fu mastodon-backend` (or how you/your playbook named the service, e.g. `mash-mastodon-backend`) for the backend and `journalctl -fu mastodon-frontend` (or how you/your playbook named the service, e.g. `mash-mastodon-frontend`) for the frontend, respectively.

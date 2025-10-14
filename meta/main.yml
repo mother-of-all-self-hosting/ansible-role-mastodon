@@ -2,9 +2,9 @@
 galaxy_info:
   author: Suguru Hirahara
   company: progressiv
-  role_name: hedgedoc
+  role_name: mastodon
   namespace: progressiv
-  description: HedgeDoc
+  description: Mastodon
   platforms:
     - name: Debian
       versions:

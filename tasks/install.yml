@@ -6,68 +6,68 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Ensure HedgeDoc paths exist
+- name: Ensure Mastodon paths exist
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: "0700"
-    owner: "{{ hedgedoc_uid }}"
-    group: "{{ hedgedoc_gid }}"
+    owner: "{{ mastodon_uid }}"
+    group: "{{ mastodon_gid }}"
   with_items:
-    - "{{ hedgedoc_base_path }}"
-    - "{{ hedgedoc_backend_base_path }}"
-    - "{{ hedgedoc_backend_data_path }}"
-    - "{{ hedgedoc_backend_uploads_path }}"
-    - "{{ hedgedoc_frontend_base_path }}"
+    - "{{ mastodon_base_path }}"
+    - "{{ mastodon_backend_base_path }}"
+    - "{{ mastodon_backend_data_path }}"
+    - "{{ mastodon_backend_uploads_path }}"
+    - "{{ mastodon_frontend_base_path }}"
 
-- name: Ensure HedgeDoc Traefik labels are installed
+- name: Ensure Mastodon Traefik labels are installed
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "0640"
-    owner: "{{ hedgedoc_uid }}"
-    group: "{{ hedgedoc_gid }}"
+    owner: "{{ mastodon_uid }}"
+    group: "{{ mastodon_gid }}"
   with_items:
-    - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ hedgedoc_backend_base_path }}/labels" }
-    - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ hedgedoc_frontend_base_path }}/labels" }
+    - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ mastodon_backend_base_path }}/labels" }
+    - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/labels" }
 
-- name: Ensure HedgeDoc configuration file installed
+- name: Ensure Mastodon configuration file installed
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    owner: "{{ hedgedoc_uid }}"
-    group: "{{ hedgedoc_gid }}"
+    owner: "{{ mastodon_uid }}"
+    group: "{{ mastodon_gid }}"
     mode: "0640"
   with_items:
-    - { src: "{{ role_path }}/templates/env_backend.j2", dest: "{{ hedgedoc_backend_base_path }}/env" }
-    - { src: "{{ role_path }}/templates/env_frontend.j2", dest: "{{ hedgedoc_frontend_base_path }}/env" }
+    - { src: "{{ role_path }}/templates/env_backend.j2", dest: "{{ mastodon_backend_base_path }}/env" }
+    - { src: "{{ role_path }}/templates/env_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/env" }
 
-- name: Ensure HedgeDoc container image is pulled
+- name: Ensure Mastodon container image is pulled
   community.docker.docker_image:
     name: "{{ item }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
   with_items:
-    - "{{ hedgedoc_backend_container_image }}"
-    - "{{ hedgedoc_frontend_container_image }}"
+    - "{{ mastodon_backend_container_image }}"
+    - "{{ mastodon_frontend_container_image }}"
   register: result
   retries: "{{ devture_playbook_help_container_retries_count }}"
   delay: "{{ devture_playbook_help_container_retries_delay }}"
   until: result is not failed
 
-- name: Ensure HedgeDoc container network is created
+- name: Ensure Mastodon container network is created
   community.docker.docker_network:
     enable_ipv6: "{{ devture_systemd_docker_base_ipv6_enabled }}"
-    name: "{{ hedgedoc_container_network }}"
+    name: "{{ mastodon_container_network }}"
     driver: bridge
     driver_options: "{{ devture_systemd_docker_base_container_networks_driver_options }}"
 
-- name: Ensure HedgeDoc systemd services are present
+- name: Ensure Mastodon systemd services are present
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "0644"
   with_items:
-    - src: "{{ role_path }}/templates/systemd/hedgedoc-backend.service.j2"
-      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ hedgedoc_backend_identifier }}.service"
-    - src: "{{ role_path }}/templates/systemd/hedgedoc-frontend.service.j2"
-      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ hedgedoc_frontend_identifier }}.service"
+    - src: "{{ role_path }}/templates/systemd/mastodon-backend.service.j2"
+      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_backend_identifier }}.service"
+    - src: "{{ role_path }}/templates/systemd/mastodon-frontend.service.j2"
+      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_frontend_identifier }}.service"

@@ -6,9 +6,9 @@ SPDX-FileCopyrightText: 2025 Suguru Hirahara
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# HedgeDoc Ansible role
+# Mastodon Ansible role
 
-This is an [Ansible](https://www.ansible.com/) role which installs [HedgeDoc 2](https://docs.hedgedoc.dev/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
+This is an [Ansible](https://www.ansible.com/) role which installs [Mastodon](https://docs.mastodon.dev/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
 
 This role *implicitly* depends on:
 
@@ -17,7 +17,7 @@ This role *implicitly* depends on:
 
 Check [defaults/main.yml](defaults/main.yml) for the full list of supported options.
 
-💡 See this [document](docs/configuring-hedgedoc.md) for details about setting up the service with this role.
+💡 See this [document](docs/configuring-mastodon.md) for details about setting up the service with this role.
 
 ## Development
 
