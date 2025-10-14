@@ -43,7 +43,7 @@ mastodon_environment_variables_additional_variables: ""
 mastodon_sidekiq_identifier: "{{ mastodon_identifier }}-sidekiq"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon/sidekiq
-mastodon_sidekiq_version: v4.4.6
+mastodon_sidekiq_version: v4.5.7
 
 mastodon_sidekiq_scheme: https
 
@@ -199,8 +199,8 @@ mastodon_sidekiq_systemd_wanted_services_list_custom: []
 
 mastodon_streaming_identifier: "{{ mastodon_identifier }}-streaming"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon/streaming
-mastodon_streaming_version: 2.0.0-alpha.3
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon-streaming
+mastodon_streaming_version: v4.5.7
 
 mastodon_streaming_scheme: https
 
@@ -209,7 +209,7 @@ mastodon_streaming_hostname: "{{ mastodon_hostname }}"
 # The path at which streaming is exposed
 mastodon_streaming_path_prefix: "/"
 
-mastodon_streaming_container_image: "{{ mastodon_streaming_container_image_registry_prefix }}mastodon/mastodon/streaming:{{ mastodon_streaming_container_image_tag }}"
+mastodon_streaming_container_image: "{{ mastodon_streaming_container_image_registry_prefix }}mastodon/mastodon-streaming:{{ mastodon_streaming_container_image_tag }}"
 mastodon_streaming_container_image_tag: "{{ mastodon_streaming_version }}"
 mastodon_streaming_container_image_registry_prefix: "{{ mastodon_streaming_container_image_registry_prefix_upstream }}"
 mastodon_streaming_container_image_registry_prefix_upstream: "{{ mastodon_streaming_container_image_registry_prefix_upstream_default }}"
