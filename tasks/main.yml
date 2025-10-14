@@ -21,6 +21,7 @@
 - name: Perform Mastodon secret generation command tasks
   when: mastodon_enabled | bool
   tags:
+    - secrets-all-mastodon
     - secret-mastodon
   block:
     - name: Run Mastodon 'bundle exec rails secret' to generate secrets
@@ -29,6 +30,7 @@
 - name: Perform Mastodon encryption secrets generation command tasks
   when: mastodon_enabled | bool
   tags:
+    - secrets-all-mastodon
     - secrets-encryption-mastodon
   block:
     - name: Run Mastodon 'bin/rails db:encryption:init' to generate encryption secrets
@@ -37,6 +39,7 @@
 - name: Perform Mastodon encryption secrets generation command tasks
   when: mastodon_enabled | bool
   tags:
+    - secrets-all-mastodon
     - secrets-webpush-mastodon
   block:
     - name: Run Mastodon 'bundle exec rails mastodon:webpush:generate_vapid_key' to generate web push keys
