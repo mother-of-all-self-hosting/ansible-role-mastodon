@@ -63,36 +63,6 @@ After adjusting the hostname, make sure to adjust your DNS records to point the 
 
 **Note**: hosting Mastodon under a subpath (by configuring the `mastodon_path_prefix` variable) does not seem to be possible due to Mastodon's technical limitations.
 
-### Set a random string for encryption key
-
-You also need to specify a random string to encrypt session data. To do so, add the following configuration to your `vars.yml` file. The value can be generated with `pwgen -s 64 1` or in another way.
-
-```yaml
-mastodon_backend_environment_variables_hd_session_secret: YOUR_SECRET_KEY_HERE
-```
-
-### Specify database
-
-It is necessary to select database used by Mastodon from MariaDB and Postgres. Currently SQLite is not supported by this role.
-
-To use Postgres, add the following configuration to your `vars.yml` file:
-
-```yaml
-mastodon_database_type: postgres
-```
-
-Set `mariadb` to use MariaDB.
-
-For other settings, check variables such as `mastodon_database_*` on [`defaults/main.yml`](../defaults/main.yml).
-
-### Enabling signing up
-
-By default this role is configured to disable signing up for an account on the service. To enable it, add the following configuration to your `vars.yml` file:
-
-```yaml
-mastodon_backend_environment_variables_hd_auth_local_enable_register: true
-```
-
 ### Extending the configuration
 
 There are some additional things you may wish to configure about the component.

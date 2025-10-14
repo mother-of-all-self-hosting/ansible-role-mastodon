@@ -6,38 +6,10 @@ SPDX-FileCopyrightText: 2025 Suguru Hirahara
 SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
-# General settings
-HD_BASE_URL={{ mastodon_environment_variables_hd_base_url }}
-HD_SESSION_SECRET={{ mastodon_backend_environment_variables_hd_session_secret }}
-
-HD_BACKEND_PORT={{ mastodon_backend_container_http_port }}
-
-# Database settings
-HD_DATABASE_TYPE={{ mastodon_database_type }}
-{% if mastodon_database_type == 'mariadb' %}
-HD_DATABASE_HOST={{ mastodon_database_mariadb_hostname }}
-HD_DATABASE_PORT={{ mastodon_database_mariadb_port }}
-HD_DATABASE_USER={{ mastodon_database_mariadb_username }}
-HD_DATABASE_PASS={{ mastodon_database_mariadb_password }}
-HD_DATABASE_NAME={{ mastodon_database_name }}
-{% endif %}
-{% if mastodon_database_type == 'postgres' %}
 HD_DATABASE_HOST={{ mastodon_database_postgres_hostname }}
 HD_DATABASE_PORT={{ mastodon_database_postgres_port }}
 HD_DATABASE_USER={{ mastodon_database_postgres_username }}
 HD_DATABASE_PASS={{ mastodon_database_postgres_password }}
 HD_DATABASE_NAME={{ mastodon_database_name }}
-{% endif %}
-{% if mastodon_database_type == 'sqlite' %}
-HD_DATABASE_NAME={{ mastodon_sqlite_filepath }}
-{% endif %}
-
-# Uploads
-HD_MEDIA_BACKEND={{ mastodon_backend_environment_variables_hd_media_backend }}
-HD_MEDIA_BACKEND_FILESYSTEM_UPLOAD_PATH={{ mastodon_backend_environment_variables_hd_media_backend_filesystem_upload_path }}
-
-# Auth
-HD_AUTH_LOCAL_ENABLE_LOGIN={{ mastodon_backend_environment_variables_hd_auth_local_enable_login | to_json }}
-HD_AUTH_LOCAL_ENABLE_REGISTER={{ mastodon_backend_environment_variables_hd_auth_local_enable_register | to_json }}
 
 {{ mastodon_backend_environment_variables_additional_variables }}
