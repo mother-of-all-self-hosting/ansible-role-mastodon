@@ -1,0 +1,92 @@
+# SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
+# SPDX-FileCopyrightText: 2023 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+- name: Fail if required HedgeDoc settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`).
+  when: "lookup('vars', item, default='') | string | length == 0"
+  with_items:
+    - hedgedoc_uid
+    - hedgedoc_gid
+    - hedgedoc_hostname
+    - hedgedoc_frontend_path_prefix
+    - hedgedoc_container_network
+    - hedgedoc_backend_environment_variables_hd_session_secret
+
+- name: Fail if HedgeDoc database type invalid
+  ansible.builtin.fail:
+    msg: >-
+      hedgedoc_database_type must be 'mariadb', 'postgres'. Currently 'sqlite' is not supported by this role.
+  when: "hedgedoc_database_type not in ['mariadb', 'postgres']"
+
+- name: Fail if required HedgeDoc + MariaDB integration settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`) when `hedgedoc_database_type` is `mariadb`
+  when: "hedgedoc_database_type == 'mariadb' and lookup('vars', item, default='') | string | length == 0"
+  with_items:
+    - hedgedoc_database_mariadb_hostname
+    - hedgedoc_database_mariadb_password
+
+- name: Fail if required HedgeDoc + Postgres integration settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`) when `hedgedoc_database_type` is `postgres`
+  when: "hedgedoc_database_type == 'postgres' and lookup('vars', item, default='') | string | length == 0"
+  with_items:
+    - hedgedoc_database_postgres_hostname
+    - hedgedoc_database_postgres_password
+
+- name: Run if Traefik is enabled for the backend
+  when: hedgedoc_backend_container_labels_traefik_enabled | bool
+  block:
+    - name: Fail if Traefik settings required for HedgeDoc backend are not defined
+      ansible.builtin.fail:
+        msg: >-
+          You need to define a required configuration setting (`{{ item }}`).
+      when: "lookup('vars', item, default='') | string | length == 0"
+      with_items:
+        - hedgedoc_backend_container_labels_traefik_hostname
+        - hedgedoc_backend_container_labels_traefik_path_prefix
+
+    # We ensure it doesn't end with a slash, because we handle both (slash and no-slash).
+    # Knowing that `hedgedoc_backend_container_labels_traefik_path_prefix` does not end with a slash
+    # ensures we know how to set these routes up without having to do "does it end with a slash" checks elsewhere.
+    - name: Fail if hedgedoc_backend_container_labels_traefik_path_prefix ends with a slash
+      ansible.builtin.fail:
+        msg: >-
+          hedgedoc_backend_container_labels_traefik_path_prefix (`{{ hedgedoc_backend_container_labels_traefik_path_prefix }}`) must either be `/` or not end with a slash (e.g. `/hedgedoc`).
+      when: "hedgedoc_backend_container_labels_traefik_path_prefix != '/' and hedgedoc_backend_container_labels_traefik_path_prefix[-1] == '/'"
+
+- name: Run if Traefik is enabled for frontend
+  when: hedgedoc_frontend_container_labels_traefik_enabled | bool
+  block:
+    - name: Fail if Traefik settings required for HedgeDoc frontend are not defined
+      ansible.builtin.fail:
+        msg: >-
+          You need to define a required configuration setting (`{{ item }}`).
+      when: "lookup('vars', item, default='') | string | length == 0"
+      with_items:
+        - hedgedoc_frontend_container_labels_traefik_hostname
+        - hedgedoc_frontend_container_labels_traefik_path_prefix
+
+    - name: Fail if hedgedoc_frontend_container_labels_traefik_path_prefix is different than /
+      ansible.builtin.fail:
+        msg: >-
+          hedgedoc_frontend_container_labels_traefik_path_prefix (`{{ hedgedoc_frontend_container_labels_traefik_path_prefix }}`) must be `/`.
+          HedgeDoc does not support hosting under a subpath yet.
+      when: "hedgedoc_frontend_container_labels_traefik_path_prefix != '/'"
+
+    # We ensure it doesn't end with a slash, because we handle both (slash and no-slash).
+    # Knowing that `hedgedoc_frontend_container_labels_traefik_path_prefix` does not end with a slash
+    # ensures we know how to set these routes up without having to do "does it end with a slash" checks elsewhere.
+    - name: Fail if hedgedoc_frontend_container_labels_traefik_path_prefix ends with a slash
+      ansible.builtin.fail:
+        msg: >-
+          hedgedoc_frontend_container_labels_traefik_path_prefix (`{{ hedgedoc_frontend_container_labels_traefik_path_prefix }}`) must either be `/` or not end with a slash (e.g. `/hedgedoc`).
+      when: "hedgedoc_frontend_container_labels_traefik_path_prefix != '/' and hedgedoc_frontend_container_labels_traefik_path_prefix[-1] == '/'"
