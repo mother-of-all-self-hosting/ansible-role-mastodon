@@ -32,6 +32,36 @@ mastodon_database_username: "mastodon"
 mastodon_database_password: ""
 mastodon_database_name: "mastodon"
 
+mastodon_redis_hostname: ""
+mastodon_redis_port: 6379
+
+# Specify LOCAL_DOMAIN
+# This identifies your server and cannot be changed safely later
+mastodon_environment_variables_local_domain: ""
+
+# Specify SECRET_KEY_BASE
+# Use `bundle exec rails secret` to generate secrets
+mastodon_environment_variables_secret_key_base: ""
+
+# Specify secret values
+# Do not share outside hosting environment!
+# Use `bin/rails db:encryption:init` to generate fresh secrets
+mastodon_environment_variables_active_record_encryption_deterministic_key: ""
+mastodon_environment_variables_active_record_encryption_key_derivation_salt: ""
+mastodon_environment_variables_active_record_encryption_primary_key: ""
+
+# Specify VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY
+# Use `bundle exec rails mastodon:webpush:generate_vapid_key` to generate ones
+mastodon_environment_variables_vapid_private_key: ""
+mastodon_environment_variables_vapid_public_key: ""
+
+# Specify the mailer's configuration
+mastodon_environment_variables_smtp_server: ""
+mastodon_environment_variables_smtp_port: ""
+mastodon_environment_variables_smtp_login: ""
+mastodon_environment_variables_smtp_password: ""
+mastodon_environment_variables_smtp_from_address: ""
+
 # Additional environment variables.
 mastodon_environment_variables_additional_variables: ""
 
