@@ -350,9 +350,6 @@ mastodon_streaming_systemd_wanted_services_list_default: []
 mastodon_streaming_systemd_wanted_services_list_auto: []
 mastodon_streaming_systemd_wanted_services_list_custom: []
 
-# Additional environment variables.
-mastodon_streaming_environment_variables_additional_variables: ""
-
 ########################################################################
 #                                                                      #
 # /streaming                                                           #
