@@ -6,10 +6,10 @@ SPDX-FileCopyrightText: 2025 Suguru Hirahara
 SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
-HD_DATABASE_HOST={{ mastodon_database_postgres_hostname }}
-HD_DATABASE_PORT={{ mastodon_database_postgres_port }}
-HD_DATABASE_USER={{ mastodon_database_postgres_username }}
-HD_DATABASE_PASS={{ mastodon_database_postgres_password }}
-HD_DATABASE_NAME={{ mastodon_database_name }}
+DB_HOST={{ mastodon_database_hostname }}
+DB_PORT={{ mastodon_database_port }}
+DB_USER={{ mastodon_database_username }}
+DB_PASS={{ mastodon_database_password }}
+DB_NAME={{ mastodon_database_name }}
 
 {{ mastodon_backend_environment_variables_additional_variables }}

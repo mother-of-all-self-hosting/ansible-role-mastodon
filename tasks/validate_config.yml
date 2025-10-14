@@ -15,8 +15,8 @@
     - mastodon_gid
     - mastodon_hostname
     - mastodon_container_network
-    - mastodon_database_postgres_hostname
-    - mastodon_database_postgres_password
+    - mastodon_database_hostname
+    - mastodon_database_password
     - mastodon_frontend_path_prefix
 
 - name: Run if Traefik is enabled for the backend
