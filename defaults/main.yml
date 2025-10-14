@@ -30,15 +30,6 @@ mastodon_container_network: "{{ mastodon_identifier }}"
 # Control if the container network is deleted on uninstalling.
 mastodon_container_network_deletion_enabled: true
 
-# Specify database to use
-# Valid values: mariadb, postgres, sqlite
-mastodon_database_type: ""
-
-mastodon_sqlite_filepath: mastodon.sqlite
-mastodon_database_mariadb_hostname: ""
-mastodon_database_mariadb_port: 3306
-mastodon_database_mariadb_username: mastodon
-mastodon_database_mariadb_password: ""
 mastodon_database_postgres_hostname: ""
 mastodon_database_postgres_port: 5432
 mastodon_database_postgres_username: mastodon
@@ -47,9 +38,6 @@ mastodon_database_name: mastodon
 
 # Specify the timezone
 mastodon_environment_variables_tz: UTC
-
-# See: https://docs.mastodon.dev/references/config/general/
-mastodon_environment_variables_hd_base_url: "{{ mastodon_frontend_scheme }}://{{ mastodon_frontend_hostname }}"
 
 # mastodon_restart_necessary controls whether the Mastodon systemd
 # service will be restarted (when true) or merely started (when false) by the
@@ -222,19 +210,6 @@ mastodon_backend_systemd_wanted_services_list: "{{ mastodon_backend_systemd_want
 mastodon_backend_systemd_wanted_services_list_default: []
 mastodon_backend_systemd_wanted_services_list_auto: []
 mastodon_backend_systemd_wanted_services_list_custom: []
-
-# Specify random strings, generated with `pwgen -s 64 1` or in another way.
-mastodon_backend_environment_variables_hd_session_secret: ""
-
-# See: https://docs.mastodon.dev/references/config/media/filesystem/
-mastodon_backend_environment_variables_hd_media_backend: "filesystem"
-mastodon_backend_environment_variables_hd_media_backend_filesystem_upload_path: "uploads/"
-
-# See: https://docs.mastodon.dev/references/config/auth/local/
-mastodon_backend_environment_variables_hd_auth_local_enable_login: true
-
-# Control if user registration is allowed
-mastodon_backend_environment_variables_hd_auth_local_enable_register: false
 
 # Additional environment variables.
 mastodon_backend_environment_variables_additional_variables: ""
@@ -437,8 +412,6 @@ mastodon_frontend_systemd_wanted_services_list: "{{ mastodon_frontend_systemd_wa
 mastodon_frontend_systemd_wanted_services_list_default: []
 mastodon_frontend_systemd_wanted_services_list_auto: []
 mastodon_frontend_systemd_wanted_services_list_custom: []
-
-mastodon_frontend_environment_variables_hd_internal_api_url: "http://{{ mastodon_backend_identifier }}:{{ mastodon_backend_container_http_port }}"
 
 # Additional environment variables.
 mastodon_frontend_environment_variables_additional_variables: ""
