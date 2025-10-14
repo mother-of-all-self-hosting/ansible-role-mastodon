@@ -4,21 +4,21 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Check existence of HedgeDoc systemd service
+- name: Check existence of Mastodon systemd service
   ansible.builtin.stat:
     path: "{{ item.path }}"
-  register: hedgedoc_service_stat
+  register: mastodon_service_stat
 
-- name: Uninstall HedgeDoc systemd service
-  when: hedgedoc_service_stat.stat.exists | bool
+- name: Uninstall Mastodon systemd service
+  when: mastodon_service_stat.stat.exists | bool
   block:
-    - name: Ensure HedgeDoc systemd service is stopped
+    - name: Ensure Mastodon systemd service is stopped
       ansible.builtin.service:
         name: "{{ item.service }}"
         state: stopped
         daemon_reload: true
 
-    - name: Ensure HedgeDoc service does not exist
+    - name: Ensure Mastodon service does not exist
       ansible.builtin.file:
         dest: "{{ item.path }}"
         state: absent

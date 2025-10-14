@@ -7,12 +7,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
 [Unit]
-Description=HedgeDoc backend ({{ hedgedoc_backend_identifier }})
-{% for service in hedgedoc_backend_systemd_required_services_list %}
+Description=Mastodon backend ({{ mastodon_backend_identifier }})
+{% for service in mastodon_backend_systemd_required_services_list %}
 Requires={{ service }}
 After={{ service }}
 {% endfor %}
-{% for service in hedgedoc_backend_systemd_wanted_services_list %}
+{% for service in mastodon_backend_systemd_wanted_services_list %}
 Wants={{ service }}
 {% endfor %}
 DefaultDependencies=no
@@ -20,43 +20,43 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
-ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop -t {{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ hedgedoc_backend_identifier }} 2>/dev/null || true'
-ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ hedgedoc_backend_identifier }} 2>/dev/null || true'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop -t {{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ mastodon_backend_identifier }} 2>/dev/null || true'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ mastodon_backend_identifier }} 2>/dev/null || true'
 
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --rm \
-      --name={{ hedgedoc_backend_identifier }} \
+      --name={{ mastodon_backend_identifier }} \
       --log-driver=none \
-      --user={{ hedgedoc_uid }}:{{ hedgedoc_gid }} \
+      --user={{ mastodon_uid }}:{{ mastodon_gid }} \
       --cap-drop=ALL \
       --read-only \
-      --network={{ hedgedoc_backend_container_network }} \
-      {% if hedgedoc_backend_container_http_host_bind_port %}
-      -p {{ hedgedoc_backend_container_http_host_bind_port }}:{{ hedgedoc_backend_container_http_port }} \
+      --network={{ mastodon_backend_container_network }} \
+      {% if mastodon_backend_container_http_host_bind_port %}
+      -p {{ mastodon_backend_container_http_host_bind_port }}:{{ mastodon_backend_container_http_port }} \
       {% endif %}
-      --env-file={{ hedgedoc_backend_base_path }}/env \
-      --label-file={{ hedgedoc_backend_base_path }}/labels \
-      --mount type=bind,src={{ hedgedoc_backend_uploads_path }},dst=/usr/src/app/backend/uploads \
-      {% for volume in hedgedoc_backend_container_additional_volumes %}
+      --env-file={{ mastodon_backend_base_path }}/env \
+      --label-file={{ mastodon_backend_base_path }}/labels \
+      --mount type=bind,src={{ mastodon_backend_uploads_path }},dst=/usr/src/app/backend/uploads \
+      {% for volume in mastodon_backend_container_additional_volumes %}
       --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options else '' }} \
       {% endfor %}
-      {% for arg in hedgedoc_backend_container_extra_arguments %}
+      {% for arg in mastodon_backend_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}
-      {{ hedgedoc_backend_container_image }}
+      {{ mastodon_backend_container_image }}
 
-{% for network in hedgedoc_backend_container_additional_networks %}
-ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ hedgedoc_backend_identifier }}
+{% for network in mastodon_backend_container_additional_networks %}
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ mastodon_backend_identifier }}
 {% endfor %}
 
-ExecStart={{ devture_systemd_docker_base_host_command_docker }} start --attach {{ hedgedoc_backend_identifier }}
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} start --attach {{ mastodon_backend_identifier }}
 
-ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop -t {{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ hedgedoc_backend_identifier }} 2>/dev/null || true'
-ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ hedgedoc_backend_identifier }} 2>/dev/null || true'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop -t {{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ mastodon_backend_identifier }} 2>/dev/null || true'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ mastodon_backend_identifier }} 2>/dev/null || true'
 
 Restart=always
 RestartSec=30
-SyslogIdentifier={{ hedgedoc_backend_identifier }}
+SyslogIdentifier={{ mastodon_backend_identifier }}
 
 [Install]
 WantedBy=multi-user.target

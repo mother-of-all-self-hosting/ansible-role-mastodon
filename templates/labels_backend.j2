@@ -6,55 +6,55 @@ SPDX-FileCopyrightText: 2025 Suguru Hirahara
 SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
-{% if hedgedoc_backend_container_labels_traefik_enabled %}
+{% if mastodon_backend_container_labels_traefik_enabled %}
 traefik.enable=true
 
-{% if hedgedoc_backend_container_labels_traefik_docker_network %}
-traefik.docker.network={{ hedgedoc_backend_container_labels_traefik_docker_network }}
+{% if mastodon_backend_container_labels_traefik_docker_network %}
+traefik.docker.network={{ mastodon_backend_container_labels_traefik_docker_network }}
 {% endif %}
 
 {% set middlewares = [] %}
 
-{% if hedgedoc_backend_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ hedgedoc_backend_identifier }}-slashless-redirect.redirectregex.regex=^({{ hedgedoc_backend_container_labels_traefik_path_prefix | quote }})$
-traefik.http.middlewares.{{ hedgedoc_backend_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
-{% set middlewares = middlewares + [hedgedoc_backend_identifier + '-slashless-redirect'] %}
+{% if mastodon_backend_container_labels_traefik_path_prefix != '/' %}
+traefik.http.middlewares.{{ mastodon_backend_identifier }}-slashless-redirect.redirectregex.regex=^({{ mastodon_backend_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ mastodon_backend_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
+{% set middlewares = middlewares + [mastodon_backend_identifier + '-slashless-redirect'] %}
 {% endif %}
 
-{% if hedgedoc_backend_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ hedgedoc_backend_identifier }}-strip-prefix.stripprefix.prefixes={{ hedgedoc_backend_container_labels_traefik_path_prefix }}
-{% set middlewares = middlewares + [hedgedoc_backend_identifier + '-strip-prefix'] %}
+{% if mastodon_backend_container_labels_traefik_path_prefix != '/' %}
+traefik.http.middlewares.{{ mastodon_backend_identifier }}-strip-prefix.stripprefix.prefixes={{ mastodon_backend_container_labels_traefik_path_prefix }}
+{% set middlewares = middlewares + [mastodon_backend_identifier + '-strip-prefix'] %}
 {% endif %}
 
-{% if hedgedoc_backend_container_labels_traefik_additional_request_headers.keys() | length > 0 %}
-{% for name, value in hedgedoc_backend_container_labels_traefik_additional_request_headers.items() %}
-traefik.http.middlewares.{{ hedgedoc_backend_identifier }}-add-request-headers.headers.customrequestheaders.{{ name }}={{ value }}
+{% if mastodon_backend_container_labels_traefik_additional_request_headers.keys() | length > 0 %}
+{% for name, value in mastodon_backend_container_labels_traefik_additional_request_headers.items() %}
+traefik.http.middlewares.{{ mastodon_backend_identifier }}-add-request-headers.headers.customrequestheaders.{{ name }}={{ value }}
 {% endfor %}
-{% set middlewares = middlewares + [hedgedoc_backend_identifier + '-add-request-headers'] %}
+{% set middlewares = middlewares + [mastodon_backend_identifier + '-add-request-headers'] %}
 {% endif %}
 
-{% if hedgedoc_backend_container_labels_traefik_additional_response_headers.keys() | length > 0 %}
-{% for name, value in hedgedoc_backend_container_labels_traefik_additional_response_headers.items() %}
-traefik.http.middlewares.{{ hedgedoc_backend_identifier }}-add-response-headers.headers.customresponseheaders.{{ name }}={{ value }}
+{% if mastodon_backend_container_labels_traefik_additional_response_headers.keys() | length > 0 %}
+{% for name, value in mastodon_backend_container_labels_traefik_additional_response_headers.items() %}
+traefik.http.middlewares.{{ mastodon_backend_identifier }}-add-response-headers.headers.customresponseheaders.{{ name }}={{ value }}
 {% endfor %}
-{% set middlewares = middlewares + [hedgedoc_backend_identifier + '-add-response-headers'] %}
+{% set middlewares = middlewares + [mastodon_backend_identifier + '-add-response-headers'] %}
 {% endif %}
 
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.rule={{ hedgedoc_backend_container_labels_traefik_rule }}
-{% if hedgedoc_backend_container_labels_traefik_priority | int > 0 %}
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.priority={{ hedgedoc_backend_container_labels_traefik_priority }}
+traefik.http.routers.{{ mastodon_backend_identifier }}.rule={{ mastodon_backend_container_labels_traefik_rule }}
+{% if mastodon_backend_container_labels_traefik_priority | int > 0 %}
+traefik.http.routers.{{ mastodon_backend_identifier }}.priority={{ mastodon_backend_container_labels_traefik_priority }}
 {% endif %}
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.service={{ hedgedoc_backend_identifier }}
+traefik.http.routers.{{ mastodon_backend_identifier }}.service={{ mastodon_backend_identifier }}
 {% if middlewares | length > 0 %}
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.middlewares={{ middlewares | join(',') }}
+traefik.http.routers.{{ mastodon_backend_identifier }}.middlewares={{ middlewares | join(',') }}
 {% endif %}
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.entrypoints={{ hedgedoc_backend_container_labels_traefik_entrypoints }}
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.tls={{ hedgedoc_backend_container_labels_traefik_tls | to_json }}
-{% if hedgedoc_backend_container_labels_traefik_tls %}
-traefik.http.routers.{{ hedgedoc_backend_identifier }}.tls.certResolver={{ hedgedoc_backend_container_labels_traefik_tls_certResolver }}
-{% endif %}
-
-traefik.http.services.{{ hedgedoc_backend_identifier }}.loadbalancer.server.port={{ hedgedoc_backend_container_http_port }}
+traefik.http.routers.{{ mastodon_backend_identifier }}.entrypoints={{ mastodon_backend_container_labels_traefik_entrypoints }}
+traefik.http.routers.{{ mastodon_backend_identifier }}.tls={{ mastodon_backend_container_labels_traefik_tls | to_json }}
+{% if mastodon_backend_container_labels_traefik_tls %}
+traefik.http.routers.{{ mastodon_backend_identifier }}.tls.certResolver={{ mastodon_backend_container_labels_traefik_tls_certResolver }}
 {% endif %}
 
-{{ hedgedoc_backend_container_labels_additional_labels }}
+traefik.http.services.{{ mastodon_backend_identifier }}.loadbalancer.server.port={{ mastodon_backend_container_http_port }}
+{% endif %}
+
+{{ mastodon_backend_container_labels_additional_labels }}
