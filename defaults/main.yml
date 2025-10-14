@@ -1,0 +1,396 @@
+# SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
+# SPDX-FileCopyrightText: 2023 MASH project contributors
+# SPDX-FileCopyrightText: 2023-2025 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2024 Nikita Chernyi
+# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+# Project source code URL: https://github.com/karlomikus/hedgedoc/
+
+hedgedoc_enabled: true
+
+hedgedoc_identifier: hedgedoc
+hedgedoc_base_path: "/{{ hedgedoc_identifier }}"
+hedgedoc_backend_base_path: "{{ hedgedoc_base_path }}/backend"
+hedgedoc_backend_data_path: "{{ hedgedoc_backend_base_path }}/data"
+hedgedoc_backend_uploads_path: "{{ hedgedoc_backend_base_path }}/uploads"
+hedgedoc_frontend_base_path: "{{ hedgedoc_base_path }}/frontend"
+
+hedgedoc_uid: ""
+hedgedoc_gid: ""
+
+hedgedoc_hostname: ""
+
+# The base container network. It will be auto-created by this role if it doesn't exist already.
+hedgedoc_container_network: "{{ hedgedoc_identifier }}"
+
+# See: https://docs.hedgedoc.dev/references/config/general/
+hedgedoc_environment_variables_hd_base_url: "{{ hedgedoc_frontend_scheme }}://{{ hedgedoc_frontend_hostname }}"
+
+########################################################################
+#                                                                      #
+# backend                                                              #
+#                                                                      #
+########################################################################
+
+hedgedoc_backend_identifier: "{{ hedgedoc_identifier }}-backend"
+
+# renovate: datasource=docker depName=ghcr.io/hedgedoc/hedgedoc/backend
+hedgedoc_backend_version: 2.0.0-alpha.3
+
+hedgedoc_backend_scheme: https
+
+hedgedoc_backend_hostname: "{{ hedgedoc_hostname }}"
+
+# The path at which the backend is exposed
+hedgedoc_backend_path_prefix: "/"
+
+hedgedoc_backend_container_image: "{{ hedgedoc_backend_container_image_registry_prefix }}hedgedoc/hedgedoc/backend:{{ hedgedoc_backend_container_image_tag }}"
+hedgedoc_backend_container_image_tag: "{{ hedgedoc_backend_version }}"
+hedgedoc_backend_container_image_registry_prefix: "{{ hedgedoc_backend_container_image_registry_prefix_upstream }}"
+hedgedoc_backend_container_image_registry_prefix_upstream: "{{ hedgedoc_backend_container_image_registry_prefix_upstream_default }}"
+hedgedoc_backend_container_image_registry_prefix_upstream_default: ghcr.io/
+hedgedoc_backend_container_image_force_pull: "{{ hedgedoc_frontend_container_image.endswith(':latest') }}"
+
+# Controls whether the HedgeDoc backend container exposes its HTTP port (as defined by `hedgedoc_backend_container_http_port`).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:3000"), or empty string to not expose.
+hedgedoc_backend_container_http_host_bind_port: ""
+
+hedgedoc_backend_container_network: "{{ hedgedoc_container_network }}"
+
+# The port number in the container
+hedgedoc_backend_container_http_port: 3000
+
+# A list of additional container networks that the container would be connected to.
+# The role does not create these networks, so make sure they already exist.
+# Use this to expose this container to another reverse proxy, which runs in a different container network.
+hedgedoc_backend_container_additional_networks: "{{ hedgedoc_backend_container_additional_networks_auto + hedgedoc_backend_container_additional_networks_custom }}"
+hedgedoc_backend_container_additional_networks_auto: []
+hedgedoc_backend_container_additional_networks_custom: []
+
+# A list of additional "volumes" to mount in the container.
+# This list gets populated dynamically at runtime. You can provide a different default value,
+# if you wish to mount your own files into the container.
+# Contains definition objects like this: `{"type": "bind", "src": "/outside", "dst": "/inside", "options": "readonly"}.
+# See the `--mount` documentation for the `docker run` command.
+hedgedoc_backend_container_additional_volumes: "{{ hedgedoc_backend_container_additional_volumes_auto + hedgedoc_backend_container_additional_volumes_custom }}"
+hedgedoc_backend_container_additional_volumes_auto: []
+hedgedoc_backend_container_additional_volumes_custom: []
+
+# hedgedoc_backend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# See `../templates/labels_backend.j2` for details.
+#
+# To inject your own other container labels, see `hedgedoc_backend_container_labels_additional_labels`.
+hedgedoc_backend_container_labels_traefik_enabled: true
+hedgedoc_backend_container_labels_traefik_docker_network: "{{ hedgedoc_backend_container_network }}"
+hedgedoc_backend_container_labels_traefik_hostname: "{{ hedgedoc_backend_hostname }}"
+# The path prefix must either be `/` or not end with a slash (e.g. `/backend`).
+hedgedoc_backend_container_labels_traefik_path_prefix: "{{ hedgedoc_backend_path_prefix }}"
+hedgedoc_backend_container_labels_traefik_rule: "Host(`{{ hedgedoc_backend_container_labels_traefik_hostname }}`) && (PathPrefix(`/realtime`) || PathPrefix(`/api`) || PathPrefix(`/public`) || PathPrefix(`/uploads`) || PathPrefix(`/media`))"
+hedgedoc_backend_container_labels_traefik_priority: 0
+hedgedoc_backend_container_labels_traefik_entrypoints: web-secure
+hedgedoc_backend_container_labels_traefik_tls: "{{ hedgedoc_backend_container_labels_traefik_entrypoints != 'web' }}"
+hedgedoc_backend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+
+# Controls which additional headers to attach to all HTTP requests.
+# To add your own custom request headers, use `hedgedoc_backend_container_labels_traefik_additional_request_headers_custom`
+hedgedoc_backend_container_labels_traefik_additional_request_headers: "{{ hedgedoc_backend_container_labels_traefik_additional_request_headers_auto | combine(hedgedoc_backend_container_labels_traefik_additional_request_headers_custom) }}"
+hedgedoc_backend_container_labels_traefik_additional_request_headers_auto: {}
+hedgedoc_backend_container_labels_traefik_additional_request_headers_custom: {}
+
+# Controls which additional headers to attach to all HTTP responses.
+# To add your own custom response headers, use `hedgedoc_backend_container_labels_traefik_additional_response_headers_custom`
+hedgedoc_backend_container_labels_traefik_additional_response_headers: "{{ hedgedoc_backend_container_labels_traefik_additional_response_headers_auto | combine(hedgedoc_backend_container_labels_traefik_additional_response_headers_custom) }}"
+hedgedoc_backend_container_labels_traefik_additional_response_headers_auto: |
+  {{
+    {}
+    | combine ({'X-XSS-Protection': hedgedoc_backend_http_header_xss_protection} if hedgedoc_backend_http_header_xss_protection else {})
+    | combine ({'X-Content-Type-Options': hedgedoc_backend_http_header_content_type_options} if hedgedoc_backend_http_header_content_type_options else {})
+    | combine ({'Content-Security-Policy': hedgedoc_backend_http_header_content_security_policy} if hedgedoc_backend_http_header_content_security_policy else {})
+    | combine ({'Permissions-Policy': hedgedoc_backend_http_header_permissions_policy} if hedgedoc_backend_http_header_permissions_policy else {})
+    | combine ({'Strict-Transport-Security': hedgedoc_backend_http_header_strict_transport_security} if hedgedoc_backend_http_header_strict_transport_security and hedgedoc_backend_container_labels_traefik_tls else {})
+  }}
+hedgedoc_backend_container_labels_traefik_additional_response_headers_custom: {}
+
+# hedgedoc_backend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `../templates/labels_backend.j2` for details.
+#
+# Example:
+# hedgedoc_backend_container_labels_additional_labels: |
+#   my.label=1
+#   another.label="here"
+hedgedoc_backend_container_labels_additional_labels: ""
+
+# A list of extra arguments to pass to the container (`docker run` command)
+hedgedoc_backend_container_extra_arguments: "{{ hedgedoc_backend_container_extra_arguments_auto + hedgedoc_backend_container_extra_arguments_custom }}"
+hedgedoc_backend_container_extra_arguments_auto: []
+hedgedoc_backend_container_extra_arguments_custom: []
+
+# Specifies the value of the `X-XSS-Protection` header
+# Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
+#
+# Learn more about it is here:
+# - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
+# - https://portswigger.net/web-security/cross-site-scripting/reflected
+hedgedoc_backend_http_header_xss_protection: "1; mode=block"
+
+# Specifies the value of the `X-Content-Type-Options` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+hedgedoc_backend_http_header_content_type_options: nosniff
+
+# Specifies the value of the `Content-Security-Policy` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+hedgedoc_backend_http_header_content_security_policy: frame-ancestors 'self'
+
+# Specifies the value of the `Permissions-Policy` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
+hedgedoc_backend_http_header_permissions_policy: "{{ 'interest-cohort=()' if hedgedoc_backend_floc_optout_enabled else '' }}"
+
+# Specifies the value of the `Strict-Transport-Security` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+hedgedoc_backend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if hedgedoc_backend_hsts_preload_enabled else '' }}"
+
+# Controls whether to send a "Permissions-Policy interest-cohort=();" header along with all responses
+#
+# Learn more about what it is here:
+# - https://www.eff.org/deeplinks/2021/03/googles-floc-terrible-idea
+# - https://paramdeo.com/blog/opting-your-website-out-of-googles-floc-network
+# - https://amifloced.org/
+#
+# Of course, a better solution is to just stop using browsers (like Chrome), which participate in such tracking practices.
+# See: `hedgedoc_backend_http_header_permissions_policy`
+hedgedoc_backend_floc_optout_enabled: true
+
+# Controls if HSTS preloading is enabled
+#
+# In its strongest and recommended form, the [HSTS policy](https://www.chromium.org/hsts) includes all subdomains, and
+# indicates a willingness to be "preloaded" into browsers:
+# `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+# For more information visit:
+# - https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
+# - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+# - https://hstspreload.org/#opt-in
+# See: `hedgedoc_http_header_strict_transport_security`
+hedgedoc_backend_hsts_preload_enabled: false
+
+# List of systemd services that the HedgeDoc backend systemd service depends on
+hedgedoc_backend_systemd_required_services_list: "{{ hedgedoc_backend_systemd_required_services_list_default + hedgedoc_backend_systemd_required_services_list_auto + hedgedoc_backend_systemd_required_services_list_custom }}"
+hedgedoc_backend_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
+hedgedoc_backend_systemd_required_services_list_auto: []
+hedgedoc_backend_systemd_required_services_list_custom: []
+
+# List of systemd services that the HedgeDoc backend systemd service wants
+hedgedoc_backend_systemd_wanted_services_list: "{{ hedgedoc_backend_systemd_wanted_services_list_default + hedgedoc_backend_systemd_wanted_services_list_auto + hedgedoc_backend_systemd_wanted_services_list_custom }}"
+hedgedoc_backend_systemd_wanted_services_list_default: []
+hedgedoc_backend_systemd_wanted_services_list_auto: []
+hedgedoc_backend_systemd_wanted_services_list_custom: []
+
+# Specify database to use
+# Valid values: mariadb, postgres, sqlite
+hedgedoc_database_type: ""
+
+hedgedoc_sqlite_filepath: "hedgedoc.sqlite"
+hedgedoc_database_mariadb_hostname: ""
+hedgedoc_database_mariadb_port: 3306
+hedgedoc_database_mariadb_username: "hedgedoc"
+hedgedoc_database_mariadb_password: ""
+hedgedoc_database_postgres_hostname: ""
+hedgedoc_database_postgres_port: 5432
+hedgedoc_database_postgres_username: "hedgedoc"
+hedgedoc_database_postgres_password: ""
+hedgedoc_database_name: "hedgedoc"
+
+# Specify random strings, generated with `pwgen -s 64 1` or in another way.
+hedgedoc_backend_environment_variables_hd_session_secret: ""
+
+# See: https://docs.hedgedoc.dev/references/config/media/filesystem/
+hedgedoc_backend_environment_variables_hd_media_backend: "filesystem"
+hedgedoc_backend_environment_variables_hd_media_backend_filesystem_upload_path: "uploads/"
+
+# See: https://docs.hedgedoc.dev/references/config/auth/local/
+hedgedoc_backend_environment_variables_hd_auth_local_enable_login: true
+
+# Control if user registration is allowed
+hedgedoc_backend_environment_variables_hd_auth_local_enable_register: false
+
+# Additional environment variables.
+hedgedoc_backend_environment_variables_additional_variables: ""
+
+########################################################################
+#                                                                      #
+# /backend                                                             #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# frontend                                                             #
+#                                                                      #
+########################################################################
+
+hedgedoc_frontend_identifier: "{{ hedgedoc_identifier }}-frontend"
+
+# renovate: datasource=docker depName=ghcr.io/hedgedoc/hedgedoc/frontend
+hedgedoc_frontend_version: 2.0.0-alpha.3
+
+hedgedoc_frontend_scheme: https
+
+hedgedoc_frontend_hostname: "{{ hedgedoc_hostname }}"
+
+# The path at which frontend is exposed
+hedgedoc_frontend_path_prefix: "/"
+
+hedgedoc_frontend_container_image: "{{ hedgedoc_frontend_container_image_registry_prefix }}hedgedoc/hedgedoc/frontend:{{ hedgedoc_frontend_container_image_tag }}"
+hedgedoc_frontend_container_image_tag: "{{ hedgedoc_frontend_version }}"
+hedgedoc_frontend_container_image_registry_prefix: "{{ hedgedoc_frontend_container_image_registry_prefix_upstream }}"
+hedgedoc_frontend_container_image_registry_prefix_upstream: "{{ hedgedoc_frontend_container_image_registry_prefix_upstream_default }}"
+hedgedoc_frontend_container_image_registry_prefix_upstream_default: ghcr.io/
+hedgedoc_frontend_container_image_force_pull: "{{ hedgedoc_frontend_container_image.endswith(':latest') }}"
+
+# Controls whether the HedgeDoc frontend container exposes its HTTP port (as defined by `hedgedoc_frontend_container_http_port`).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:3001"), or empty string to not expose.
+hedgedoc_frontend_container_http_host_bind_port: ""
+
+hedgedoc_frontend_container_network: "{{ hedgedoc_container_network }}"
+
+# The port number in the container
+hedgedoc_frontend_container_http_port: 3001
+
+# A list of additional container networks that the container would be connected to.
+# The role does not create these networks, so make sure they already exist.
+# Use this to expose this container to another reverse proxy, which runs in a different container network.
+hedgedoc_frontend_container_additional_networks: "{{ hedgedoc_frontend_container_additional_networks_auto + hedgedoc_frontend_container_additional_networks_custom }}"
+hedgedoc_frontend_container_additional_networks_auto: []
+hedgedoc_frontend_container_additional_networks_custom: []
+
+# A list of additional "volumes" to mount in the container.
+# This list gets populated dynamically at runtime. You can provide a different default value,
+# if you wish to mount your own files into the container.
+# Contains definition objects like this: `{"type": "bind", "src": "/outside", "dst": "/inside", "options": "readonly"}.
+# See the `--mount` documentation for the `docker run` command.
+hedgedoc_frontend_container_additional_volumes: "{{ hedgedoc_frontend_container_additional_volumes_auto + hedgedoc_frontend_container_additional_volumes_custom }}"
+hedgedoc_frontend_container_additional_volumes_auto: []
+hedgedoc_frontend_container_additional_volumes_custom: []
+
+# hedgedoc_frontend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# See `../templates/labels_frontend.j2` for details.
+#
+# To inject your own other container labels, see `hedgedoc_frontend_container_labels_additional_labels`.
+hedgedoc_frontend_container_labels_traefik_enabled: true
+hedgedoc_frontend_container_labels_traefik_docker_network: "{{ hedgedoc_frontend_container_network }}"
+hedgedoc_frontend_container_labels_traefik_hostname: "{{ hedgedoc_frontend_hostname }}"
+# The path prefix must either be `/` or not end with a slash (e.g. `/hedgedoc_frontend`).
+hedgedoc_frontend_container_labels_traefik_path_prefix: "{{ hedgedoc_frontend_path_prefix }}"
+hedgedoc_frontend_container_labels_traefik_rule: "Host(`{{ hedgedoc_frontend_container_labels_traefik_hostname }}`){% if hedgedoc_frontend_container_labels_traefik_path_prefix != '/' %} && PathPrefix(`{{ hedgedoc_frontend_container_labels_traefik_path_prefix }}`){% endif %}"
+hedgedoc_frontend_container_labels_traefik_priority: 0
+hedgedoc_frontend_container_labels_traefik_entrypoints: web-secure
+hedgedoc_frontend_container_labels_traefik_tls: "{{ hedgedoc_frontend_container_labels_traefik_entrypoints != 'web' }}"
+hedgedoc_frontend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+
+# Controls which additional headers to attach to all HTTP requests.
+# To add your own custom request headers, use `hedgedoc_frontend_container_labels_traefik_additional_request_headers_custom`
+hedgedoc_frontend_container_labels_traefik_additional_request_headers: "{{ hedgedoc_frontend_container_labels_traefik_additional_request_headers_auto | combine(hedgedoc_frontend_container_labels_traefik_additional_request_headers_custom) }}"
+hedgedoc_frontend_container_labels_traefik_additional_request_headers_auto: {}
+hedgedoc_frontend_container_labels_traefik_additional_request_headers_custom: {}
+
+# Controls which additional headers to attach to all HTTP responses.
+# To add your own custom response headers, use `hedgedoc_frontend_container_labels_traefik_additional_response_headers_custom`
+hedgedoc_frontend_container_labels_traefik_additional_response_headers: "{{ hedgedoc_frontend_container_labels_traefik_additional_response_headers_auto | combine(hedgedoc_frontend_container_labels_traefik_additional_response_headers_custom) }}"
+hedgedoc_frontend_container_labels_traefik_additional_response_headers_auto: |
+  {{
+    {}
+    | combine ({'X-XSS-Protection': hedgedoc_frontend_http_header_xss_protection} if hedgedoc_frontend_http_header_xss_protection else {})
+    | combine ({'X-Content-Type-Options': hedgedoc_frontend_http_header_content_type_options} if hedgedoc_frontend_http_header_content_type_options else {})
+    | combine ({'Content-Security-Policy': hedgedoc_frontend_http_header_content_security_policy} if hedgedoc_frontend_http_header_content_security_policy else {})
+    | combine ({'Permissions-Policy': hedgedoc_frontend_http_header_permissions_policy} if hedgedoc_frontend_http_header_permissions_policy else {})
+    | combine ({'Strict-Transport-Security': hedgedoc_frontend_http_header_strict_transport_security} if hedgedoc_frontend_http_header_strict_transport_security and hedgedoc_frontend_container_labels_traefik_tls else {})
+  }}
+hedgedoc_frontend_container_labels_traefik_additional_response_headers_custom: {}
+
+# hedgedoc_frontend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `../templates/labels_frontend.j2` for details.
+#
+# Example:
+# hedgedoc_frontend_container_labels_additional_labels: |
+#   my.label=1
+#   another.label="here"
+hedgedoc_frontend_container_labels_additional_labels: ""
+
+# A list of extra arguments to pass to the container (`docker run` command)
+hedgedoc_frontend_container_extra_arguments: "{{ hedgedoc_frontend_container_extra_arguments_auto + hedgedoc_frontend_container_extra_arguments_custom }}"
+hedgedoc_frontend_container_extra_arguments_auto: []
+hedgedoc_frontend_container_extra_arguments_custom: []
+
+# Specifies the value of the `X-XSS-Protection` header
+# Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
+#
+# Learn more about it is here:
+# - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
+# - https://portswigger.net/web-security/cross-site-scripting/reflected
+hedgedoc_frontend_http_header_xss_protection: "1; mode=block"
+
+# Specifies the value of the `X-Content-Type-Options` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+hedgedoc_frontend_http_header_content_type_options: nosniff
+
+# Specifies the value of the `Content-Security-Policy` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+hedgedoc_frontend_http_header_content_security_policy: frame-ancestors 'self'
+
+# Specifies the value of the `Permissions-Policy` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
+hedgedoc_frontend_http_header_permissions_policy: "{{ 'interest-cohort=()' if hedgedoc_frontend_floc_optout_enabled else '' }}"
+
+# Specifies the value of the `Strict-Transport-Security` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+hedgedoc_frontend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if hedgedoc_frontend_hsts_preload_enabled else '' }}"
+
+# Controls whether to send a "Permissions-Policy interest-cohort=();" header along with all responses
+#
+# Learn more about what it is here:
+# - https://www.eff.org/deeplinks/2021/03/googles-floc-terrible-idea
+# - https://paramdeo.com/blog/opting-your-website-out-of-googles-floc-network
+# - https://amifloced.org/
+#
+# Of course, a better solution is to just stop using browsers (like Chrome), which participate in such tracking practices.
+# See: `hedgedoc_frontend_http_header_permissions_policy`
+hedgedoc_frontend_floc_optout_enabled: true
+
+# Controls if HSTS preloading is enabled
+#
+# In its strongest and recommended form, the [HSTS policy](https://www.chromium.org/hsts) includes all subdomains, and
+# indicates a willingness to be "preloaded" into browsers:
+# `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+# For more information visit:
+# - https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
+# - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+# - https://hstspreload.org/#opt-in
+# See: `hedgedoc_http_header_strict_transport_security`
+hedgedoc_frontend_hsts_preload_enabled: false
+
+# List of systemd services that the HedgeDoc frontend systemd service depends on
+hedgedoc_frontend_systemd_required_services_list: "{{ hedgedoc_frontend_systemd_required_services_list_default + hedgedoc_frontend_systemd_required_services_list_auto + hedgedoc_frontend_systemd_required_services_list_custom }}"
+hedgedoc_frontend_systemd_required_services_list_default: ['docker.service', '{{ hedgedoc_backend_identifier }}.service']
+hedgedoc_frontend_systemd_required_services_list_auto: []
+hedgedoc_frontend_systemd_required_services_list_custom: []
+
+# List of systemd services that the HedgeDoc frontend systemd service wants
+hedgedoc_frontend_systemd_wanted_services_list: "{{ hedgedoc_frontend_systemd_wanted_services_list_default + hedgedoc_frontend_systemd_wanted_services_list_auto + hedgedoc_frontend_systemd_wanted_services_list_custom }}"
+hedgedoc_frontend_systemd_wanted_services_list_default: []
+hedgedoc_frontend_systemd_wanted_services_list_auto: []
+hedgedoc_frontend_systemd_wanted_services_list_custom: []
+
+hedgedoc_frontend_environment_variables_hd_internal_api_url: "http://{{ hedgedoc_backend_identifier }}:{{ hedgedoc_backend_container_http_port }}"
+
+# Additional environment variables.
+hedgedoc_frontend_environment_variables_additional_variables: ""
+
+########################################################################
+#                                                                      #
+# /frontend                                                            #
+#                                                                      #
+########################################################################
