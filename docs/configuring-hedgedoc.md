@@ -59,7 +59,7 @@ To enable Mastodon you need to set the hostname as well. To do so, add the follo
 mastodon_hostname: "example.com"
 ```
 
-After adjusting the hostname, make sure to adjust your DNS records to point the domain to your backend.
+After adjusting the hostname, make sure to adjust your DNS records to point the domain to your sidekiq.
 
 **Note**: hosting Mastodon under a subpath (by configuring the `mastodon_path_prefix` variable) does not seem to be possible due to Mastodon's technical limitations.
 
@@ -87,10 +87,10 @@ After running the command for installation, Mastodon instance becomes available 
 
 To get started, open the frontend's URL with a web browser, and register the account.
 
-Since account registration is disabled by default, you need to enable it first by setting `mastodon_backend_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
+Since account registration is disabled by default, you need to enable it first by setting `mastodon_sidekiq_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
 
 ## Troubleshooting
 
 ### Check the service's logs
 
-You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the backend with SSH, and running `journalctl -fu mastodon-backend` (or how you/your playbook named the service, e.g. `mash-mastodon-backend`) for the backend and `journalctl -fu mastodon-frontend` (or how you/your playbook named the service, e.g. `mash-mastodon-frontend`) for the frontend, respectively.
+You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the sidekiq with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the sidekiq and `journalctl -fu mastodon-frontend` (or how you/your playbook named the service, e.g. `mash-mastodon-frontend`) for the frontend, respectively.
