@@ -26,6 +26,12 @@ mastodon_hostname: ""
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 mastodon_container_network: "{{ mastodon_identifier }}"
 
+mastodon_database_hostname: ""
+mastodon_database_port: 5432
+mastodon_database_username: "mastodon"
+mastodon_database_password: ""
+mastodon_database_name: "mastodon"
+
 ########################################################################
 #                                                                      #
 # backend                                                              #
@@ -184,12 +190,6 @@ mastodon_backend_systemd_wanted_services_list: "{{ mastodon_backend_systemd_want
 mastodon_backend_systemd_wanted_services_list_default: []
 mastodon_backend_systemd_wanted_services_list_auto: []
 mastodon_backend_systemd_wanted_services_list_custom: []
-
-mastodon_database_postgres_hostname: ""
-mastodon_database_postgres_port: 5432
-mastodon_database_postgres_username: "mastodon"
-mastodon_database_postgres_password: ""
-mastodon_database_name: "mastodon"
 
 # Additional environment variables.
 mastodon_backend_environment_variables_additional_variables: ""
