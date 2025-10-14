@@ -364,7 +364,7 @@ mastodon_streaming_systemd_wanted_services_list_custom: []
 
 mastodon_web_identifier: "{{ mastodon_identifier }}-web"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon-web
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
 mastodon_web_version: v4.4.6
 
 mastodon_web_scheme: https
@@ -374,7 +374,7 @@ mastodon_web_hostname: "{{ mastodon_hostname }}"
 # The path at which web is exposed
 mastodon_web_path_prefix: "/"
 
-mastodon_web_container_image: "{{ mastodon_web_container_image_registry_prefix }}mastodon/mastodon-web:{{ mastodon_web_container_image_tag }}"
+mastodon_web_container_image: "{{ mastodon_web_container_image_registry_prefix }}mastodon/mastodon:{{ mastodon_web_container_image_tag }}"
 mastodon_web_container_image_tag: "{{ mastodon_web_version }}"
 mastodon_web_container_image_registry_prefix: "{{ mastodon_web_container_image_registry_prefix_upstream }}"
 mastodon_web_container_image_registry_prefix_upstream: "{{ mastodon_web_container_image_registry_prefix_upstream_default }}"
