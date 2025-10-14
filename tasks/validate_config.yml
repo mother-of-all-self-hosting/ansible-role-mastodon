@@ -15,32 +15,9 @@
     - mastodon_gid
     - mastodon_hostname
     - mastodon_container_network
-    - mastodon_backend_environment_variables_hd_session_secret
-    - mastodon_frontend_path_prefix
-
-- name: Fail if Mastodon database type invalid
-  ansible.builtin.fail:
-    msg: >-
-      mastodon_database_type must be 'mariadb', 'postgres'. Currently 'sqlite' is not supported by this role.
-  when: "mastodon_database_type not in ['mariadb', 'postgres']"
-
-- name: Fail if required Mastodon + MariaDB integration settings not defined
-  ansible.builtin.fail:
-    msg: >-
-      You need to define a required configuration setting (`{{ item }}`) when `mastodon_database_type` is `mariadb`
-  when: "mastodon_database_type == 'mariadb' and lookup('vars', item, default='') | string | length == 0"
-  with_items:
-    - mastodon_database_mariadb_hostname
-    - mastodon_database_mariadb_password
-
-- name: Fail if required Mastodon + Postgres integration settings not defined
-  ansible.builtin.fail:
-    msg: >-
-      You need to define a required configuration setting (`{{ item }}`) when `mastodon_database_type` is `postgres`
-  when: "mastodon_database_type == 'postgres' and lookup('vars', item, default='') | string | length == 0"
-  with_items:
     - mastodon_database_postgres_hostname
     - mastodon_database_postgres_password
+    - mastodon_frontend_path_prefix
 
 - name: Run if Traefik is enabled for the backend
   when: mastodon_backend_container_labels_traefik_enabled | bool
