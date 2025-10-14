@@ -17,7 +17,7 @@
     - "{{ mastodon_base_path }}"
     - "{{ mastodon_sidekiq_base_path }}"
     - "{{ mastodon_sidekiq_data_path }}"
-    - "{{ mastodon_frontend_base_path }}"
+    - "{{ mastodon_streaming_base_path }}"
 
 - name: Ensure Mastodon Traefik labels are installed
   ansible.builtin.template:
@@ -28,7 +28,7 @@
     group: "{{ mastodon_gid }}"
   with_items:
     - { src: "{{ role_path }}/templates/labels_sidekiq.j2", dest: "{{ mastodon_sidekiq_base_path }}/labels" }
-    - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/labels" }
+    - { src: "{{ role_path }}/templates/labels_streaming.j2", dest: "{{ mastodon_streaming_base_path }}/labels" }
 
 - name: Ensure Mastodon env file installed
   ansible.builtin.template:
@@ -44,7 +44,7 @@
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
   with_items:
     - "{{ mastodon_sidekiq_container_image }}"
-    - "{{ mastodon_frontend_container_image }}"
+    - "{{ mastodon_streaming_container_image }}"
   register: result
   retries: "{{ devture_playbook_help_container_retries_count }}"
   delay: "{{ devture_playbook_help_container_retries_delay }}"
@@ -65,5 +65,5 @@
   with_items:
     - src: "{{ role_path }}/templates/systemd/mastodon-sidekiq.service.j2"
       dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_sidekiq_identifier }}.service"
-    - src: "{{ role_path }}/templates/systemd/mastodon-frontend.service.j2"
-      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_frontend_identifier }}.service"
+    - src: "{{ role_path }}/templates/systemd/mastodon-streaming.service.j2"
+      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_streaming_identifier }}.service"
