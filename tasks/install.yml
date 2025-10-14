@@ -31,16 +31,13 @@
     - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ mastodon_backend_base_path }}/labels" }
     - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/labels" }
 
-- name: Ensure Mastodon configuration file installed
+- name: Ensure Mastodon env file installed
   ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "{{ role_path }}/templates/env.j2"
+    dest: "{{ mastodon_base_path }}/env"
+    mode: "0640"
     owner: "{{ mastodon_uid }}"
     group: "{{ mastodon_gid }}"
-    mode: "0640"
-  with_items:
-    - { src: "{{ role_path }}/templates/env_backend.j2", dest: "{{ mastodon_backend_base_path }}/env" }
-    - { src: "{{ role_path }}/templates/env_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/env" }
 
 - name: Ensure Mastodon container image is pulled
   community.docker.docker_image:
