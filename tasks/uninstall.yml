@@ -39,9 +39,9 @@
 
     - name: Ensure Mastodon sidekiq local data path does not exist if empty
       ansible.builtin.command:
-        cmd: "rmdir {{ mastodon_sidekiq_data_path }}"
-      register: mastodon_sidekiq_data_path_deletion_result
-      changed_when: mastodon_sidekiq_data_path_deletion_result.rc == 0
+        cmd: "rmdir {{ mastodon_data_path }}"
+      register: mastodon_data_path_deletion_result
+      changed_when: mastodon_data_path_deletion_result.rc == 0
       failed_when: false
 
     - name: Ensure Mastodon sidekiq base path does not exist if empty
@@ -53,19 +53,19 @@
 
     - name: Check existence of Mastodon sidekiq local data path
       ansible.builtin.stat:
-        path: "{{ mastodon_sidekiq_data_path }}"
-      register: mastodon_sidekiq_data_path_stat
+        path: "{{ mastodon_data_path }}"
+      register: mastodon_data_path_stat
 
     # We just want to notify the user. Deleting data is too destructive.
     - name: Notify if Mastodon sidekiq local data remains
-      when: mastodon_sidekiq_data_path_stat.stat.exists | bool
+      when: mastodon_data_path_stat.stat.exists | bool
       ansible.builtin.set_fact:
         devture_playbook_runtime_messages_list: |
           {{
             devture_playbook_runtime_messages_list | default([])
             +
             [
-              "Note: As the local Mastodon instance has been removed, some old data remains in `" + mastodon_sidekiq_data_path + "`. Feel free to delete it."
+              "Note: As the local Mastodon instance has been removed, some old data remains in `" + mastodon_data_path + "`. Feel free to delete it."
             ]
           }}
 
