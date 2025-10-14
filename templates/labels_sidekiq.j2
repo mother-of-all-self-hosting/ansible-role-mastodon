@@ -54,7 +54,6 @@ traefik.http.routers.{{ mastodon_sidekiq_identifier }}.tls={{ mastodon_sidekiq_c
 traefik.http.routers.{{ mastodon_sidekiq_identifier }}.tls.certResolver={{ mastodon_sidekiq_container_labels_traefik_tls_certResolver }}
 {% endif %}
 
-traefik.http.services.{{ mastodon_sidekiq_identifier }}.loadbalancer.server.port={{ mastodon_sidekiq_container_http_port }}
 {% endif %}
 
 {{ mastodon_sidekiq_container_labels_additional_labels }}

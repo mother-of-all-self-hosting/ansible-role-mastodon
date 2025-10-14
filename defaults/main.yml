@@ -59,15 +59,7 @@ mastodon_sidekiq_container_image_registry_prefix_upstream: "{{ mastodon_sidekiq_
 mastodon_sidekiq_container_image_registry_prefix_upstream_default: ghcr.io/
 mastodon_sidekiq_container_image_force_pull: "{{ mastodon_frontend_container_image.endswith(':latest') }}"
 
-# Controls whether the Mastodon sidekiq container exposes its HTTP port (as defined by `mastodon_sidekiq_container_http_port`).
-#
-# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:3000"), or empty string to not expose.
-mastodon_sidekiq_container_http_host_bind_port: ""
-
 mastodon_sidekiq_container_network: "{{ mastodon_container_network }}"
-
-# The port number in the container
-mastodon_sidekiq_container_http_port: 3000
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
