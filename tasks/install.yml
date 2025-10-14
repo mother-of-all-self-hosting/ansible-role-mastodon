@@ -17,7 +17,6 @@
     - "{{ mastodon_base_path }}"
     - "{{ mastodon_sidekiq_base_path }}"
     - "{{ mastodon_sidekiq_data_path }}"
-    - "{{ mastodon_sidekiq_uploads_path }}"
     - "{{ mastodon_frontend_base_path }}"
 
 - name: Ensure Mastodon support files installed
