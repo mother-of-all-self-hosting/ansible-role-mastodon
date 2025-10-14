@@ -26,6 +26,14 @@
     - name: Run Mastodon 'bundle exec rails secret' to generate secrets
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/secret.yml"
 
+- name: Perform Mastodon encryption secrets generation command tasks
+  when: mastodon_enabled | bool
+  tags:
+    - secrets-encryption-mastodon
+  block:
+    - name: Run Mastodon 'bin/rails db:encryption:init' to generate encryption secrets
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/secrets_encryption.yml"
+
 - name: Perform Mastodon uninstallation tasks
   when: not mastodon_enabled | bool
   tags:
