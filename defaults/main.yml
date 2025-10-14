@@ -389,7 +389,7 @@ mastodon_web_container_http_host_bind_port: ""
 mastodon_web_container_network: "{{ mastodon_container_network }}"
 
 # The port number in the container
-mastodon_web_container_http_port: 4000
+mastodon_web_container_http_port: 3000
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
