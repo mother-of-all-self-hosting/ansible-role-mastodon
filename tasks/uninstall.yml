@@ -28,51 +28,43 @@
   failed_when: network_deletion_result.rc > 0 and 'not found' not in network_deletion_result.stderr
   changed_when: mastodon_container_network in network_deletion_result.stdout
 
-- name: Remove Mastodon sidekiq files
-  block:
-    - name: Ensure Mastodon sidekiq support files do not exist
-      ansible.builtin.file:
-        path: "{{ mastodon_sidekiq_base_path }}/{{ item }}"
-        state: absent
-      with_items:
-        - env
-        - labels
+- name: Ensure Mastodon web path does not exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ mastodon_sidekiq_base_path }}"
+    - "{{ mastodon_streaming_base_path }}"
+    - "{{ mastodon_web_base_path }}"
 
-    - name: Ensure Mastodon sidekiq local data path does not exist if empty
-      ansible.builtin.command:
-        cmd: "rmdir {{ mastodon_data_path }}"
-      register: mastodon_data_path_deletion_result
-      changed_when: mastodon_data_path_deletion_result.rc == 0
-      failed_when: false
+- name: Ensure Mastodon local data path does not exist if empty
+  ansible.builtin.command:
+    cmd: "rmdir {{ mastodon_data_path }}"
+  register: mastodon_data_path_deletion_result
+  changed_when: mastodon_data_path_deletion_result.rc == 0
+  failed_when: false
 
-    - name: Ensure Mastodon sidekiq base path does not exist if empty
-      ansible.builtin.command:
-        cmd: "rmdir {{ mastodon_sidekiq_base_path }}"
-      register: mastodon_sidekiq_base_path_deletion_result
-      changed_when: mastodon_sidekiq_base_path_deletion_result.rc == 0
-      failed_when: false
+- name: Ensure Mastodon local base path does not exist if empty
+  ansible.builtin.command:
+    cmd: "rmdir {{ mastodon_base_path }}"
+  register: mastodon_base_path_deletion_result
+  changed_when: mastodon_base_path_deletion_result.rc == 0
+  failed_when: false
 
-    - name: Check existence of Mastodon sidekiq local data path
-      ansible.builtin.stat:
-        path: "{{ mastodon_data_path }}"
-      register: mastodon_data_path_stat
+- name: Check existence of Mastodon sidekiq local data path
+  ansible.builtin.stat:
+    path: "{{ mastodon_data_path }}"
+  register: mastodon_data_path_stat
 
-    # We just want to notify the user. Deleting data is too destructive.
-    - name: Notify if Mastodon sidekiq local data remains
-      when: mastodon_data_path_stat.stat.exists | bool
-      ansible.builtin.set_fact:
-        devture_playbook_runtime_messages_list: |
-          {{
-            devture_playbook_runtime_messages_list | default([])
-            +
-            [
-              "Note: As the local Mastodon instance has been removed, some old data remains in `" + mastodon_data_path + "`. Feel free to delete it."
-            ]
-          }}
-
-- name: Remove Mastodon streaming files
-  block:
-    - name: Ensure Mastodon streaming path does not exist
-      ansible.builtin.file:
-        path: "{{ mastodon_streaming_base_path }}"
-        state: absent
+# We just want to notify the user. Deleting data is too destructive.
+- name: Notify if Mastodon local data remains
+  when: mastodon_data_path_stat.stat.exists | bool
+  ansible.builtin.set_fact:
+    devture_playbook_runtime_messages_list: |
+      {{
+        devture_playbook_runtime_messages_list | default([])
+        +
+        [
+          "Note: As the local Mastodon instance has been removed, some old data remains in `" + mastodon_data_path + "`. Feel free to delete it."
+        ]
+      }}
