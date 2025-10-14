@@ -20,6 +20,20 @@
     - mastodon_redis_hostname
     - mastodon_streaming_path_prefix
 
+- name: Fail if required Mastodon secrets and keys not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`).
+      The values for them can be obtained by running the playbook with the `secrets-all-mastodon` tag.
+  when: "lookup('vars', item, default='') | string | length == 0"
+  with_items:
+    - mastodon_environment_variables_secret_key_base
+    - mastodon_environment_variables_active_record_encryption_deterministic_key
+    - mastodon_environment_variables_active_record_encryption_key_derivation_salt
+    - mastodon_environment_variables_active_record_encryption_primary_key
+    - mastodon_environment_variables_vapid_private_key
+    - mastodon_environment_variables_vapid_public_key
+
 - name: Run if Traefik is enabled for the sidekiq
   when: mastodon_sidekiq_container_labels_traefik_enabled | bool
   block:
