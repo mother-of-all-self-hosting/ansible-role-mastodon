@@ -27,9 +27,6 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --rm \
       --name={{ mastodon_sidekiq_identifier }} \
       --log-driver=none \
-      --user={{ mastodon_uid }}:{{ mastodon_gid }} \
-      --cap-drop=ALL \
-      --read-only \
       --network={{ mastodon_sidekiq_container_network }} \
       --env-file={{ mastodon_base_path }}/env \
       --label-file={{ mastodon_sidekiq_base_path }}/labels \
