@@ -73,7 +73,7 @@ mastodon_environment_variables_additional_variables: ""
 
 mastodon_sidekiq_identifier: "{{ mastodon_identifier }}-sidekiq"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon/sidekiq
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
 mastodon_sidekiq_version: v4.5.7
 
 mastodon_sidekiq_scheme: https
