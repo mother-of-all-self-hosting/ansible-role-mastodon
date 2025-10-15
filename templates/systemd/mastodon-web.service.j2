@@ -27,9 +27,6 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --rm \
       --name={{ mastodon_web_identifier }} \
       --log-driver=none \
-      --user={{ mastodon_uid }}:{{ mastodon_gid }} \
-      --cap-drop=ALL \
-      --read-only \
       --network={{ mastodon_web_container_network }} \
       {% if mastodon_web_container_http_host_bind_port %}
       -p {{ mastodon_web_container_http_host_bind_port }}:{{ mastodon_web_container_http_port }} \
