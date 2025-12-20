@@ -144,13 +144,16 @@ mastodon_sidekiq_container_labels_traefik_additional_response_headers_auto: |
 mastodon_sidekiq_container_labels_traefik_additional_response_headers_custom: {}
 
 # mastodon_sidekiq_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# To add your own custom labels, use `mastodon_sidekiq_container_labels_additional_labels_custom`
 # See `../templates/labels_sidekiq.j2` for details.
 #
 # Example:
 # mastodon_sidekiq_container_labels_additional_labels: |
 #   my.label=1
 #   another.label="here"
-mastodon_sidekiq_container_labels_additional_labels: ""
+mastodon_sidekiq_container_labels_additional_labels: "{{ mastodon_sidekiq_container_labels_additional_labels_auto | combine(mastodon_sidekiq_container_labels_additional_labels_custom) }}"
+mastodon_sidekiq_container_labels_additional_labels_auto: {}
+mastodon_sidekiq_container_labels_additional_labels_custom: {}
 
 # A list of extra arguments to pass to the container (`docker run` command)
 mastodon_sidekiq_container_extra_arguments: "{{ mastodon_sidekiq_container_extra_arguments_auto + mastodon_sidekiq_container_extra_arguments_custom }}"
@@ -309,13 +312,16 @@ mastodon_streaming_container_labels_traefik_additional_response_headers_auto: |
 mastodon_streaming_container_labels_traefik_additional_response_headers_custom: {}
 
 # mastodon_streaming_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# To add your own custom labels, use `mastodon_streaming_container_labels_additional_labels_custom`
 # See `../templates/labels_streaming.j2` for details.
 #
 # Example:
 # mastodon_streaming_container_labels_additional_labels: |
 #   my.label=1
 #   another.label="here"
-mastodon_streaming_container_labels_additional_labels: ""
+mastodon_streaming_container_labels_additional_labels: "{{ mastodon_streaming_container_labels_additional_labels_auto | combine(mastodon_streaming_container_labels_additional_labels_custom) }}"
+mastodon_streaming_container_labels_additional_labels_auto: {}
+mastodon_streaming_container_labels_additional_labels_custom: {}
 
 # A list of extra arguments to pass to the container (`docker run` command)
 mastodon_streaming_container_extra_arguments: "{{ mastodon_streaming_container_extra_arguments_auto + mastodon_streaming_container_extra_arguments_custom }}"
@@ -474,13 +480,16 @@ mastodon_web_container_labels_traefik_additional_response_headers_auto: |
 mastodon_web_container_labels_traefik_additional_response_headers_custom: {}
 
 # mastodon_web_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# To add your own custom labels, use `mastodon_web_container_labels_additional_labels_custom`
 # See `../templates/labels_web.j2` for details.
 #
 # Example:
 # mastodon_web_container_labels_additional_labels: |
 #   my.label=1
 #   another.label="here"
-mastodon_web_container_labels_additional_labels: ""
+mastodon_web_container_labels_additional_labels: "{{ mastodon_web_container_labels_additional_labels_auto | combine(mastodon_web_container_labels_additional_labels_custom) }}"
+mastodon_web_container_labels_additional_labels_auto: {}
+mastodon_web_container_labels_additional_labels_custom: {}
 
 # A list of extra arguments to pass to the container (`docker run` command)
 mastodon_web_container_extra_arguments: "{{ mastodon_web_container_extra_arguments_auto + mastodon_web_container_extra_arguments_custom }}"
