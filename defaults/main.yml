@@ -155,7 +155,7 @@ mastodon_sidekiq_container_labels_additional_labels: "{{ mastodon_sidekiq_contai
 mastodon_sidekiq_container_labels_additional_labels_auto: {}
 mastodon_sidekiq_container_labels_additional_labels_custom: {}
 
-# A list of extra arguments to pass to the container (`docker run` command)
+# A list of extra arguments to pass to the container (`docker create` command)
 mastodon_sidekiq_container_extra_arguments: "{{ mastodon_sidekiq_container_extra_arguments_auto + mastodon_sidekiq_container_extra_arguments_custom }}"
 mastodon_sidekiq_container_extra_arguments_auto: []
 mastodon_sidekiq_container_extra_arguments_custom: []
@@ -323,7 +323,7 @@ mastodon_streaming_container_labels_additional_labels: "{{ mastodon_streaming_co
 mastodon_streaming_container_labels_additional_labels_auto: {}
 mastodon_streaming_container_labels_additional_labels_custom: {}
 
-# A list of extra arguments to pass to the container (`docker run` command)
+# A list of extra arguments to pass to the container (`docker create` command)
 mastodon_streaming_container_extra_arguments: "{{ mastodon_streaming_container_extra_arguments_auto + mastodon_streaming_container_extra_arguments_custom }}"
 mastodon_streaming_container_extra_arguments_auto: []
 mastodon_streaming_container_extra_arguments_custom: []
@@ -491,7 +491,7 @@ mastodon_web_container_labels_additional_labels: "{{ mastodon_web_container_labe
 mastodon_web_container_labels_additional_labels_auto: {}
 mastodon_web_container_labels_additional_labels_custom: {}
 
-# A list of extra arguments to pass to the container (`docker run` command)
+# A list of extra arguments to pass to the container (`docker create` command)
 mastodon_web_container_extra_arguments: "{{ mastodon_web_container_extra_arguments_auto + mastodon_web_container_extra_arguments_custom }}"
 mastodon_web_container_extra_arguments_auto: []
 mastodon_web_container_extra_arguments_custom: []
