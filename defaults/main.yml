@@ -21,6 +21,7 @@ mastodon_web_base_path: "{{ mastodon_base_path }}/web"
 mastodon_uid: ""
 mastodon_gid: ""
 
+# The hostname at which Mastodon is served.
 mastodon_hostname: ""
 
 # The base container network. It will be auto-created by this role if it doesn't exist already.
