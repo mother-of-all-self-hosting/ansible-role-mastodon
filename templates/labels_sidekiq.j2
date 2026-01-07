@@ -56,4 +56,6 @@ traefik.http.routers.{{ mastodon_sidekiq_identifier }}.tls.certResolver={{ masto
 
 {% endif %}
 
-{{ mastodon_sidekiq_container_labels_additional_labels }}
+{% for arg in mastodon_sidekiq_container_labels_additional_labels %}
+{{ arg }}
+{% endfor %}
