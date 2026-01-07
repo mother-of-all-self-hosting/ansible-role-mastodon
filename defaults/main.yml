@@ -235,7 +235,7 @@ mastodon_sidekiq_systemd_wanted_services_list_custom: []
 mastodon_streaming_identifier: "{{ mastodon_identifier }}-streaming"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon-streaming
-mastodon_streaming_version: v4.4.8
+mastodon_streaming_version: v4.5.4
 
 mastodon_streaming_scheme: https
 
