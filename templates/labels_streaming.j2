@@ -57,4 +57,6 @@ traefik.http.routers.{{ mastodon_streaming_identifier }}.tls.certResolver={{ mas
 traefik.http.services.{{ mastodon_streaming_identifier }}.loadbalancer.server.port={{ mastodon_streaming_container_http_port }}
 {% endif %}
 
-{{ mastodon_streaming_container_labels_additional_labels }}
+{% for arg in mastodon_streaming_container_labels_additional_labels %}
+{{ arg }}
+{% endfor %}
