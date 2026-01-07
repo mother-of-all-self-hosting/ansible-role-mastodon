@@ -75,7 +75,7 @@ mastodon_environment_variables_additional_variables: ""
 mastodon_sidekiq_identifier: "{{ mastodon_identifier }}-sidekiq"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_sidekiq_version: v4.4.8
+mastodon_sidekiq_version: v4.5.4
 
 mastodon_sidekiq_scheme: https
 
@@ -403,7 +403,7 @@ mastodon_streaming_systemd_wanted_services_list_custom: []
 mastodon_web_identifier: "{{ mastodon_identifier }}-web"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_web_version: v4.4.8
+mastodon_web_version: v4.5.4
 
 mastodon_web_scheme: https
 
