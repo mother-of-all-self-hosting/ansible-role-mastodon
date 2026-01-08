@@ -152,7 +152,7 @@ mastodon_sidekiq_container_labels_traefik_additional_response_headers_custom: {}
 # To add your own custom labels, use `mastodon_sidekiq_container_labels_additional_labels_custom`
 #
 # Example:
-# mastodon_sidekiq_container_labels_additional_labels_custom: |
+# mastodon_sidekiq_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
 mastodon_sidekiq_container_labels_additional_labels: "{{ mastodon_sidekiq_container_labels_additional_labels_auto + mastodon_sidekiq_container_labels_additional_labels_custom }}"
@@ -320,7 +320,7 @@ mastodon_streaming_container_labels_traefik_additional_response_headers_custom: 
 # To add your own custom labels, use `mastodon_streaming_container_labels_additional_labels_custom`
 #
 # Example:
-# mastodon_streaming_container_labels_additional_labels_custom: |
+# mastodon_streaming_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
 mastodon_streaming_container_labels_additional_labels: "{{ mastodon_streaming_container_labels_additional_labels_auto + mastodon_streaming_container_labels_additional_labels_custom }}"
@@ -488,7 +488,7 @@ mastodon_web_container_labels_traefik_additional_response_headers_custom: {}
 # To add your own custom labels, use `mastodon_web_container_labels_additional_labels_custom`
 #
 # Example:
-# mastodon_web_container_labels_additional_labels_custom: |
+# mastodon_web_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
 mastodon_web_container_labels_additional_labels: "{{ mastodon_web_container_labels_additional_labels_auto + mastodon_web_container_labels_additional_labels_custom }}"
