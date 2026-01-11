@@ -19,6 +19,7 @@
     - mastodon_database_password
     - mastodon_redis_hostname
     - mastodon_streaming_path_prefix
+    - mastodon_environment_variables_local_domain
 
 - name: Fail if required Mastodon secrets and keys not defined
   ansible.builtin.fail:
