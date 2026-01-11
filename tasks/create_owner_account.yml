@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: 2023 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+
+# The command to create an owner: `ansible-playbook -i inventory/hosts setup.yml --tags=create-owner-account-mastodon -e username=USERNAME_HERE -e emailaddress=EMAIL_ADDRESS_HERE`
+
+- name: Fail if playbook called incorrectly
+  ansible.builtin.fail:
+    msg: "The `username` and `emailaddress` variables need to be provided via --extra-vars"
+  when: "username is not defined or emailaddress is not defined"
+
+- name: Ensure Mastodon web service is started
+  ansible.builtin.service:
+    name: "{{ mastodon_web_identifier }}"
+    state: started
+    daemon_reload: true
+  register: mastodon_web_start
+
+- name: Wait a while, so that Mastodon web can manage to start
+  ansible.builtin.pause:
+    seconds: 7
+  when: mastodon_web_start.changed | bool
+
+- name: Run Mastodon 'tootctl accounts create' command to create the owner
+  ansible.builtin.command:
+    cmd: |-
+      {{ devture_systemd_docker_base_host_command_docker }} exec
+      -e RAILS_ENV=production
+      {{ mastodon_web_identifier }}
+      bin/tootctl accounts
+      create
+      {{ username }}
+      --email {{ emailaddress }}
+      --confirmed
+      --role Owner
+  register: mastodon_tootctl_accounts_create_result
+  failed_when: mastodon_tootctl_accounts_create_result.rc != 0
+
+- name: Extract the Mastodon instance owner's password
+  ansible.builtin.set_fact:
+    mastodon_owner_account_password: "{{ mastodon_tootctl_accounts_create_result.stdout | regex_search('New password: \\w+') | regex_replace('New password: ', '') }}"
+
+- name: Run Mastodon 'tootctl accounts modify' command to approve the owner
+  ansible.builtin.command:
+    cmd: |-
+      {{ devture_systemd_docker_base_host_command_docker }} exec
+      -e RAILS_ENV=production
+      {{ mastodon_web_identifier }}
+      bin/tootctl accounts
+      modify
+      {{ username }}
+      --approve
+  register: mastodon_tootctl_accounts_approve_result
+  failed_when: mastodon_tootctl_accounts_approve_result.rc != 0
+
+- name: Display the extracted Mastodon instance owner's password
+  ansible.builtin.set_fact:
+    devture_playbook_runtime_messages_list: |
+      {{
+        devture_playbook_runtime_messages_list | default([])
+        +
+        [
+          "The initial password for `" + username + "` (" + emailaddress +") is `" + mastodon_owner_account_password + "`. Make sure not to lose it until you log in to the instance with it and the mail address and change it with yours."
+        ]
+      }}
