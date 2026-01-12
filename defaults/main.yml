@@ -242,7 +242,7 @@ mastodon_streaming_version: v4.5.4
 
 mastodon_streaming_scheme: https
 
-mastodon_streaming_hostname: "{{ mastodon_hostname }}"
+mastodon_streaming_hostname: ""
 
 # The path at which streaming is exposed
 mastodon_streaming_path_prefix: "/"
@@ -284,7 +284,7 @@ mastodon_streaming_container_additional_volumes_custom: []
 # See `../templates/labels_streaming.j2` for details.
 #
 # To inject your own other container labels, see `mastodon_streaming_container_labels_additional_labels`.
-mastodon_streaming_container_labels_traefik_enabled: true
+mastodon_streaming_container_labels_traefik_enabled: false
 mastodon_streaming_container_labels_traefik_docker_network: "{{ mastodon_streaming_container_network }}"
 mastodon_streaming_container_labels_traefik_hostname: "{{ mastodon_streaming_hostname }}"
 # The path prefix must either be `/` or not end with a slash (e.g. `/streaming`).
