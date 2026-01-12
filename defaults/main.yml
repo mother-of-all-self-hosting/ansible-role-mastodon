@@ -382,7 +382,8 @@ mastodon_streaming_hsts_preload_enabled: false
 # List of systemd services that the Mastodon streaming systemd service depends on
 mastodon_streaming_systemd_required_services_list: "{{ mastodon_streaming_systemd_required_services_list_default + mastodon_streaming_systemd_required_services_list_auto + mastodon_streaming_systemd_required_services_list_custom }}"
 mastodon_streaming_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
-mastodon_streaming_systemd_required_services_list_auto: []
+mastodon_streaming_systemd_required_services_list_auto:
+  - "{{ mastodon_web_identifier }}"
 mastodon_streaming_systemd_required_services_list_custom: []
 
 # List of systemd services that the Mastodon streaming systemd service wants
@@ -550,7 +551,8 @@ mastodon_web_hsts_preload_enabled: false
 # List of systemd services that the Mastodon web systemd service depends on
 mastodon_web_systemd_required_services_list: "{{ mastodon_web_systemd_required_services_list_default + mastodon_web_systemd_required_services_list_auto + mastodon_web_systemd_required_services_list_custom }}"
 mastodon_web_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
-mastodon_web_systemd_required_services_list_auto: []
+mastodon_web_systemd_required_services_list_auto:
+  - "{{ mastodon_sidekiq_identifier }}"
 mastodon_web_systemd_required_services_list_custom: []
 
 # List of systemd services that the Mastodon web systemd service wants
