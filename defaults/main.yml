@@ -256,7 +256,7 @@ mastodon_streaming_container_image_force_pull: "{{ mastodon_streaming_container_
 
 # Controls whether the Mastodon streaming container exposes its HTTP port (as defined by `mastodon_streaming_container_http_port`).
 #
-# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:3001"), or empty string to not expose.
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
 mastodon_streaming_container_http_host_bind_port: ""
 
 mastodon_streaming_container_network: "{{ mastodon_container_network }}"
@@ -425,7 +425,7 @@ mastodon_web_container_image_force_pull: "{{ mastodon_web_container_image.endswi
 
 # Controls whether the Mastodon web container exposes its HTTP port (as defined by `mastodon_web_container_http_port`).
 #
-# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:3001"), or empty string to not expose.
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
 mastodon_web_container_http_host_bind_port: ""
 
 mastodon_web_container_network: "{{ mastodon_container_network }}"
