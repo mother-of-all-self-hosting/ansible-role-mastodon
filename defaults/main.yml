@@ -27,6 +27,9 @@ mastodon_hostname: ""
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 mastodon_container_network: "{{ mastodon_identifier }}"
 
+# Control if the container network is deleted on uninstalling.
+mastodon_container_network_deletion_enabled: true
+
 mastodon_database_hostname: ""
 mastodon_database_port: 5432
 mastodon_database_username: "mastodon"
