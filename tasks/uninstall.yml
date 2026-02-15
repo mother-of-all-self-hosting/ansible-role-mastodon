@@ -12,21 +12,24 @@
     - { service: "{{ mastodon_sidekiq_identifier }}.service", path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_sidekiq_identifier }}.service" }
     - { service: "{{ mastodon_web_identifier }}.service", path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_web_identifier }}.service" }
 
-- name: Ensure Mastodon container network does not exist via community.docker.docker_network
-  when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'
-  community.docker.docker_network:
-    name: "{{ mastodon_container_network }}"
-    state: absent
+- name: Ensure Mastodon container network does not exist
+  when: mastodon_container_network_deletion_enabled
+  block:
+    - name: Ensure Mastodon container network does not exist via community.docker.docker_network
+      when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'
+      community.docker.docker_network:
+        name: "{{ mastodon_container_network }}"
+        state: absent
 
-- name: Ensure Mastodon container network does not exist via ansible.builtin.command
-  when: devture_systemd_docker_base_container_network_creation_method == 'command'
-  ansible.builtin.command:
-    cmd: >-
-      {{ devture_systemd_docker_base_host_command_docker }} network rm
-      {{ mastodon_container_network }}
-  register: network_deletion_result
-  failed_when: network_deletion_result.rc > 0 and 'not found' not in network_deletion_result.stderr
-  changed_when: mastodon_container_network in network_deletion_result.stdout
+    - name: Ensure Mastodon container network does not exist via ansible.builtin.command
+      when: devture_systemd_docker_base_container_network_creation_method == 'command'
+      ansible.builtin.command:
+        cmd: >-
+          {{ devture_systemd_docker_base_host_command_docker }} network rm
+          {{ mastodon_container_network }}
+      register: network_deletion_result
+      failed_when: network_deletion_result.rc > 0 and 'not found' not in network_deletion_result.stderr
+      changed_when: mastodon_container_network in network_deletion_result.stdout
 
 - name: Ensure Mastodon web path does not exist
   ansible.builtin.file:
