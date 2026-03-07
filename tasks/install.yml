@@ -32,6 +32,7 @@
     - { src: "{{ role_path }}/templates/labels_sidekiq.j2", dest: "{{ mastodon_sidekiq_base_path }}/labels" }
     - { src: "{{ role_path }}/templates/labels_streaming.j2", dest: "{{ mastodon_streaming_base_path }}/labels" }
     - { src: "{{ role_path }}/templates/labels_web.j2", dest: "{{ mastodon_web_base_path }}/labels" }
+  register: mastodon_support_files_result
 
 - name: Ensure Mastodon container image is pulled
   community.docker.docker_image:
@@ -41,10 +42,10 @@
     - "{{ mastodon_sidekiq_container_image }}"
     - "{{ mastodon_streaming_container_image }}"
     - "{{ mastodon_web_container_image }}"
-  register: result
+  register: mastodon_container_images_pull_result
   retries: "{{ devture_playbook_help_container_retries_count }}"
   delay: "{{ devture_playbook_help_container_retries_delay }}"
-  until: result is not failed
+  until: mastodon_container_images_pull_result is not failed
 
 - name: Ensure Mastodon container network is created
   community.docker.docker_network:
@@ -65,3 +66,13 @@
       dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_streaming_identifier }}.service"
     - src: "{{ role_path }}/templates/systemd/mastodon-web.service.j2"
       dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_web_identifier }}.service"
+  register: mastodon_systemd_services_result
+
+- name: Determine whether Bar Assistant needs a restart
+  ansible.builtin.set_fact:
+    mastodon_restart_necessary: >-
+      {{
+        mastodon_support_files_result.changed | default(false)
+        or mastodon_systemd_services_result.changed | default(false)
+        or mastodon_container_images_pull_result.changed | default(false)
+      }}
