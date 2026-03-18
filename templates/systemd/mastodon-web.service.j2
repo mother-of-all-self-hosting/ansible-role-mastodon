@@ -34,7 +34,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --label-file={{ mastodon_web_base_path }}/labels \
       --mount type=bind,src={{ mastodon_data_path }},dst=/mastodon/public/system \
       {% for volume in mastodon_web_container_additional_volumes %}
-      --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options else '' }} \
+      --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options | default('') else '' }} \
       {% endfor %}
       {% for arg in mastodon_web_container_extra_arguments %}
       {{ arg }} \
