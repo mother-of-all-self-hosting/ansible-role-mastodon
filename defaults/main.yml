@@ -282,7 +282,7 @@ mastodon_sidekiq_container_cleanup_command: |
 mastodon_streaming_identifier: "{{ mastodon_identifier }}-streaming"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon-streaming
-mastodon_streaming_version: v4.5.7
+mastodon_streaming_version: v4.5.9
 
 mastodon_streaming_scheme: https
 
