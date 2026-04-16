@@ -482,7 +482,7 @@ mastodon_streaming_container_cleanup_command: |
 mastodon_web_identifier: "{{ mastodon_identifier }}-web"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_web_version: v4.5.7
+mastodon_web_version: v4.5.9
 
 mastodon_web_scheme: https
 
