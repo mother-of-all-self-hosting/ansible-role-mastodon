@@ -18,6 +18,14 @@
     - name: Install Mastodon
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
 
+- name: Perform Mastodon secret generation command tasks
+  when: mastodon_enabled | bool
+  tags:
+    - create-secret-mastodon
+  block:
+    - name: Run Mastodon 'bundle exec rails secret' to generate secrets
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_secret.yml"
+
 - name: Perform Mastodon uninstallation tasks
   when: not mastodon_enabled | bool
   tags:
