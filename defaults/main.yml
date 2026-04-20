@@ -103,7 +103,7 @@ mastodon_sidekiq_container_labels_traefik_docker_network: "{{ mastodon_sidekiq_c
 mastodon_sidekiq_container_labels_traefik_hostname: "{{ mastodon_sidekiq_hostname }}"
 # The path prefix must either be `/` or not end with a slash (e.g. `/sidekiq`).
 mastodon_sidekiq_container_labels_traefik_path_prefix: "{{ mastodon_sidekiq_path_prefix }}"
-mastodon_sidekiq_container_labels_traefik_rule: "Host(`{{ mastodon_sidekiq_container_labels_traefik_hostname }}`) && (PathPrefix(`/realtime`) || PathPrefix(`/api`) || PathPrefix(`/public`) || PathPrefix(`/uploads`) || PathPrefix(`/media`))"
+mastodon_sidekiq_container_labels_traefik_rule: "Host(`{{ mastodon_sidekiq_container_labels_traefik_hostname }}`){% if mastodon_sidekiq_container_labels_traefik_path_prefix != '/' %} && PathPrefix(`{{ mastodon_sidekiq_container_labels_traefik_path_prefix }}`){% endif %}"
 mastodon_sidekiq_container_labels_traefik_priority: 0
 mastodon_sidekiq_container_labels_traefik_entrypoints: web-secure
 mastodon_sidekiq_container_labels_traefik_tls: "{{ mastodon_sidekiq_container_labels_traefik_entrypoints != 'web' }}"
