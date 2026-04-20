@@ -21,7 +21,6 @@
     - { "name": "mastodon_database_socket_path_host", when: "{{ mastodon_database_socket_enabled }}" }
     - { "name": "mastodon_database_hostname", when: "{{ not mastodon_database_socket_enabled }}" }
     - { "name": "mastodon_database_password", when: true }
-    - { "name": "mastodon_redis_hostname", when: true }
     - { "name": "mastodon_environment_variables_local_domain", when: true }
 
 - name: Fail if required Mastodon secrets and keys not defined
@@ -37,6 +36,39 @@
     - mastodon_environment_variables_active_record_encryption_primary_key
     - mastodon_environment_variables_vapid_private_key
     - mastodon_environment_variables_vapid_public_key
+
+- name: Run if Mastodon + Redis integration is enabled
+  when: mastodon_redis_is_configured | bool
+  block:
+    - name: Fail if both Redis hostname and socket host path for Mastodon are set
+      ansible.builtin.fail:
+        msg: >-
+          You may need to define either `mastodon_redis_hostname` or `mastodon_redis_socket_path_host` to enable Redis integration.
+      when: >-
+        mastodon_redis_hostname | string | length != 0 and
+        mastodon_redis_socket_path_host | string | length != 0
+
+    - name: Fail if Redis hostname for Mastodon is set when Unix socket is enabled
+      ansible.builtin.fail:
+        msg: >-
+          You need to define `mastodon_redis_socket_path_host` and remove `mastodon_redis_hostname` to enable Redis integration,
+          when `mastodon_redis_socket_enabled` is `true`.
+          Check the documentation for details.
+          You may remove the Redis service from `mastodon_container_additional_networks_custom` if specified.
+      when: >-
+        mastodon_redis_hostname | string | length != 0 and
+        mastodon_redis_socket_enabled
+
+    - name: Fail if Redis socket host path for Mastodon is set when Unix socket is not enabled
+      ansible.builtin.fail:
+        msg: >-
+          You need to define `mastodon_redis_hostname` and remove `mastodon_redis_socket_path_host` to enable Redis integration,
+          when `mastodon_redis_socket_enabled` is `false`.
+          Check the documentation for details.
+          You may also need to specify the Redis service to `mastodon_container_additional_networks_custom` if it does not exist on the same network.
+      when: >-
+        mastodon_redis_socket_path_host | string | length != 0 and
+        not mastodon_redis_socket_enabled
 
 - name: Run if Traefik is enabled for the Sidekiq
   when: mastodon_sidekiq_container_labels_traefik_enabled | bool

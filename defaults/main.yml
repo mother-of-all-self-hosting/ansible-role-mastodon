@@ -50,12 +50,6 @@ mastodon_users: "{{ mastodon_users_auto + mastodon_users_custom }}"
 mastodon_users_auto: []
 mastodon_users_custom: []
 
-# Specify Redis configuration
-mastodon_redis_hostname: ""
-mastodon_redis_port: 6379
-mastodon_redis_username: ""
-mastodon_redis_password: ""
-
 # Specify the timezone
 mastodon_environment_variables_tz: UTC
 
@@ -153,6 +147,44 @@ mastodon_environment_variables_db_host: "{{ mastodon_database_socket_path_contai
 ########################################################################
 #                                                                      #
 # /database                                                            #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# redis                                                                #
+#                                                                      #
+########################################################################
+
+# Specify Redis configuration
+mastodon_redis_hostname: ""
+mastodon_redis_port: 6379
+mastodon_redis_username: ""
+mastodon_redis_password: ""
+mastodon_redis_database: "0"
+
+mastodon_redis_is_configured: "{{ mastodon_redis_hostname != '' or mastodon_redis_socket_path_host != '' }}"
+
+# Control if the connection to Redis is made via a Unix socket
+mastodon_redis_socket_enabled: true
+
+# Specify the path to the Redis Unix socket path inside the Mastodon container
+mastodon_redis_socket_path_container: /run-valkey
+mastodon_redis_socket_path: /valkey.sock
+
+# Specify the path to the Redis Unix socket path on the host (bind-mount source)
+mastodon_redis_socket_path_host: ""
+
+mastodon_environment_variables_redis_url: |-
+  {% if mastodon_redis_socket_enabled %}
+  unix://{{ mastodon_redis_socket_path_container }}{{ mastodon_redis_socket_path }}?db={{ mastodon_redis_database }}{{ '&password=' + mastodon_redis_password if mastodon_redis_password }}
+  {%- else -%}
+  redis://{{ mastodon_redis_username }}:{{ mastodon_redis_password }}@{{ mastodon_redis_hostname }}:{{ mastodon_redis_port }}
+  {%- endif -%}
+
+########################################################################
+#                                                                      #
+# /redis                                                               #
 #                                                                      #
 ########################################################################
 

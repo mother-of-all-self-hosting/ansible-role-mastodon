@@ -137,12 +137,22 @@ Make sure to replace the placeholders with your own values.
 
 It is necessary to set up a Redis database for the Mastodon instance. Valkey can also be used instead.
 
-To enable the Redis database for Mastodon, add the following configuration to your `vars.yml` file:
+To enable the Redis database for Mastodon, add the following configuration to your `vars.yml` file. Note that the role is by default configured to establish connection with the Redis database via the Unix socket.
 
 ```yaml
-mastodon_redis_hostname: YOUR_REDIS_SERVER_HOSTNAME_HERE
-mastodon_redis_port: 6379
+# Specify the path to the Redis Unix socket path on the host (bind-mount source)
+mastodon_redis_socket_path_host: ""
+
 mastodon_redis_database: 0
+```
+
+If TCP connection is preferred, connection via the Unix socket can be disabled by adding the following configuration to your `vars.yml` file:
+
+```yaml
+# Disable the connection to Redis via a Unix socket
+mastodon_redis_socket_enabled: false
+
+mastodon_redis_hostname: YOUR_REDIS_SERVER_HOSTNAME_HERE
 ```
 
 Make sure to replace `YOUR_REDIS_SERVER_HOSTNAME_HERE` with your own value.
