@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-# Project source code URL: https://github.com/karlomikus/mastodon/
+# Project source code URL: https://github.com/mastodon/mastodon
 
 mastodon_enabled: true
 
@@ -61,7 +61,7 @@ mastodon_restart_necessary: false
 mastodon_sidekiq_identifier: "{{ mastodon_identifier }}-sidekiq"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_sidekiq_version: 2.0.0-alpha.3
+mastodon_sidekiq_version: v4.4.6
 
 mastodon_sidekiq_scheme: https
 
@@ -70,12 +70,12 @@ mastodon_sidekiq_hostname: "{{ mastodon_hostname }}"
 # The path at which the Sidekiq is exposed
 mastodon_sidekiq_path_prefix: "/"
 
-mastodon_sidekiq_container_image: "{{ mastodon_sidekiq_container_image_registry_prefix }}mastodon/mastodon/sidekiq:{{ mastodon_sidekiq_container_image_tag }}"
+mastodon_sidekiq_container_image: "{{ mastodon_sidekiq_container_image_registry_prefix }}mastodon/mastodon:{{ mastodon_sidekiq_container_image_tag }}"
 mastodon_sidekiq_container_image_tag: "{{ mastodon_sidekiq_version }}"
 mastodon_sidekiq_container_image_registry_prefix: "{{ mastodon_sidekiq_container_image_registry_prefix_upstream }}"
 mastodon_sidekiq_container_image_registry_prefix_upstream: "{{ mastodon_sidekiq_container_image_registry_prefix_upstream_default }}"
 mastodon_sidekiq_container_image_registry_prefix_upstream_default: ghcr.io/
-mastodon_sidekiq_container_image_force_pull: "{{ mastodon_frontend_container_image.endswith(':latest') }}"
+mastodon_sidekiq_container_image_force_pull: "{{ mastodon_sidekiq_container_image.endswith(':latest') }}"
 
 mastodon_sidekiq_container_network: "{{ mastodon_container_network }}"
 
