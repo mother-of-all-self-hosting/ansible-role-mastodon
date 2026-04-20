@@ -22,13 +22,15 @@ Type=simple
 Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
 ExecStartPre={{ devture_systemd_docker_base_host_command_sh }} -c '{{ mastodon_sidekiq_container_cleanup_command | trim | replace("\n", " ") }}'
 
+{#
+  Writable system is necessary to avoid the error:
+  "`/opt/mastodon` is not writable."
+#}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --rm \
       --name={{ mastodon_sidekiq_identifier }} \
       --log-driver=none \
-      --user={{ mastodon_uid }}:{{ mastodon_gid }} \
-      --cap-drop=ALL \
-      --read-only \
+      --user=0:0 \
       --network={{ mastodon_sidekiq_container_network }} \
       --env-file={{ mastodon_base_path }}/env \
       --label-file={{ mastodon_sidekiq_base_path }}/labels \

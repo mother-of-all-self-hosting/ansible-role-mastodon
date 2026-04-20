@@ -22,13 +22,15 @@ Type=simple
 Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
 ExecStartPre={{ devture_systemd_docker_base_host_command_sh }} -c '{{ mastodon_web_container_cleanup_command | trim | replace("\n", " ") }}'
 
+{#
+  Writable system is necessary to avoid the error:
+  "Could not locate Gemfile or .bundle/ directory"
+#}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --rm \
       --name={{ mastodon_web_identifier }} \
       --log-driver=none \
-      --user={{ mastodon_uid }}:{{ mastodon_gid }} \
-      --cap-drop=ALL \
-      --read-only \
+      --user=0:0 \
       --network={{ mastodon_web_container_network }} \
       {% if mastodon_web_container_http_host_bind_port %}
       -p {{ mastodon_web_container_http_host_bind_port }}:{{ mastodon_web_container_http_port }} \
