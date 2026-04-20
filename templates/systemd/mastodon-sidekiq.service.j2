@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
 [Unit]
-Description=Mastodon backend ({{ mastodon_sidekiq_identifier }})
+Description=Mastodon Sidekiq ({{ mastodon_sidekiq_identifier }})
 {% for service in mastodon_sidekiq_systemd_required_services_list %}
 Requires={{ service }}
 After={{ service }}
@@ -39,7 +39,8 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% for arg in mastodon_sidekiq_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}
-      {{ mastodon_sidekiq_container_image }}
+      {{ mastodon_sidekiq_container_image }} \
+      bundle exec sidekiq
 
 {% for network in mastodon_sidekiq_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ mastodon_sidekiq_identifier }}
