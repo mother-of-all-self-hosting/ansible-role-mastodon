@@ -28,8 +28,7 @@
     owner: "{{ mastodon_uid }}"
     group: "{{ mastodon_gid }}"
   with_items:
-    - { src: "{{ role_path }}/templates/env_backend.j2", dest: "{{ mastodon_backend_base_path }}/env" }
-    - { src: "{{ role_path }}/templates/env_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/env" }
+    - { src: "{{ role_path }}/templates/env.j2", dest: "{{ mastodon_base_path }}/env" }
     - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ mastodon_backend_base_path }}/labels" }
     - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/labels" }
   register: mastodon_support_files_result

@@ -39,6 +39,9 @@ mastodon_database_name: mastodon
 # Specify the timezone
 mastodon_environment_variables_tz: UTC
 
+# Additional environment variables.
+mastodon_environment_variables_additional_variables: ""
+
 # mastodon_restart_necessary controls whether the Mastodon systemd
 # service will be restarted (when true) or merely started (when false) by the
 # systemd service manager role (when conditional restart is enabled).
@@ -210,9 +213,6 @@ mastodon_backend_systemd_wanted_services_list: "{{ mastodon_backend_systemd_want
 mastodon_backend_systemd_wanted_services_list_default: []
 mastodon_backend_systemd_wanted_services_list_auto: []
 mastodon_backend_systemd_wanted_services_list_custom: []
-
-# Additional environment variables.
-mastodon_backend_environment_variables_additional_variables: ""
 
 # Controls how long to wait for the container to stop gracefully before killing it.
 mastodon_backend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
@@ -412,9 +412,6 @@ mastodon_frontend_systemd_wanted_services_list: "{{ mastodon_frontend_systemd_wa
 mastodon_frontend_systemd_wanted_services_list_default: []
 mastodon_frontend_systemd_wanted_services_list_auto: []
 mastodon_frontend_systemd_wanted_services_list_custom: []
-
-# Additional environment variables.
-mastodon_frontend_environment_variables_additional_variables: ""
 
 # Controls how long to wait for the container to stop gracefully before killing it.
 mastodon_frontend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"

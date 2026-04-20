@@ -33,7 +33,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% if mastodon_frontend_container_http_host_bind_port %}
       -p {{ mastodon_frontend_container_http_host_bind_port }}:{{ mastodon_frontend_container_http_port }} \
       {% endif %}
-      --env-file={{ mastodon_frontend_base_path }}/env \
+      --env-file={{ mastodon_base_path }}/env \
       --label-file={{ mastodon_frontend_base_path }}/labels \
       {% for volume in mastodon_frontend_container_additional_volumes %}
       --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options | default('') else '' }} \
