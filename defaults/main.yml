@@ -18,6 +18,9 @@ mastodon_sidekiq_base_path: "{{ mastodon_base_path }}/sidekiq"
 mastodon_streaming_base_path: "{{ mastodon_base_path }}/streaming"
 mastodon_web_base_path: "{{ mastodon_base_path }}/web"
 
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
+mastodon_version: v4.5.9
+
 mastodon_uid: ""
 mastodon_gid: ""
 
@@ -60,8 +63,7 @@ mastodon_restart_necessary: false
 
 mastodon_sidekiq_identifier: "{{ mastodon_identifier }}-sidekiq"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_sidekiq_version: v4.5.9
+mastodon_sidekiq_version: "{{ mastodon_version }}"
 
 mastodon_sidekiq_scheme: https
 
@@ -251,8 +253,7 @@ mastodon_sidekiq_container_cleanup_command: |
 
 mastodon_streaming_identifier: "{{ mastodon_identifier }}-streaming"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon-streaming
-mastodon_streaming_version: v4.5.9
+mastodon_streaming_version: "{{ mastodon_version }}"
 
 mastodon_streaming_scheme: https
 
@@ -450,8 +451,7 @@ mastodon_streaming_container_cleanup_command: |
 
 mastodon_web_identifier: "{{ mastodon_identifier }}-web"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_web_version: v4.5.9
+mastodon_web_version: "{{ mastodon_version }}"
 
 mastodon_web_scheme: https
 
