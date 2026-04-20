@@ -1,43 +1,45 @@
 {#
 SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
 SPDX-FileCopyrightText: 2024 Nikita Chernyi
-SPDX-FileCopyrightText: 2025 Suguru Hirahara
+SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
-# General settings
-HD_BASE_URL={{ hedgedoc_environment_variables_hd_base_url }}
-HD_SESSION_SECRET={{ hedgedoc_backend_environment_variables_hd_session_secret }}
+TZ={{ mastodon_environment_variables_tz }}
 
-HD_BACKEND_PORT={{ hedgedoc_backend_container_http_port }}
+# General settings
+HD_BASE_URL={{ mastodon_environment_variables_hd_base_url }}
+HD_SESSION_SECRET={{ mastodon_backend_environment_variables_hd_session_secret }}
+
+HD_BACKEND_PORT={{ mastodon_backend_container_http_port }}
 
 # Database settings
-HD_DATABASE_TYPE={{ hedgedoc_database_type }}
-{% if hedgedoc_database_type == 'mariadb' %}
-HD_DATABASE_HOST={{ hedgedoc_database_mariadb_hostname }}
-HD_DATABASE_PORT={{ hedgedoc_database_mariadb_port }}
-HD_DATABASE_USER={{ hedgedoc_database_mariadb_username }}
-HD_DATABASE_PASS={{ hedgedoc_database_mariadb_password }}
-HD_DATABASE_NAME={{ hedgedoc_database_name }}
+HD_DATABASE_TYPE={{ mastodon_database_type }}
+{% if mastodon_database_type == 'mariadb' %}
+HD_DATABASE_HOST={{ mastodon_database_mariadb_hostname }}
+HD_DATABASE_PORT={{ mastodon_database_mariadb_port }}
+HD_DATABASE_USER={{ mastodon_database_mariadb_username }}
+HD_DATABASE_PASS={{ mastodon_database_mariadb_password }}
+HD_DATABASE_NAME={{ mastodon_database_name }}
 {% endif %}
-{% if hedgedoc_database_type == 'postgres' %}
-HD_DATABASE_HOST={{ hedgedoc_database_postgres_hostname }}
-HD_DATABASE_PORT={{ hedgedoc_database_postgres_port }}
-HD_DATABASE_USER={{ hedgedoc_database_postgres_username }}
-HD_DATABASE_PASS={{ hedgedoc_database_postgres_password }}
-HD_DATABASE_NAME={{ hedgedoc_database_name }}
+{% if mastodon_database_type == 'postgres' %}
+HD_DATABASE_HOST={{ mastodon_database_postgres_hostname }}
+HD_DATABASE_PORT={{ mastodon_database_postgres_port }}
+HD_DATABASE_USER={{ mastodon_database_postgres_username }}
+HD_DATABASE_PASS={{ mastodon_database_postgres_password }}
+HD_DATABASE_NAME={{ mastodon_database_name }}
 {% endif %}
-{% if hedgedoc_database_type == 'sqlite' %}
-HD_DATABASE_NAME={{ hedgedoc_sqlite_filepath }}
+{% if mastodon_database_type == 'sqlite' %}
+HD_DATABASE_NAME={{ mastodon_sqlite_filepath }}
 {% endif %}
 
 # Uploads
-HD_MEDIA_BACKEND={{ hedgedoc_backend_environment_variables_hd_media_backend }}
-HD_MEDIA_BACKEND_FILESYSTEM_UPLOAD_PATH={{ hedgedoc_backend_environment_variables_hd_media_backend_filesystem_upload_path }}
+HD_MEDIA_BACKEND={{ mastodon_backend_environment_variables_hd_media_backend }}
+HD_MEDIA_BACKEND_FILESYSTEM_UPLOAD_PATH={{ mastodon_backend_environment_variables_hd_media_backend_filesystem_upload_path }}
 
 # Auth
-HD_AUTH_LOCAL_ENABLE_LOGIN={{ hedgedoc_backend_environment_variables_hd_auth_local_enable_login | to_json }}
-HD_AUTH_LOCAL_ENABLE_REGISTER={{ hedgedoc_backend_environment_variables_hd_auth_local_enable_register | to_json }}
+HD_AUTH_LOCAL_ENABLE_LOGIN={{ mastodon_backend_environment_variables_hd_auth_local_enable_login | to_json }}
+HD_AUTH_LOCAL_ENABLE_REGISTER={{ mastodon_backend_environment_variables_hd_auth_local_enable_register | to_json }}
 
-{{ hedgedoc_backend_environment_variables_additional_variables }}
+{{ mastodon_backend_environment_variables_additional_variables }}

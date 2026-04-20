@@ -1,28 +1,28 @@
 # SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
 # SPDX-FileCopyrightText: 2023 Slavi Pantaleev
-# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Perform HedgeDoc installation tasks
-  when: hedgedoc_enabled | bool
+- name: Perform Mastodon installation tasks
+  when: mastodon_enabled | bool
   tags:
     - setup-all
-    - setup-hedgedoc
+    - setup-mastodon
     - install-all
-    - install-hedgedoc
+    - install-mastodon
   block:
-    - name: Validate HedgeDoc configuration
+    - name: Validate Mastodon configuration
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
-    - name: Install HedgeDoc
+    - name: Install Mastodon
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
 
-- name: Perform HedgeDoc uninstallation tasks
-  when: not hedgedoc_enabled | bool
+- name: Perform Mastodon uninstallation tasks
+  when: not mastodon_enabled | bool
   tags:
     - setup-all
-    - setup-hedgedoc
+    - setup-mastodon
   block:
-    - name: Uninstall HedgeDoc
+    - name: Uninstall Mastodon
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"

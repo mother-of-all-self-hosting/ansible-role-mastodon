@@ -2,57 +2,56 @@
 # SPDX-FileCopyrightText: 2023 MASH project contributors
 # SPDX-FileCopyrightText: 2023-2025 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2024 Nikita Chernyi
-# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-# Project source code URL: https://github.com/karlomikus/hedgedoc/
+# Project source code URL: https://github.com/karlomikus/mastodon/
 
-hedgedoc_enabled: true
+mastodon_enabled: true
 
-hedgedoc_identifier: hedgedoc
-hedgedoc_base_path: "/{{ hedgedoc_identifier }}"
-hedgedoc_backend_base_path: "{{ hedgedoc_base_path }}/backend"
-hedgedoc_backend_data_path: "{{ hedgedoc_backend_base_path }}/data"
-hedgedoc_backend_uploads_path: "{{ hedgedoc_backend_base_path }}/uploads"
-hedgedoc_frontend_base_path: "{{ hedgedoc_base_path }}/frontend"
+mastodon_identifier: mastodon
+mastodon_base_path: "/{{ mastodon_identifier }}"
+mastodon_backend_base_path: "{{ mastodon_base_path }}/backend"
+mastodon_backend_data_path: "{{ mastodon_backend_base_path }}/data"
+mastodon_backend_uploads_path: "{{ mastodon_backend_base_path }}/uploads"
+mastodon_frontend_base_path: "{{ mastodon_base_path }}/frontend"
 
-hedgedoc_uid: ""
-hedgedoc_gid: ""
+mastodon_uid: ""
+mastodon_gid: ""
 
-# The hostname at which HedgeDoc is served.
-hedgedoc_hostname: ""
+# The hostname at which Mastodon is served.
+mastodon_hostname: ""
 
 # The base container network. It will be auto-created by this role if it doesn't exist already.
-hedgedoc_container_network: "{{ hedgedoc_identifier }}"
+mastodon_container_network: "{{ mastodon_identifier }}"
 
 # Control if the container network is deleted on uninstalling.
-hedgedoc_container_network_deletion_enabled: true
+mastodon_container_network_deletion_enabled: true
 
 # Specify database to use
 # Valid values: mariadb, postgres, sqlite
-hedgedoc_database_type: ""
+mastodon_database_type: ""
 
-# Specify database configuration
-hedgedoc_sqlite_filepath: hedgedoc.sqlite
-hedgedoc_database_mariadb_hostname: ""
-hedgedoc_database_mariadb_port: 3306
-hedgedoc_database_mariadb_username: hedgedoc
-hedgedoc_database_mariadb_password: ""
-hedgedoc_database_postgres_hostname: ""
-hedgedoc_database_postgres_port: 5432
-hedgedoc_database_postgres_username: hedgedoc
-hedgedoc_database_postgres_password: ""
-hedgedoc_database_name: hedgedoc
+mastodon_sqlite_filepath: mastodon.sqlite
+mastodon_database_mariadb_hostname: ""
+mastodon_database_mariadb_port: 3306
+mastodon_database_mariadb_username: mastodon
+mastodon_database_mariadb_password: ""
+mastodon_database_postgres_hostname: ""
+mastodon_database_postgres_port: 5432
+mastodon_database_postgres_username: mastodon
+mastodon_database_postgres_password: ""
+mastodon_database_name: mastodon
 
 # Specify the timezone
-hedgedoc_environment_variables_tz: UTC
+mastodon_environment_variables_tz: UTC
 
-# See: https://docs.hedgedoc.dev/references/config/general/
-hedgedoc_environment_variables_hd_base_url: "{{ hedgedoc_frontend_scheme }}://{{ hedgedoc_frontend_hostname }}"
+# See: https://docs.mastodon.dev/references/config/general/
+mastodon_environment_variables_hd_base_url: "{{ mastodon_frontend_scheme }}://{{ mastodon_frontend_hostname }}"
 
-# hedgedoc_restart_necessary controls whether the HedgeDoc systemd
+# mastodon_restart_necessary controls whether the Mastodon systemd
 # service will be restarted (when true) or merely started (when false) by the
 # systemd service manager role (when conditional restart is enabled).
 #
@@ -60,7 +59,7 @@ hedgedoc_environment_variables_hd_base_url: "{{ hedgedoc_frontend_scheme }}://{{
 # any configuration files, the systemd service file, or the container image changed.
 # The default of `false` means "no restart needed" — appropriate when the role's
 # installation tasks haven't run (e.g., due to --tags skipping them).
-hedgedoc_restart_necessary: false
+mastodon_restart_necessary: false
 
 ########################################################################
 #                                                                      #
@@ -68,102 +67,102 @@ hedgedoc_restart_necessary: false
 #                                                                      #
 ########################################################################
 
-hedgedoc_backend_identifier: "{{ hedgedoc_identifier }}-backend"
+mastodon_backend_identifier: "{{ mastodon_identifier }}-backend"
 
-# renovate: datasource=docker depName=ghcr.io/hedgedoc/hedgedoc/backend
-hedgedoc_backend_version: 2.0.0-alpha.3
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon/backend
+mastodon_backend_version: 2.0.0-alpha.3
 
-hedgedoc_backend_scheme: https
+mastodon_backend_scheme: https
 
-hedgedoc_backend_hostname: "{{ hedgedoc_hostname }}"
+mastodon_backend_hostname: "{{ mastodon_hostname }}"
 
 # The path at which the backend is exposed
-hedgedoc_backend_path_prefix: "/"
+mastodon_backend_path_prefix: "/"
 
-hedgedoc_backend_container_image: "{{ hedgedoc_backend_container_image_registry_prefix }}hedgedoc/hedgedoc/backend:{{ hedgedoc_backend_container_image_tag }}"
-hedgedoc_backend_container_image_tag: "{{ hedgedoc_backend_version }}"
-hedgedoc_backend_container_image_registry_prefix: "{{ hedgedoc_backend_container_image_registry_prefix_upstream }}"
-hedgedoc_backend_container_image_registry_prefix_upstream: "{{ hedgedoc_backend_container_image_registry_prefix_upstream_default }}"
-hedgedoc_backend_container_image_registry_prefix_upstream_default: ghcr.io/
-hedgedoc_backend_container_image_force_pull: "{{ hedgedoc_frontend_container_image.endswith(':latest') }}"
+mastodon_backend_container_image: "{{ mastodon_backend_container_image_registry_prefix }}mastodon/mastodon/backend:{{ mastodon_backend_container_image_tag }}"
+mastodon_backend_container_image_tag: "{{ mastodon_backend_version }}"
+mastodon_backend_container_image_registry_prefix: "{{ mastodon_backend_container_image_registry_prefix_upstream }}"
+mastodon_backend_container_image_registry_prefix_upstream: "{{ mastodon_backend_container_image_registry_prefix_upstream_default }}"
+mastodon_backend_container_image_registry_prefix_upstream_default: ghcr.io/
+mastodon_backend_container_image_force_pull: "{{ mastodon_frontend_container_image.endswith(':latest') }}"
 
-hedgedoc_backend_container_network: "{{ hedgedoc_container_network }}"
+mastodon_backend_container_network: "{{ mastodon_container_network }}"
 
-# Specify how the HedgeDoc backend container publishes its HTTP port (as defined by `hedgedoc_backend_container_http_port`).
+# Specify how the Mastodon backend container publishes its HTTP port (as defined by `mastodon_backend_container_http_port`).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
-hedgedoc_backend_container_http_host_bind_port: ""
+mastodon_backend_container_http_host_bind_port: ""
 
 # The port number in the container
-hedgedoc_backend_container_http_port: 3000
+mastodon_backend_container_http_port: 3000
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
 # Use this to expose this container to another reverse proxy, which runs in a different container network.
-hedgedoc_backend_container_additional_networks: "{{ hedgedoc_backend_container_additional_networks_auto + hedgedoc_backend_container_additional_networks_custom }}"
-hedgedoc_backend_container_additional_networks_auto: []
-hedgedoc_backend_container_additional_networks_custom: []
+mastodon_backend_container_additional_networks: "{{ mastodon_backend_container_additional_networks_auto + mastodon_backend_container_additional_networks_custom }}"
+mastodon_backend_container_additional_networks_auto: []
+mastodon_backend_container_additional_networks_custom: []
 
 # A list of additional "volumes" to mount in the container.
 # This list gets populated dynamically at runtime. You can provide a different default value,
 # if you wish to mount your own files into the container.
 # Contains definition objects like this: `{"type": "bind", "src": "/outside", "dst": "/inside", "options": "readonly"}.
 # See the `--mount` documentation for the `docker run` command.
-hedgedoc_backend_container_additional_volumes: "{{ hedgedoc_backend_container_additional_volumes_auto + hedgedoc_backend_container_additional_volumes_custom }}"
-hedgedoc_backend_container_additional_volumes_auto: []
-hedgedoc_backend_container_additional_volumes_custom: []
+mastodon_backend_container_additional_volumes: "{{ mastodon_backend_container_additional_volumes_auto + mastodon_backend_container_additional_volumes_custom }}"
+mastodon_backend_container_additional_volumes_auto: []
+mastodon_backend_container_additional_volumes_custom: []
 
-# hedgedoc_backend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# mastodon_backend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `../templates/labels_backend.j2` for details.
 #
-# To inject your own other container labels, see `hedgedoc_backend_container_labels_additional_labels_custom`.
-hedgedoc_backend_container_labels_traefik_enabled: true
-hedgedoc_backend_container_labels_traefik_docker_network: "{{ hedgedoc_backend_container_network }}"
-hedgedoc_backend_container_labels_traefik_hostname: "{{ hedgedoc_backend_hostname }}"
+# To inject your own other container labels, see `mastodon_backend_container_labels_additional_labels_custom`.
+mastodon_backend_container_labels_traefik_enabled: true
+mastodon_backend_container_labels_traefik_docker_network: "{{ mastodon_backend_container_network }}"
+mastodon_backend_container_labels_traefik_hostname: "{{ mastodon_backend_hostname }}"
 # The path prefix must either be `/` or not end with a slash (e.g. `/backend`).
-hedgedoc_backend_container_labels_traefik_path_prefix: "{{ hedgedoc_backend_path_prefix }}"
-hedgedoc_backend_container_labels_traefik_rule: "Host(`{{ hedgedoc_backend_container_labels_traefik_hostname }}`) && (PathPrefix(`/realtime`) || PathPrefix(`/api`) || PathPrefix(`/public`) || PathPrefix(`/uploads`) || PathPrefix(`/media`))"
-hedgedoc_backend_container_labels_traefik_priority: 0
-hedgedoc_backend_container_labels_traefik_entrypoints: web-secure
-hedgedoc_backend_container_labels_traefik_tls: "{{ hedgedoc_backend_container_labels_traefik_entrypoints != 'web' }}"
-hedgedoc_backend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+mastodon_backend_container_labels_traefik_path_prefix: "{{ mastodon_backend_path_prefix }}"
+mastodon_backend_container_labels_traefik_rule: "Host(`{{ mastodon_backend_container_labels_traefik_hostname }}`) && (PathPrefix(`/realtime`) || PathPrefix(`/api`) || PathPrefix(`/public`) || PathPrefix(`/uploads`) || PathPrefix(`/media`))"
+mastodon_backend_container_labels_traefik_priority: 0
+mastodon_backend_container_labels_traefik_entrypoints: web-secure
+mastodon_backend_container_labels_traefik_tls: "{{ mastodon_backend_container_labels_traefik_entrypoints != 'web' }}"
+mastodon_backend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 
 # Controls which additional headers to attach to all HTTP requests.
-# To add your own custom request headers, use `hedgedoc_backend_container_labels_traefik_additional_request_headers_custom`
-hedgedoc_backend_container_labels_traefik_additional_request_headers: "{{ hedgedoc_backend_container_labels_traefik_additional_request_headers_auto | combine(hedgedoc_backend_container_labels_traefik_additional_request_headers_custom) }}"
-hedgedoc_backend_container_labels_traefik_additional_request_headers_auto: {}
-hedgedoc_backend_container_labels_traefik_additional_request_headers_custom: {}
+# To add your own custom request headers, use `mastodon_backend_container_labels_traefik_additional_request_headers_custom`
+mastodon_backend_container_labels_traefik_additional_request_headers: "{{ mastodon_backend_container_labels_traefik_additional_request_headers_auto | combine(mastodon_backend_container_labels_traefik_additional_request_headers_custom) }}"
+mastodon_backend_container_labels_traefik_additional_request_headers_auto: {}
+mastodon_backend_container_labels_traefik_additional_request_headers_custom: {}
 
 # Controls which additional headers to attach to all HTTP responses.
-# To add your own custom response headers, use `hedgedoc_backend_container_labels_traefik_additional_response_headers_custom`
-hedgedoc_backend_container_labels_traefik_additional_response_headers: "{{ hedgedoc_backend_container_labels_traefik_additional_response_headers_auto | combine(hedgedoc_backend_container_labels_traefik_additional_response_headers_custom) }}"
-hedgedoc_backend_container_labels_traefik_additional_response_headers_auto: |
+# To add your own custom response headers, use `mastodon_backend_container_labels_traefik_additional_response_headers_custom`
+mastodon_backend_container_labels_traefik_additional_response_headers: "{{ mastodon_backend_container_labels_traefik_additional_response_headers_auto | combine(mastodon_backend_container_labels_traefik_additional_response_headers_custom) }}"
+mastodon_backend_container_labels_traefik_additional_response_headers_auto: |
   {{
     {}
-    | combine ({'X-XSS-Protection': hedgedoc_backend_http_header_xss_protection} if hedgedoc_backend_http_header_xss_protection else {})
-    | combine ({'X-Content-Type-Options': hedgedoc_backend_http_header_content_type_options} if hedgedoc_backend_http_header_content_type_options else {})
-    | combine ({'Content-Security-Policy': hedgedoc_backend_http_header_content_security_policy} if hedgedoc_backend_http_header_content_security_policy else {})
-    | combine ({'Permissions-Policy': hedgedoc_backend_http_header_permissions_policy} if hedgedoc_backend_http_header_permissions_policy else {})
-    | combine ({'Strict-Transport-Security': hedgedoc_backend_http_header_strict_transport_security} if hedgedoc_backend_http_header_strict_transport_security and hedgedoc_backend_container_labels_traefik_tls else {})
+    | combine ({'X-XSS-Protection': mastodon_backend_http_header_xss_protection} if mastodon_backend_http_header_xss_protection else {})
+    | combine ({'X-Content-Type-Options': mastodon_backend_http_header_content_type_options} if mastodon_backend_http_header_content_type_options else {})
+    | combine ({'Content-Security-Policy': mastodon_backend_http_header_content_security_policy} if mastodon_backend_http_header_content_security_policy else {})
+    | combine ({'Permissions-Policy': mastodon_backend_http_header_permissions_policy} if mastodon_backend_http_header_permissions_policy else {})
+    | combine ({'Strict-Transport-Security': mastodon_backend_http_header_strict_transport_security} if mastodon_backend_http_header_strict_transport_security and mastodon_backend_container_labels_traefik_tls else {})
   }}
-hedgedoc_backend_container_labels_traefik_additional_response_headers_custom: {}
+mastodon_backend_container_labels_traefik_additional_response_headers_custom: {}
 
-# hedgedoc_backend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# mastodon_backend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
 # See `../templates/labels_backend.j2` for details.
-# To add your own custom labels, use `hedgedoc_backend_container_labels_additional_labels_custom`
+# To add your own custom labels, use `mastodon_backend_container_labels_additional_labels_custom`
 #
 # Example:
-# hedgedoc_backend_container_labels_additional_labels_custom:
+# mastodon_backend_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
-hedgedoc_backend_container_labels_additional_labels: "{{ hedgedoc_backend_container_labels_additional_labels_auto + hedgedoc_backend_container_labels_additional_labels_custom }}"
-hedgedoc_backend_container_labels_additional_labels_auto: []
-hedgedoc_backend_container_labels_additional_labels_custom: []
+mastodon_backend_container_labels_additional_labels: "{{ mastodon_backend_container_labels_additional_labels_auto + mastodon_backend_container_labels_additional_labels_custom }}"
+mastodon_backend_container_labels_additional_labels_auto: []
+mastodon_backend_container_labels_additional_labels_custom: []
 
 # A list of extra arguments to pass to the container (`docker create` command)
-hedgedoc_backend_container_extra_arguments: "{{ hedgedoc_backend_container_extra_arguments_auto + hedgedoc_backend_container_extra_arguments_custom }}"
-hedgedoc_backend_container_extra_arguments_auto: []
-hedgedoc_backend_container_extra_arguments_custom: []
+mastodon_backend_container_extra_arguments: "{{ mastodon_backend_container_extra_arguments_auto + mastodon_backend_container_extra_arguments_custom }}"
+mastodon_backend_container_extra_arguments_auto: []
+mastodon_backend_container_extra_arguments_custom: []
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
@@ -171,23 +170,23 @@ hedgedoc_backend_container_extra_arguments_custom: []
 # Learn more about it is here:
 # - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
 # - https://portswigger.net/web-security/cross-site-scripting/reflected
-hedgedoc_backend_http_header_xss_protection: "1; mode=block"
+mastodon_backend_http_header_xss_protection: "1; mode=block"
 
 # Specifies the value of the `X-Content-Type-Options` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
-hedgedoc_backend_http_header_content_type_options: nosniff
+mastodon_backend_http_header_content_type_options: nosniff
 
 # Specifies the value of the `Content-Security-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-hedgedoc_backend_http_header_content_security_policy: frame-ancestors 'self'
+mastodon_backend_http_header_content_security_policy: frame-ancestors 'self'
 
 # Specifies the value of the `Permissions-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
-hedgedoc_backend_http_header_permissions_policy: "{{ 'interest-cohort=()' if hedgedoc_backend_floc_optout_enabled else '' }}"
+mastodon_backend_http_header_permissions_policy: "{{ 'interest-cohort=()' if mastodon_backend_floc_optout_enabled else '' }}"
 
 # Specifies the value of the `Strict-Transport-Security` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-hedgedoc_backend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if hedgedoc_backend_hsts_preload_enabled else '' }}"
+mastodon_backend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if mastodon_backend_hsts_preload_enabled else '' }}"
 
 # Controls whether to send a "Permissions-Policy interest-cohort=();" header along with all responses
 #
@@ -197,8 +196,8 @@ hedgedoc_backend_http_header_strict_transport_security: "max-age=31536000; inclu
 # - https://amifloced.org/
 #
 # Of course, a better solution is to just stop using browsers (like Chrome), which participate in such tracking practices.
-# See: `hedgedoc_backend_http_header_permissions_policy`
-hedgedoc_backend_floc_optout_enabled: true
+# See: `mastodon_backend_http_header_permissions_policy`
+mastodon_backend_floc_optout_enabled: true
 
 # Controls if HSTS preloading is enabled
 #
@@ -209,66 +208,66 @@ hedgedoc_backend_floc_optout_enabled: true
 # - https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
 # - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
 # - https://hstspreload.org/#opt-in
-# See: `hedgedoc_http_header_strict_transport_security`
-hedgedoc_backend_hsts_preload_enabled: false
+# See: `mastodon_http_header_strict_transport_security`
+mastodon_backend_hsts_preload_enabled: false
 
-# List of systemd services that the HedgeDoc backend systemd service depends on
-hedgedoc_backend_systemd_required_services_list: "{{ hedgedoc_backend_systemd_required_services_list_default + hedgedoc_backend_systemd_required_services_list_auto + hedgedoc_backend_systemd_required_services_list_custom }}"
-hedgedoc_backend_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
-hedgedoc_backend_systemd_required_services_list_auto: []
-hedgedoc_backend_systemd_required_services_list_custom: []
+# List of systemd services that the Mastodon backend systemd service depends on
+mastodon_backend_systemd_required_services_list: "{{ mastodon_backend_systemd_required_services_list_default + mastodon_backend_systemd_required_services_list_auto + mastodon_backend_systemd_required_services_list_custom }}"
+mastodon_backend_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
+mastodon_backend_systemd_required_services_list_auto: []
+mastodon_backend_systemd_required_services_list_custom: []
 
-# List of systemd services that the HedgeDoc backend systemd service wants
-hedgedoc_backend_systemd_wanted_services_list: "{{ hedgedoc_backend_systemd_wanted_services_list_default + hedgedoc_backend_systemd_wanted_services_list_auto + hedgedoc_backend_systemd_wanted_services_list_custom }}"
-hedgedoc_backend_systemd_wanted_services_list_default: []
-hedgedoc_backend_systemd_wanted_services_list_auto: []
-hedgedoc_backend_systemd_wanted_services_list_custom: []
+# List of systemd services that the Mastodon backend systemd service wants
+mastodon_backend_systemd_wanted_services_list: "{{ mastodon_backend_systemd_wanted_services_list_default + mastodon_backend_systemd_wanted_services_list_auto + mastodon_backend_systemd_wanted_services_list_custom }}"
+mastodon_backend_systemd_wanted_services_list_default: []
+mastodon_backend_systemd_wanted_services_list_auto: []
+mastodon_backend_systemd_wanted_services_list_custom: []
 
 # Specify random strings, generated with `pwgen -s 64 1` or in another way.
-hedgedoc_backend_environment_variables_hd_session_secret: ""
+mastodon_backend_environment_variables_hd_session_secret: ""
 
-# See: https://docs.hedgedoc.dev/references/config/media/filesystem/
-hedgedoc_backend_environment_variables_hd_media_backend: "filesystem"
-hedgedoc_backend_environment_variables_hd_media_backend_filesystem_upload_path: "uploads/"
+# See: https://docs.mastodon.dev/references/config/media/filesystem/
+mastodon_backend_environment_variables_hd_media_backend: "filesystem"
+mastodon_backend_environment_variables_hd_media_backend_filesystem_upload_path: "uploads/"
 
-# See: https://docs.hedgedoc.dev/references/config/auth/local/
-hedgedoc_backend_environment_variables_hd_auth_local_enable_login: true
+# See: https://docs.mastodon.dev/references/config/auth/local/
+mastodon_backend_environment_variables_hd_auth_local_enable_login: true
 
 # Control if user registration is allowed
-hedgedoc_backend_environment_variables_hd_auth_local_enable_register: false
+mastodon_backend_environment_variables_hd_auth_local_enable_register: false
 
 # Additional environment variables.
-hedgedoc_backend_environment_variables_additional_variables: ""
+mastodon_backend_environment_variables_additional_variables: ""
 
 # Controls how long to wait for the container to stop gracefully before killing it.
-hedgedoc_backend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
+mastodon_backend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
 
 # Controls how long the pre-start cleanup should wait for stale container-name release
 # before failing startup explicitly.
-hedgedoc_backend_container_cleanup_timeout_seconds: "{{ devture_systemd_docker_base_container_cleanup_timeout_seconds }}"
+mastodon_backend_container_cleanup_timeout_seconds: "{{ devture_systemd_docker_base_container_cleanup_timeout_seconds }}"
 
 # Controls the delay between pre-start cleanup retries.
-hedgedoc_backend_container_cleanup_retry_delay_seconds: "{{ devture_systemd_docker_base_container_cleanup_retry_delay_seconds }}"
+mastodon_backend_container_cleanup_retry_delay_seconds: "{{ devture_systemd_docker_base_container_cleanup_retry_delay_seconds }}"
 
 # Shell command used in the systemd pre-start phase to deterministically remove a stale
 # container and wait until Docker releases its name.
-hedgedoc_backend_container_cleanup_command: |
+mastodon_backend_container_cleanup_command: |
   i=0;
-  while [ "$i" -lt {{ hedgedoc_backend_container_cleanup_timeout_seconds }} ]; do
-  {{ devture_systemd_docker_base_host_command_docker }} stop -t {{ hedgedoc_backend_container_stop_grace_time_seconds }} {{ hedgedoc_backend_identifier }} >/dev/null 2>&1 || true;
-  {{ devture_systemd_docker_base_host_command_docker }} rm -f {{ hedgedoc_backend_identifier }} >/dev/null 2>&1 || true;
-  if {{ devture_systemd_docker_base_host_command_docker }} container inspect {{ hedgedoc_backend_identifier }} >/dev/null 2>&1; then
+  while [ "$i" -lt {{ mastodon_backend_container_cleanup_timeout_seconds }} ]; do
+  {{ devture_systemd_docker_base_host_command_docker }} stop -t {{ mastodon_backend_container_stop_grace_time_seconds }} {{ mastodon_backend_identifier }} >/dev/null 2>&1 || true;
+  {{ devture_systemd_docker_base_host_command_docker }} rm -f {{ mastodon_backend_identifier }} >/dev/null 2>&1 || true;
+  if {{ devture_systemd_docker_base_host_command_docker }} container inspect {{ mastodon_backend_identifier }} >/dev/null 2>&1; then
   i=$((i + 1));
-  sleep {{ hedgedoc_backend_container_cleanup_retry_delay_seconds }};
+  sleep {{ mastodon_backend_container_cleanup_retry_delay_seconds }};
   continue;
   fi;
   if {{ devture_systemd_docker_base_host_command_docker }} info >/dev/null 2>&1; then
   exit 0;
   fi;
-  echo "Failed to query Docker daemon while cleaning up {{ hedgedoc_backend_identifier }}" >&2;
+  echo "Failed to query Docker daemon while cleaning up {{ mastodon_backend_identifier }}" >&2;
   exit 1;
   done;
-  echo "Failed to remove stale container {{ hedgedoc_backend_identifier }} after {{ hedgedoc_backend_container_cleanup_timeout_seconds }} attempts" >&2;
+  echo "Failed to remove stale container {{ mastodon_backend_identifier }} after {{ mastodon_backend_container_cleanup_timeout_seconds }} attempts" >&2;
   exit 1
 
 ########################################################################
@@ -283,102 +282,102 @@ hedgedoc_backend_container_cleanup_command: |
 #                                                                      #
 ########################################################################
 
-hedgedoc_frontend_identifier: "{{ hedgedoc_identifier }}-frontend"
+mastodon_frontend_identifier: "{{ mastodon_identifier }}-frontend"
 
-# renovate: datasource=docker depName=ghcr.io/hedgedoc/hedgedoc/frontend
-hedgedoc_frontend_version: 2.0.0-alpha.3
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon/frontend
+mastodon_frontend_version: 2.0.0-alpha.3
 
-hedgedoc_frontend_scheme: https
+mastodon_frontend_scheme: https
 
-hedgedoc_frontend_hostname: "{{ hedgedoc_hostname }}"
+mastodon_frontend_hostname: "{{ mastodon_hostname }}"
 
 # The path at which frontend is exposed
-hedgedoc_frontend_path_prefix: "/"
+mastodon_frontend_path_prefix: "/"
 
-hedgedoc_frontend_container_image: "{{ hedgedoc_frontend_container_image_registry_prefix }}hedgedoc/hedgedoc/frontend:{{ hedgedoc_frontend_container_image_tag }}"
-hedgedoc_frontend_container_image_tag: "{{ hedgedoc_frontend_version }}"
-hedgedoc_frontend_container_image_registry_prefix: "{{ hedgedoc_frontend_container_image_registry_prefix_upstream }}"
-hedgedoc_frontend_container_image_registry_prefix_upstream: "{{ hedgedoc_frontend_container_image_registry_prefix_upstream_default }}"
-hedgedoc_frontend_container_image_registry_prefix_upstream_default: ghcr.io/
-hedgedoc_frontend_container_image_force_pull: "{{ hedgedoc_frontend_container_image.endswith(':latest') }}"
+mastodon_frontend_container_image: "{{ mastodon_frontend_container_image_registry_prefix }}mastodon/mastodon/frontend:{{ mastodon_frontend_container_image_tag }}"
+mastodon_frontend_container_image_tag: "{{ mastodon_frontend_version }}"
+mastodon_frontend_container_image_registry_prefix: "{{ mastodon_frontend_container_image_registry_prefix_upstream }}"
+mastodon_frontend_container_image_registry_prefix_upstream: "{{ mastodon_frontend_container_image_registry_prefix_upstream_default }}"
+mastodon_frontend_container_image_registry_prefix_upstream_default: ghcr.io/
+mastodon_frontend_container_image_force_pull: "{{ mastodon_frontend_container_image.endswith(':latest') }}"
 
-hedgedoc_frontend_container_network: "{{ hedgedoc_container_network }}"
+mastodon_frontend_container_network: "{{ mastodon_container_network }}"
 
-# Specify how the HedgeDoc frontend container publishes its HTTP port (as defined by `hedgedoc_frontend_container_http_port`).
+# Specify how the Mastodon frontend container publishes its HTTP port (as defined by `mastodon_frontend_container_http_port`).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
-hedgedoc_frontend_container_http_host_bind_port: ""
+mastodon_frontend_container_http_host_bind_port: ""
 
 # The port number in the container
-hedgedoc_frontend_container_http_port: 3001
+mastodon_frontend_container_http_port: 3001
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
 # Use this to expose this container to another reverse proxy, which runs in a different container network.
-hedgedoc_frontend_container_additional_networks: "{{ hedgedoc_frontend_container_additional_networks_auto + hedgedoc_frontend_container_additional_networks_custom }}"
-hedgedoc_frontend_container_additional_networks_auto: []
-hedgedoc_frontend_container_additional_networks_custom: []
+mastodon_frontend_container_additional_networks: "{{ mastodon_frontend_container_additional_networks_auto + mastodon_frontend_container_additional_networks_custom }}"
+mastodon_frontend_container_additional_networks_auto: []
+mastodon_frontend_container_additional_networks_custom: []
 
 # A list of additional "volumes" to mount in the container.
 # This list gets populated dynamically at runtime. You can provide a different default value,
 # if you wish to mount your own files into the container.
 # Contains definition objects like this: `{"type": "bind", "src": "/outside", "dst": "/inside", "options": "readonly"}.
 # See the `--mount` documentation for the `docker run` command.
-hedgedoc_frontend_container_additional_volumes: "{{ hedgedoc_frontend_container_additional_volumes_auto + hedgedoc_frontend_container_additional_volumes_custom }}"
-hedgedoc_frontend_container_additional_volumes_auto: []
-hedgedoc_frontend_container_additional_volumes_custom: []
+mastodon_frontend_container_additional_volumes: "{{ mastodon_frontend_container_additional_volumes_auto + mastodon_frontend_container_additional_volumes_custom }}"
+mastodon_frontend_container_additional_volumes_auto: []
+mastodon_frontend_container_additional_volumes_custom: []
 
-# hedgedoc_frontend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# mastodon_frontend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `../templates/labels_frontend.j2` for details.
 #
-# To inject your own other container labels, see `hedgedoc_frontend_container_labels_additional_labels_custom`.
-hedgedoc_frontend_container_labels_traefik_enabled: true
-hedgedoc_frontend_container_labels_traefik_docker_network: "{{ hedgedoc_frontend_container_network }}"
-hedgedoc_frontend_container_labels_traefik_hostname: "{{ hedgedoc_frontend_hostname }}"
-# The path prefix must either be `/` or not end with a slash (e.g. `/hedgedoc_frontend`).
-hedgedoc_frontend_container_labels_traefik_path_prefix: "{{ hedgedoc_frontend_path_prefix }}"
-hedgedoc_frontend_container_labels_traefik_rule: "Host(`{{ hedgedoc_frontend_container_labels_traefik_hostname }}`){% if hedgedoc_frontend_container_labels_traefik_path_prefix != '/' %} && PathPrefix(`{{ hedgedoc_frontend_container_labels_traefik_path_prefix }}`){% endif %}"
-hedgedoc_frontend_container_labels_traefik_priority: 0
-hedgedoc_frontend_container_labels_traefik_entrypoints: web-secure
-hedgedoc_frontend_container_labels_traefik_tls: "{{ hedgedoc_frontend_container_labels_traefik_entrypoints != 'web' }}"
-hedgedoc_frontend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+# To inject your own other container labels, see `mastodon_frontend_container_labels_additional_labels_custom`.
+mastodon_frontend_container_labels_traefik_enabled: true
+mastodon_frontend_container_labels_traefik_docker_network: "{{ mastodon_frontend_container_network }}"
+mastodon_frontend_container_labels_traefik_hostname: "{{ mastodon_frontend_hostname }}"
+# The path prefix must either be `/` or not end with a slash (e.g. `/frontend`).
+mastodon_frontend_container_labels_traefik_path_prefix: "{{ mastodon_frontend_path_prefix }}"
+mastodon_frontend_container_labels_traefik_rule: "Host(`{{ mastodon_frontend_container_labels_traefik_hostname }}`){% if mastodon_frontend_container_labels_traefik_path_prefix != '/' %} && PathPrefix(`{{ mastodon_frontend_container_labels_traefik_path_prefix }}`){% endif %}"
+mastodon_frontend_container_labels_traefik_priority: 0
+mastodon_frontend_container_labels_traefik_entrypoints: web-secure
+mastodon_frontend_container_labels_traefik_tls: "{{ mastodon_frontend_container_labels_traefik_entrypoints != 'web' }}"
+mastodon_frontend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 
 # Controls which additional headers to attach to all HTTP requests.
-# To add your own custom request headers, use `hedgedoc_frontend_container_labels_traefik_additional_request_headers_custom`
-hedgedoc_frontend_container_labels_traefik_additional_request_headers: "{{ hedgedoc_frontend_container_labels_traefik_additional_request_headers_auto | combine(hedgedoc_frontend_container_labels_traefik_additional_request_headers_custom) }}"
-hedgedoc_frontend_container_labels_traefik_additional_request_headers_auto: {}
-hedgedoc_frontend_container_labels_traefik_additional_request_headers_custom: {}
+# To add your own custom request headers, use `mastodon_frontend_container_labels_traefik_additional_request_headers_custom`
+mastodon_frontend_container_labels_traefik_additional_request_headers: "{{ mastodon_frontend_container_labels_traefik_additional_request_headers_auto | combine(mastodon_frontend_container_labels_traefik_additional_request_headers_custom) }}"
+mastodon_frontend_container_labels_traefik_additional_request_headers_auto: {}
+mastodon_frontend_container_labels_traefik_additional_request_headers_custom: {}
 
 # Controls which additional headers to attach to all HTTP responses.
-# To add your own custom response headers, use `hedgedoc_frontend_container_labels_traefik_additional_response_headers_custom`
-hedgedoc_frontend_container_labels_traefik_additional_response_headers: "{{ hedgedoc_frontend_container_labels_traefik_additional_response_headers_auto | combine(hedgedoc_frontend_container_labels_traefik_additional_response_headers_custom) }}"
-hedgedoc_frontend_container_labels_traefik_additional_response_headers_auto: |
+# To add your own custom response headers, use `mastodon_frontend_container_labels_traefik_additional_response_headers_custom`
+mastodon_frontend_container_labels_traefik_additional_response_headers: "{{ mastodon_frontend_container_labels_traefik_additional_response_headers_auto | combine(mastodon_frontend_container_labels_traefik_additional_response_headers_custom) }}"
+mastodon_frontend_container_labels_traefik_additional_response_headers_auto: |
   {{
     {}
-    | combine ({'X-XSS-Protection': hedgedoc_frontend_http_header_xss_protection} if hedgedoc_frontend_http_header_xss_protection else {})
-    | combine ({'X-Content-Type-Options': hedgedoc_frontend_http_header_content_type_options} if hedgedoc_frontend_http_header_content_type_options else {})
-    | combine ({'Content-Security-Policy': hedgedoc_frontend_http_header_content_security_policy} if hedgedoc_frontend_http_header_content_security_policy else {})
-    | combine ({'Permissions-Policy': hedgedoc_frontend_http_header_permissions_policy} if hedgedoc_frontend_http_header_permissions_policy else {})
-    | combine ({'Strict-Transport-Security': hedgedoc_frontend_http_header_strict_transport_security} if hedgedoc_frontend_http_header_strict_transport_security and hedgedoc_frontend_container_labels_traefik_tls else {})
+    | combine ({'X-XSS-Protection': mastodon_frontend_http_header_xss_protection} if mastodon_frontend_http_header_xss_protection else {})
+    | combine ({'X-Content-Type-Options': mastodon_frontend_http_header_content_type_options} if mastodon_frontend_http_header_content_type_options else {})
+    | combine ({'Content-Security-Policy': mastodon_frontend_http_header_content_security_policy} if mastodon_frontend_http_header_content_security_policy else {})
+    | combine ({'Permissions-Policy': mastodon_frontend_http_header_permissions_policy} if mastodon_frontend_http_header_permissions_policy else {})
+    | combine ({'Strict-Transport-Security': mastodon_frontend_http_header_strict_transport_security} if mastodon_frontend_http_header_strict_transport_security and mastodon_frontend_container_labels_traefik_tls else {})
   }}
-hedgedoc_frontend_container_labels_traefik_additional_response_headers_custom: {}
+mastodon_frontend_container_labels_traefik_additional_response_headers_custom: {}
 
-# hedgedoc_frontend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# mastodon_frontend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
 # See `../templates/labels_frontend.j2` for details.
-# To add your own custom labels, use `hedgedoc_frontend_container_labels_additional_labels_custom`
+# To add your own custom labels, use `mastodon_frontend_container_labels_additional_labels_custom`
 #
 # Example:
-# hedgedoc_frontend_container_labels_additional_labels_custom:
+# mastodon_frontend_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
-hedgedoc_frontend_container_labels_additional_labels: "{{ hedgedoc_frontend_container_labels_additional_labels_auto + hedgedoc_frontend_container_labels_additional_labels_custom }}"
-hedgedoc_frontend_container_labels_additional_labels_auto: []
-hedgedoc_frontend_container_labels_additional_labels_custom: []
+mastodon_frontend_container_labels_additional_labels: "{{ mastodon_frontend_container_labels_additional_labels_auto + mastodon_frontend_container_labels_additional_labels_custom }}"
+mastodon_frontend_container_labels_additional_labels_auto: []
+mastodon_frontend_container_labels_additional_labels_custom: []
 
 # A list of extra arguments to pass to the container (`docker create` command)
-hedgedoc_frontend_container_extra_arguments: "{{ hedgedoc_frontend_container_extra_arguments_auto + hedgedoc_frontend_container_extra_arguments_custom }}"
-hedgedoc_frontend_container_extra_arguments_auto: []
-hedgedoc_frontend_container_extra_arguments_custom: []
+mastodon_frontend_container_extra_arguments: "{{ mastodon_frontend_container_extra_arguments_auto + mastodon_frontend_container_extra_arguments_custom }}"
+mastodon_frontend_container_extra_arguments_auto: []
+mastodon_frontend_container_extra_arguments_custom: []
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
@@ -386,23 +385,23 @@ hedgedoc_frontend_container_extra_arguments_custom: []
 # Learn more about it is here:
 # - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
 # - https://portswigger.net/web-security/cross-site-scripting/reflected
-hedgedoc_frontend_http_header_xss_protection: "1; mode=block"
+mastodon_frontend_http_header_xss_protection: "1; mode=block"
 
 # Specifies the value of the `X-Content-Type-Options` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
-hedgedoc_frontend_http_header_content_type_options: nosniff
+mastodon_frontend_http_header_content_type_options: nosniff
 
 # Specifies the value of the `Content-Security-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-hedgedoc_frontend_http_header_content_security_policy: frame-ancestors 'self'
+mastodon_frontend_http_header_content_security_policy: frame-ancestors 'self'
 
 # Specifies the value of the `Permissions-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
-hedgedoc_frontend_http_header_permissions_policy: "{{ 'interest-cohort=()' if hedgedoc_frontend_floc_optout_enabled else '' }}"
+mastodon_frontend_http_header_permissions_policy: "{{ 'interest-cohort=()' if mastodon_frontend_floc_optout_enabled else '' }}"
 
 # Specifies the value of the `Strict-Transport-Security` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-hedgedoc_frontend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if hedgedoc_frontend_hsts_preload_enabled else '' }}"
+mastodon_frontend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if mastodon_frontend_hsts_preload_enabled else '' }}"
 
 # Controls whether to send a "Permissions-Policy interest-cohort=();" header along with all responses
 #
@@ -412,8 +411,8 @@ hedgedoc_frontend_http_header_strict_transport_security: "max-age=31536000; incl
 # - https://amifloced.org/
 #
 # Of course, a better solution is to just stop using browsers (like Chrome), which participate in such tracking practices.
-# See: `hedgedoc_frontend_http_header_permissions_policy`
-hedgedoc_frontend_floc_optout_enabled: true
+# See: `mastodon_frontend_http_header_permissions_policy`
+mastodon_frontend_floc_optout_enabled: true
 
 # Controls if HSTS preloading is enabled
 #
@@ -424,55 +423,55 @@ hedgedoc_frontend_floc_optout_enabled: true
 # - https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
 # - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
 # - https://hstspreload.org/#opt-in
-# See: `hedgedoc_http_header_strict_transport_security`
-hedgedoc_frontend_hsts_preload_enabled: false
+# See: `mastodon_http_header_strict_transport_security`
+mastodon_frontend_hsts_preload_enabled: false
 
-# List of systemd services that the HedgeDoc frontend systemd service depends on
-hedgedoc_frontend_systemd_required_services_list: "{{ hedgedoc_frontend_systemd_required_services_list_default + hedgedoc_frontend_systemd_required_services_list_auto + hedgedoc_frontend_systemd_required_services_list_custom }}"
-hedgedoc_frontend_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
-hedgedoc_frontend_systemd_required_services_list_auto: []
-hedgedoc_frontend_systemd_required_services_list_custom: []
+# List of systemd services that the Mastodon frontend systemd service depends on
+mastodon_frontend_systemd_required_services_list: "{{ mastodon_frontend_systemd_required_services_list_default + mastodon_frontend_systemd_required_services_list_auto + mastodon_frontend_systemd_required_services_list_custom }}"
+mastodon_frontend_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
+mastodon_frontend_systemd_required_services_list_auto: []
+mastodon_frontend_systemd_required_services_list_custom: []
 
-# List of systemd services that the HedgeDoc frontend systemd service wants
-hedgedoc_frontend_systemd_wanted_services_list: "{{ hedgedoc_frontend_systemd_wanted_services_list_default + hedgedoc_frontend_systemd_wanted_services_list_auto + hedgedoc_frontend_systemd_wanted_services_list_custom }}"
-hedgedoc_frontend_systemd_wanted_services_list_default: []
-hedgedoc_frontend_systemd_wanted_services_list_auto: []
-hedgedoc_frontend_systemd_wanted_services_list_custom: []
+# List of systemd services that the Mastodon frontend systemd service wants
+mastodon_frontend_systemd_wanted_services_list: "{{ mastodon_frontend_systemd_wanted_services_list_default + mastodon_frontend_systemd_wanted_services_list_auto + mastodon_frontend_systemd_wanted_services_list_custom }}"
+mastodon_frontend_systemd_wanted_services_list_default: []
+mastodon_frontend_systemd_wanted_services_list_auto: []
+mastodon_frontend_systemd_wanted_services_list_custom: []
 
-hedgedoc_frontend_environment_variables_hd_internal_api_url: "http://{{ hedgedoc_backend_identifier }}:{{ hedgedoc_backend_container_http_port }}"
+mastodon_frontend_environment_variables_hd_internal_api_url: "http://{{ mastodon_backend_identifier }}:{{ mastodon_backend_container_http_port }}"
 
 # Additional environment variables.
-hedgedoc_frontend_environment_variables_additional_variables: ""
+mastodon_frontend_environment_variables_additional_variables: ""
 
 # Controls how long to wait for the container to stop gracefully before killing it.
-hedgedoc_frontend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
+mastodon_frontend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
 
 # Controls how long the pre-start cleanup should wait for stale container-name release
 # before failing startup explicitly.
-hedgedoc_frontend_container_cleanup_timeout_seconds: "{{ devture_systemd_docker_base_container_cleanup_timeout_seconds }}"
+mastodon_frontend_container_cleanup_timeout_seconds: "{{ devture_systemd_docker_base_container_cleanup_timeout_seconds }}"
 
 # Controls the delay between pre-start cleanup retries.
-hedgedoc_frontend_container_cleanup_retry_delay_seconds: "{{ devture_systemd_docker_base_container_cleanup_retry_delay_seconds }}"
+mastodon_frontend_container_cleanup_retry_delay_seconds: "{{ devture_systemd_docker_base_container_cleanup_retry_delay_seconds }}"
 
 # Shell command used in the systemd pre-start phase to deterministically remove a stale
 # container and wait until Docker releases its name.
-hedgedoc_frontend_container_cleanup_command: |
+mastodon_frontend_container_cleanup_command: |
   i=0;
-  while [ "$i" -lt {{ hedgedoc_frontend_container_cleanup_timeout_seconds }} ]; do
-  {{ devture_systemd_docker_base_host_command_docker }} stop -t {{ hedgedoc_frontend_container_stop_grace_time_seconds }} {{ hedgedoc_frontend_identifier }} >/dev/null 2>&1 || true;
-  {{ devture_systemd_docker_base_host_command_docker }} rm -f {{ hedgedoc_frontend_identifier }} >/dev/null 2>&1 || true;
-  if {{ devture_systemd_docker_base_host_command_docker }} container inspect {{ hedgedoc_frontend_identifier }} >/dev/null 2>&1; then
+  while [ "$i" -lt {{ mastodon_frontend_container_cleanup_timeout_seconds }} ]; do
+  {{ devture_systemd_docker_base_host_command_docker }} stop -t {{ mastodon_frontend_container_stop_grace_time_seconds }} {{ mastodon_frontend_identifier }} >/dev/null 2>&1 || true;
+  {{ devture_systemd_docker_base_host_command_docker }} rm -f {{ mastodon_frontend_identifier }} >/dev/null 2>&1 || true;
+  if {{ devture_systemd_docker_base_host_command_docker }} container inspect {{ mastodon_frontend_identifier }} >/dev/null 2>&1; then
   i=$((i + 1));
-  sleep {{ hedgedoc_frontend_container_cleanup_retry_delay_seconds }};
+  sleep {{ mastodon_frontend_container_cleanup_retry_delay_seconds }};
   continue;
   fi;
   if {{ devture_systemd_docker_base_host_command_docker }} info >/dev/null 2>&1; then
   exit 0;
   fi;
-  echo "Failed to query Docker daemon while cleaning up {{ hedgedoc_frontend_identifier }}" >&2;
+  echo "Failed to query Docker daemon while cleaning up {{ mastodon_frontend_identifier }}" >&2;
   exit 1;
   done;
-  echo "Failed to remove stale container {{ hedgedoc_frontend_identifier }} after {{ hedgedoc_frontend_container_cleanup_timeout_seconds }} attempts" >&2;
+  echo "Failed to remove stale container {{ mastodon_frontend_identifier }} after {{ mastodon_frontend_container_cleanup_timeout_seconds }} attempts" >&2;
   exit 1
 
 ########################################################################

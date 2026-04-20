@@ -1,89 +1,89 @@
 # SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
 # SPDX-FileCopyrightText: 2023 MASH project contributors
 # SPDX-FileCopyrightText: 2025 Slavi Pantaleev
-# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Ensure HedgeDoc paths exist
+- name: Ensure Mastodon paths exist
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: "0750"
-    owner: "{{ hedgedoc_uid }}"
-    group: "{{ hedgedoc_gid }}"
+    owner: "{{ mastodon_uid }}"
+    group: "{{ mastodon_gid }}"
   with_items:
-    - "{{ hedgedoc_base_path }}"
-    - "{{ hedgedoc_backend_base_path }}"
-    - "{{ hedgedoc_backend_data_path }}"
-    - "{{ hedgedoc_backend_uploads_path }}"
-    - "{{ hedgedoc_frontend_base_path }}"
+    - "{{ mastodon_base_path }}"
+    - "{{ mastodon_backend_base_path }}"
+    - "{{ mastodon_backend_data_path }}"
+    - "{{ mastodon_backend_uploads_path }}"
+    - "{{ mastodon_frontend_base_path }}"
 
-- name: Ensure HedgeDoc support files installed
+- name: Ensure Mastodon support files installed
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "0640"
-    owner: "{{ hedgedoc_uid }}"
-    group: "{{ hedgedoc_gid }}"
+    owner: "{{ mastodon_uid }}"
+    group: "{{ mastodon_gid }}"
   with_items:
-    - { src: "{{ role_path }}/templates/env_backend.j2", dest: "{{ hedgedoc_backend_base_path }}/env" }
-    - { src: "{{ role_path }}/templates/env_frontend.j2", dest: "{{ hedgedoc_frontend_base_path }}/env" }
-    - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ hedgedoc_backend_base_path }}/labels" }
-    - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ hedgedoc_frontend_base_path }}/labels" }
-  register: hedgedoc_support_files_result
+    - { src: "{{ role_path }}/templates/env_backend.j2", dest: "{{ mastodon_backend_base_path }}/env" }
+    - { src: "{{ role_path }}/templates/env_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/env" }
+    - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ mastodon_backend_base_path }}/labels" }
+    - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/labels" }
+  register: mastodon_support_files_result
 
-- name: Ensure HedgeDoc container images are pulled
+- name: Ensure Mastodon container images are pulled
   community.docker.docker_image:
     name: "{{ item }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
   with_items:
-    - "{{ hedgedoc_backend_container_image }}"
-    - "{{ hedgedoc_frontend_container_image }}"
-  register: hedgedoc_container_images_pull_result
+    - "{{ mastodon_backend_container_image }}"
+    - "{{ mastodon_frontend_container_image }}"
+  register: mastodon_container_images_pull_result
   retries: "{{ devture_playbook_help_container_retries_count }}"
   delay: "{{ devture_playbook_help_container_retries_delay }}"
-  until: hedgedoc_container_images_pull_result is not failed
+  until: mastodon_container_images_pull_result is not failed
 
-- name: Ensure HedgeDoc container network is created via community.docker.docker_network
+- name: Ensure Mastodon container network is created via community.docker.docker_network
   when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'
   community.docker.docker_network:
     enable_ipv6: "{{ devture_systemd_docker_base_ipv6_enabled }}"
-    name: "{{ hedgedoc_container_network }}"
+    name: "{{ mastodon_container_network }}"
     driver: bridge
     driver_options: "{{ devture_systemd_docker_base_container_networks_driver_options }}"
-  register: hedgedoc_network_creation_result
+  register: mastodon_network_creation_result
 
-- name: Ensure HedgeDoc container network is created via ansible.builtin.command
+- name: Ensure Mastodon container network is created via ansible.builtin.command
   when: devture_systemd_docker_base_container_network_creation_method == 'command'
   ansible.builtin.command:
     cmd: >-
       {{ devture_systemd_docker_base_host_command_docker }} network create
       {% if devture_systemd_docker_base_ipv6_enabled %}--ipv6{% endif %}
       {{ devture_systemd_docker_base_container_networks_driver_options_string }}
-      {{ hedgedoc_container_network }}
-  register: hedgedoc_network_creation_result
-  changed_when: hedgedoc_network_creation_result.rc == 0
-  failed_when: hedgedoc_network_creation_result.rc != 0 and 'already exists' not in hedgedoc_network_creation_result.stderr
+      {{ mastodon_container_network }}
+  register: mastodon_network_creation_result
+  changed_when: mastodon_network_creation_result.rc == 0
+  failed_when: mastodon_network_creation_result.rc != 0 and 'already exists' not in mastodon_network_creation_result.stderr
 
-- name: Ensure HedgeDoc systemd services are present
+- name: Ensure Mastodon systemd services are present
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "0644"
   with_items:
-    - src: "{{ role_path }}/templates/systemd/hedgedoc-backend.service.j2"
-      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ hedgedoc_backend_identifier }}.service"
-    - src: "{{ role_path }}/templates/systemd/hedgedoc-frontend.service.j2"
-      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ hedgedoc_frontend_identifier }}.service"
-  register: hedgedoc_systemd_services_result
+    - src: "{{ role_path }}/templates/systemd/mastodon-backend.service.j2"
+      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_backend_identifier }}.service"
+    - src: "{{ role_path }}/templates/systemd/mastodon-frontend.service.j2"
+      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_frontend_identifier }}.service"
+  register: mastodon_systemd_services_result
 
-- name: Determine whether HedgeDoc needs a restart
+- name: Determine whether Mastodon needs a restart
   ansible.builtin.set_fact:
-    hedgedoc_restart_necessary: >-
+    mastodon_restart_necessary: >-
       {{
-        hedgedoc_support_files_result.changed | default(false)
-        or hedgedoc_systemd_services_result.changed | default(false)
-        or hedgedoc_container_images_pull_result.changed | default(false)
+        mastodon_support_files_result.changed | default(false)
+        or mastodon_systemd_services_result.changed | default(false)
+        or mastodon_container_images_pull_result.changed | default(false)
       }}

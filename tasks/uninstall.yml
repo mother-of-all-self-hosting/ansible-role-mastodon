@@ -1,80 +1,80 @@
 # SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
-# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Ensure HedgeDoc systemd services are stopped and removed
+- name: Ensure Mastodon systemd services are stopped and removed
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/remove_service.yml"
   with_items:
-    - service: "{{ hedgedoc_frontend_identifier }}.service"
-      path: "{{ devture_systemd_docker_base_systemd_path }}/{{ hedgedoc_frontend_identifier }}.service"
-    - { service: "{{ hedgedoc_backend_identifier }}.service", path: "{{ devture_systemd_docker_base_systemd_path }}/{{ hedgedoc_backend_identifier }}.service" }
+    - service: "{{ mastodon_frontend_identifier }}.service"
+      path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_frontend_identifier }}.service"
+    - { service: "{{ mastodon_backend_identifier }}.service", path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_backend_identifier }}.service" }
 
-- name: Ensure Hedgedoc container network does not exist
-  when: hedgedoc_container_network_deletion_enabled
+- name: Ensure Mastodon container network does not exist
+  when: mastodon_container_network_deletion_enabled
   block:
-    - name: Ensure Hedgedoc container network does not exist via community.docker.docker_network
+    - name: Ensure Mastodon container network does not exist via community.docker.docker_network
       when: devture_systemd_docker_base_container_network_creation_method == 'ansible-module'
       community.docker.docker_network:
-        name: "{{ hedgedoc_container_network }}"
+        name: "{{ mastodon_container_network }}"
         state: absent
 
-    - name: Ensure Hedgedoc container network does not exist via ansible.builtin.command
+    - name: Ensure Mastodon container network does not exist via ansible.builtin.command
       when: devture_systemd_docker_base_container_network_creation_method == 'command'
       ansible.builtin.command:
         cmd: >-
           {{ devture_systemd_docker_base_host_command_docker }} network rm
-          {{ hedgedoc_container_network }}
+          {{ mastodon_container_network }}
       register: network_deletion_result
       failed_when: network_deletion_result.rc > 0 and 'not found' not in network_deletion_result.stderr
-      changed_when: hedgedoc_container_network in network_deletion_result.stdout
+      changed_when: mastodon_container_network in network_deletion_result.stdout
 
-- name: Remove HedgeDoc backend files
+- name: Remove Mastodon backend files
   block:
-    - name: Ensure HedgeDoc backend support files do not exist
+    - name: Ensure Mastodon backend support files do not exist
       ansible.builtin.file:
-        path: "{{ hedgedoc_backend_base_path }}/{{ item }}"
+        path: "{{ mastodon_backend_base_path }}/{{ item }}"
         state: absent
       with_items:
         - env
         - labels
 
-    - name: Ensure HedgeDoc backend local data path does not exist if empty
+    - name: Ensure Mastodon backend local data path does not exist if empty
       ansible.builtin.command:
-        cmd: "rmdir {{ hedgedoc_backend_data_path }}"
-      register: hedgedoc_backend_data_path_deletion_result
-      changed_when: hedgedoc_backend_data_path_deletion_result.rc == 0
+        cmd: "rmdir {{ mastodon_backend_data_path }}"
+      register: mastodon_backend_data_path_deletion_result
+      changed_when: mastodon_backend_data_path_deletion_result.rc == 0
       failed_when: false
 
-    - name: Ensure HedgeDoc backend base path does not exist if empty
+    - name: Ensure Mastodon backend base path does not exist if empty
       ansible.builtin.command:
-        cmd: "rmdir {{ hedgedoc_backend_base_path }}"
-      register: hedgedoc_backend_base_path_deletion_result
-      changed_when: hedgedoc_backend_base_path_deletion_result.rc == 0
+        cmd: "rmdir {{ mastodon_backend_base_path }}"
+      register: mastodon_backend_base_path_deletion_result
+      changed_when: mastodon_backend_base_path_deletion_result.rc == 0
       failed_when: false
 
-    - name: Check existence of HedgeDoc backend local data path
+    - name: Check existence of Mastodon backend local data path
       ansible.builtin.stat:
-        path: "{{ hedgedoc_backend_data_path }}"
-      register: hedgedoc_backend_data_path_stat
+        path: "{{ mastodon_backend_data_path }}"
+      register: mastodon_backend_data_path_stat
 
     # We just want to notify the user. Deleting data is too destructive.
-    - name: Inject the message about the remaining HedgeDoc backend local data path
-      when: hedgedoc_backend_data_path_stat.stat.exists | bool
+    - name: Inject the message about the remaining Mastodon backend local data path
+      when: mastodon_backend_data_path_stat.stat.exists | bool
       ansible.builtin.set_fact:
         devture_playbook_runtime_messages_list: |
           {{
             devture_playbook_runtime_messages_list | default([])
             +
             [
-              "Note: As the local HedgeDoc instance has been removed, some old data remains in `" + hedgedoc_backend_data_path + "`. Feel free to delete it."
+              "Note: As the local Mastodon instance has been removed, some old data remains in `" + mastodon_backend_data_path + "`. Feel free to delete it."
             ]
           }}
 
-- name: Remove HedgeDoc frontend files
+- name: Remove Mastodon frontend files
   block:
-    - name: Ensure HedgeDoc frontend path does not exist
+    - name: Ensure Mastodon frontend path does not exist
       ansible.builtin.file:
-        path: "{{ hedgedoc_frontend_base_path }}"
+        path: "{{ mastodon_frontend_base_path }}"
         state: absent
