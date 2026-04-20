@@ -258,7 +258,7 @@ mastodon_streaming_scheme: https
 mastodon_streaming_hostname: "{{ mastodon_hostname }}"
 
 # The path at which the streaming API server is exposed
-mastodon_streaming_path_prefix: "/"
+mastodon_streaming_path_prefix: "/api/v1/streaming"
 
 mastodon_streaming_container_image: "{{ mastodon_streaming_container_image_registry_prefix }}mastodon/mastodon-streaming:{{ mastodon_streaming_container_image_tag }}"
 mastodon_streaming_container_image_tag: "{{ mastodon_streaming_version }}"
