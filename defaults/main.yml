@@ -98,7 +98,7 @@ mastodon_sidekiq_container_additional_volumes_custom: []
 # See `../templates/labels_sidekiq.j2` for details.
 #
 # To inject your own other container labels, see `mastodon_sidekiq_container_labels_additional_labels_custom`.
-mastodon_sidekiq_container_labels_traefik_enabled: true
+mastodon_sidekiq_container_labels_traefik_enabled: false
 mastodon_sidekiq_container_labels_traefik_docker_network: "{{ mastodon_sidekiq_container_network }}"
 mastodon_sidekiq_container_labels_traefik_hostname: "{{ mastodon_sidekiq_hostname }}"
 # The path prefix must either be `/` or not end with a slash (e.g. `/sidekiq`).
