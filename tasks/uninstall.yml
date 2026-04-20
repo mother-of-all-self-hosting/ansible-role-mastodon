@@ -7,10 +7,10 @@
 - name: Ensure Mastodon systemd services are stopped and removed
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/remove_service.yml"
   with_items:
-    - service: "{{ mastodon_frontend_identifier }}.service"
-      path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_frontend_identifier }}.service"
     - service: "{{ mastodon_sidekiq_identifier }}.service"
       path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_sidekiq_identifier }}.service"
+    - service: "{{ mastodon_streaming_identifier }}.service"
+      path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_streaming_identifier }}.service"
 
 - name: Ensure Mastodon container network does not exist
   when: mastodon_container_network_deletion_enabled
@@ -73,9 +73,9 @@
             ]
           }}
 
-- name: Remove Mastodon frontend files
+- name: Remove Mastodon streaming API server files
   block:
-    - name: Ensure Mastodon frontend path does not exist
+    - name: Ensure Mastodon streaming API server path does not exist
       ansible.builtin.file:
-        path: "{{ mastodon_frontend_base_path }}"
+        path: "{{ mastodon_streaming_base_path }}"
         state: absent

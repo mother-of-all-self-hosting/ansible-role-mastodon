@@ -14,8 +14,8 @@
     - mastodon_uid
     - mastodon_gid
     - mastodon_hostname
-    - mastodon_frontend_path_prefix
     - mastodon_sidekiq_path_prefix
+    - mastodon_streaming_path_prefix
     - mastodon_container_network
     - mastodon_database_postgres_hostname
     - mastodon_database_postgres_password
@@ -41,30 +41,30 @@
           mastodon_sidekiq_container_labels_traefik_path_prefix (`{{ mastodon_sidekiq_container_labels_traefik_path_prefix }}`) must either be `/` or not end with a slash (e.g. `/mastodon`).
       when: "mastodon_sidekiq_container_labels_traefik_path_prefix != '/' and mastodon_sidekiq_container_labels_traefik_path_prefix[-1] == '/'"
 
-- name: Run if Traefik is enabled for frontend
-  when: mastodon_frontend_container_labels_traefik_enabled | bool
+- name: Run if Traefik is enabled for the streaming API server
+  when: mastodon_streaming_container_labels_traefik_enabled | bool
   block:
-    - name: Fail if Traefik settings required for Mastodon frontend are not defined
+    - name: Fail if Traefik settings required for Mastodon streaming API server are not defined
       ansible.builtin.fail:
         msg: >-
           You need to define a required configuration setting (`{{ item }}`).
       when: "lookup('vars', item, default='') | string | length == 0"
       with_items:
-        - mastodon_frontend_container_labels_traefik_hostname
-        - mastodon_frontend_container_labels_traefik_path_prefix
+        - mastodon_streaming_container_labels_traefik_hostname
+        - mastodon_streaming_container_labels_traefik_path_prefix
 
-    - name: Fail if mastodon_frontend_container_labels_traefik_path_prefix is different than /
+    - name: Fail if mastodon_streaming_container_labels_traefik_path_prefix is different than /
       ansible.builtin.fail:
         msg: >-
-          mastodon_frontend_container_labels_traefik_path_prefix (`{{ mastodon_frontend_container_labels_traefik_path_prefix }}`) must be `/`.
+          mastodon_streaming_container_labels_traefik_path_prefix (`{{ mastodon_streaming_container_labels_traefik_path_prefix }}`) must be `/`.
           Mastodon does not support hosting under a subpath yet.
-      when: "mastodon_frontend_container_labels_traefik_path_prefix != '/'"
+      when: "mastodon_streaming_container_labels_traefik_path_prefix != '/'"
 
     # We ensure it doesn't end with a slash, because we handle both (slash and no-slash).
-    # Knowing that `mastodon_frontend_container_labels_traefik_path_prefix` does not end with a slash
+    # Knowing that `mastodon_streaming_container_labels_traefik_path_prefix` does not end with a slash
     # ensures we know how to set these routes up without having to do "does it end with a slash" checks elsewhere.
-    - name: Fail if mastodon_frontend_container_labels_traefik_path_prefix ends with a slash
+    - name: Fail if mastodon_streaming_container_labels_traefik_path_prefix ends with a slash
       ansible.builtin.fail:
         msg: >-
-          mastodon_frontend_container_labels_traefik_path_prefix (`{{ mastodon_frontend_container_labels_traefik_path_prefix }}`) must either be `/` or not end with a slash (e.g. `/mastodon`).
-      when: "mastodon_frontend_container_labels_traefik_path_prefix != '/' and mastodon_frontend_container_labels_traefik_path_prefix[-1] == '/'"
+          mastodon_streaming_container_labels_traefik_path_prefix (`{{ mastodon_streaming_container_labels_traefik_path_prefix }}`) must either be `/` or not end with a slash (e.g. `/mastodon`).
+      when: "mastodon_streaming_container_labels_traefik_path_prefix != '/' and mastodon_streaming_container_labels_traefik_path_prefix[-1] == '/'"

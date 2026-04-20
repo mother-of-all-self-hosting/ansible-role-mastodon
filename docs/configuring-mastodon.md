@@ -85,7 +85,7 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 
 After running the command for installation, Mastodon instance becomes available at `https://example.com`.
 
-To get started, open the frontend's URL with a web browser, and register the account.
+To get started, open the the streaming API server's URL with a web browser, and register the account.
 
 Since account registration is disabled by default, you need to enable it first by setting `mastodon_sidekiq_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
 
@@ -93,4 +93,4 @@ Since account registration is disabled by default, you need to enable it first b
 
 ### Check the service's logs
 
-You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the Sidekiq with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the Sidekiq and `journalctl -fu mastodon-frontend` (or how you/your playbook named the service, e.g. `mash-mastodon-frontend`) for the frontend, respectively.
+You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the Sidekiq and `journalctl -fu mastodon-streaming` (or how you/your playbook named the service, e.g. `mash-mastodon-streaming`) for the the streaming API server, respectively.
