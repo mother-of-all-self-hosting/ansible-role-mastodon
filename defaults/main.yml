@@ -50,17 +50,6 @@ mastodon_users: "{{ mastodon_users_auto + mastodon_users_custom }}"
 mastodon_users_auto: []
 mastodon_users_custom: []
 
-# Specify database configuration
-mastodon_database_hostname: ""
-mastodon_database_port: 5432
-mastodon_database_username: mastodon
-mastodon_database_password: ""
-# Specify SSL mode for Postgres database server
-# By default, we expect a local container (without SSL), so attempting SSL connections is not necessary.
-# Valid values: see https://www.postgresql.org/docs/11/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS
-mastodon_database_sslmode: disable
-mastodon_database_name: mastodon
-
 # Specify Redis configuration
 mastodon_redis_hostname: ""
 mastodon_redis_port: 6379
@@ -132,6 +121,40 @@ mastodon_environment_variables_additional_variables: ""
 # The default of `false` means "no restart needed" — appropriate when the role's
 # installation tasks haven't run (e.g., due to --tags skipping them).
 mastodon_restart_necessary: false
+
+########################################################################
+#                                                                      #
+# database                                                             #
+#                                                                      #
+########################################################################
+
+# Specify database configuration
+mastodon_database_hostname: ""
+mastodon_database_port: 5432
+mastodon_database_username: mastodon
+mastodon_database_password: ""
+# Specify SSL mode for Postgres database server
+# By default, we expect a local container (without SSL), so attempting SSL connections is not necessary.
+# Valid values: see https://www.postgresql.org/docs/11/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS
+mastodon_database_sslmode: disable
+mastodon_database_name: mastodon
+
+# Control if the database connection to Postgres is made via a Unix socket
+mastodon_database_socket_enabled: true
+
+# Specify the path to the Postgres Unix socket path inside the Mastodon container
+mastodon_database_socket_path_container: /run-postgres
+
+# Specify the path to the Postgres Unix socket path on the host (bind-mount source)
+mastodon_database_socket_path_host: ""
+
+mastodon_environment_variables_db_host: "{{ mastodon_database_socket_path_container if mastodon_database_socket_enabled else mastodon_database_hostname }}"
+
+########################################################################
+#                                                                      #
+# /database                                                            #
+#                                                                      #
+########################################################################
 
 ########################################################################
 #                                                                      #

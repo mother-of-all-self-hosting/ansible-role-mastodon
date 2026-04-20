@@ -8,20 +8,21 @@
 - name: Fail if required Mastodon settings not defined
   ansible.builtin.fail:
     msg: >-
-      You need to define a required configuration setting (`{{ item }}`).
-  when: "lookup('vars', item, default='') | string | length == 0"
+      You need to define a required configuration setting (`{{ item.name }}`).
+  when: "item.when | bool and lookup('vars', item.name, default='') | string | length == 0"
   with_items:
-    - mastodon_uid
-    - mastodon_gid
-    - mastodon_hostname
-    - mastodon_sidekiq_path_prefix
-    - mastodon_streaming_path_prefix
-    - mastodon_web_path_prefix
-    - mastodon_container_network
-    - mastodon_database_hostname
-    - mastodon_database_password
-    - mastodon_redis_hostname
-    - mastodon_environment_variables_local_domain
+    - { "name": "mastodon_uid", when: true }
+    - { "name": "mastodon_gid", when: true }
+    - { "name": "mastodon_hostname", when: true }
+    - { "name": "mastodon_sidekiq_path_prefix", when: true }
+    - { "name": "mastodon_streaming_path_prefix", when: true }
+    - { "name": "mastodon_web_path_prefix", when: true }
+    - { "name": "mastodon_container_network", when: true }
+    - { "name": "mastodon_database_socket_path_host", when: "{{ mastodon_database_socket_enabled }}" }
+    - { "name": "mastodon_database_hostname", when: "{{ not mastodon_database_socket_enabled }}" }
+    - { "name": "mastodon_database_password", when: true }
+    - { "name": "mastodon_redis_hostname", when: true }
+    - { "name": "mastodon_environment_variables_local_domain", when: true }
 
 - name: Fail if required Mastodon secrets and keys not defined
   ansible.builtin.fail:
