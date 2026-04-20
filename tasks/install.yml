@@ -15,9 +15,9 @@
     group: "{{ mastodon_gid }}"
   with_items:
     - "{{ mastodon_base_path }}"
-    - "{{ mastodon_backend_base_path }}"
-    - "{{ mastodon_backend_data_path }}"
-    - "{{ mastodon_backend_uploads_path }}"
+    - "{{ mastodon_sidekiq_base_path }}"
+    - "{{ mastodon_sidekiq_data_path }}"
+    - "{{ mastodon_sidekiq_uploads_path }}"
     - "{{ mastodon_frontend_base_path }}"
 
 - name: Ensure Mastodon support files installed
@@ -29,8 +29,8 @@
     group: "{{ mastodon_gid }}"
   with_items:
     - { src: "{{ role_path }}/templates/env.j2", dest: "{{ mastodon_base_path }}/env" }
-    - { src: "{{ role_path }}/templates/labels_backend.j2", dest: "{{ mastodon_backend_base_path }}/labels" }
     - { src: "{{ role_path }}/templates/labels_frontend.j2", dest: "{{ mastodon_frontend_base_path }}/labels" }
+    - { src: "{{ role_path }}/templates/labels_sidekiq.j2", dest: "{{ mastodon_sidekiq_base_path }}/labels" }
   register: mastodon_support_files_result
 
 - name: Ensure Mastodon container images are pulled
@@ -38,8 +38,8 @@
     name: "{{ item }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
   with_items:
-    - "{{ mastodon_backend_container_image }}"
     - "{{ mastodon_frontend_container_image }}"
+    - "{{ mastodon_sidekiq_container_image }}"
   register: mastodon_container_images_pull_result
   retries: "{{ devture_playbook_help_container_retries_count }}"
   delay: "{{ devture_playbook_help_container_retries_delay }}"
@@ -72,8 +72,8 @@
     dest: "{{ item.dest }}"
     mode: "0644"
   with_items:
-    - src: "{{ role_path }}/templates/systemd/mastodon-backend.service.j2"
-      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_backend_identifier }}.service"
+    - src: "{{ role_path }}/templates/systemd/mastodon-sidekiq.service.j2"
+      dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_sidekiq_identifier }}.service"
     - src: "{{ role_path }}/templates/systemd/mastodon-frontend.service.j2"
       dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_frontend_identifier }}.service"
   register: mastodon_systemd_services_result

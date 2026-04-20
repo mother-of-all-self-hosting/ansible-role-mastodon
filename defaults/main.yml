@@ -13,9 +13,9 @@ mastodon_enabled: true
 
 mastodon_identifier: mastodon
 mastodon_base_path: "/{{ mastodon_identifier }}"
-mastodon_backend_base_path: "{{ mastodon_base_path }}/backend"
-mastodon_backend_data_path: "{{ mastodon_backend_base_path }}/data"
-mastodon_backend_uploads_path: "{{ mastodon_backend_base_path }}/uploads"
+mastodon_sidekiq_base_path: "{{ mastodon_base_path }}/sidekiq"
+mastodon_sidekiq_data_path: "{{ mastodon_sidekiq_base_path }}/data"
+mastodon_sidekiq_uploads_path: "{{ mastodon_sidekiq_base_path }}/uploads"
 mastodon_frontend_base_path: "{{ mastodon_base_path }}/frontend"
 
 mastodon_uid: ""
@@ -54,106 +54,106 @@ mastodon_restart_necessary: false
 
 ########################################################################
 #                                                                      #
-# backend                                                              #
+# sidekiq                                                              #
 #                                                                      #
 ########################################################################
 
-mastodon_backend_identifier: "{{ mastodon_identifier }}-backend"
+mastodon_sidekiq_identifier: "{{ mastodon_identifier }}-sidekiq"
 
-# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon/backend
-mastodon_backend_version: 2.0.0-alpha.3
+# renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
+mastodon_sidekiq_version: 2.0.0-alpha.3
 
-mastodon_backend_scheme: https
+mastodon_sidekiq_scheme: https
 
-mastodon_backend_hostname: "{{ mastodon_hostname }}"
+mastodon_sidekiq_hostname: "{{ mastodon_hostname }}"
 
-# The path at which the backend is exposed
-mastodon_backend_path_prefix: "/"
+# The path at which the Sidekiq is exposed
+mastodon_sidekiq_path_prefix: "/"
 
-mastodon_backend_container_image: "{{ mastodon_backend_container_image_registry_prefix }}mastodon/mastodon/backend:{{ mastodon_backend_container_image_tag }}"
-mastodon_backend_container_image_tag: "{{ mastodon_backend_version }}"
-mastodon_backend_container_image_registry_prefix: "{{ mastodon_backend_container_image_registry_prefix_upstream }}"
-mastodon_backend_container_image_registry_prefix_upstream: "{{ mastodon_backend_container_image_registry_prefix_upstream_default }}"
-mastodon_backend_container_image_registry_prefix_upstream_default: ghcr.io/
-mastodon_backend_container_image_force_pull: "{{ mastodon_frontend_container_image.endswith(':latest') }}"
+mastodon_sidekiq_container_image: "{{ mastodon_sidekiq_container_image_registry_prefix }}mastodon/mastodon/sidekiq:{{ mastodon_sidekiq_container_image_tag }}"
+mastodon_sidekiq_container_image_tag: "{{ mastodon_sidekiq_version }}"
+mastodon_sidekiq_container_image_registry_prefix: "{{ mastodon_sidekiq_container_image_registry_prefix_upstream }}"
+mastodon_sidekiq_container_image_registry_prefix_upstream: "{{ mastodon_sidekiq_container_image_registry_prefix_upstream_default }}"
+mastodon_sidekiq_container_image_registry_prefix_upstream_default: ghcr.io/
+mastodon_sidekiq_container_image_force_pull: "{{ mastodon_frontend_container_image.endswith(':latest') }}"
 
-mastodon_backend_container_network: "{{ mastodon_container_network }}"
+mastodon_sidekiq_container_network: "{{ mastodon_container_network }}"
 
-# Specify how the Mastodon backend container publishes its HTTP port (as defined by `mastodon_backend_container_http_port`).
+# Specify how the Mastodon Sidekiq container publishes its HTTP port (as defined by `mastodon_sidekiq_container_http_port`).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
-mastodon_backend_container_http_host_bind_port: ""
+mastodon_sidekiq_container_http_host_bind_port: ""
 
 # The port number in the container
-mastodon_backend_container_http_port: 3000
+mastodon_sidekiq_container_http_port: 3000
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
 # Use this to expose this container to another reverse proxy, which runs in a different container network.
-mastodon_backend_container_additional_networks: "{{ mastodon_backend_container_additional_networks_auto + mastodon_backend_container_additional_networks_custom }}"
-mastodon_backend_container_additional_networks_auto: []
-mastodon_backend_container_additional_networks_custom: []
+mastodon_sidekiq_container_additional_networks: "{{ mastodon_sidekiq_container_additional_networks_auto + mastodon_sidekiq_container_additional_networks_custom }}"
+mastodon_sidekiq_container_additional_networks_auto: []
+mastodon_sidekiq_container_additional_networks_custom: []
 
 # A list of additional "volumes" to mount in the container.
 # This list gets populated dynamically at runtime. You can provide a different default value,
 # if you wish to mount your own files into the container.
 # Contains definition objects like this: `{"type": "bind", "src": "/outside", "dst": "/inside", "options": "readonly"}.
 # See the `--mount` documentation for the `docker run` command.
-mastodon_backend_container_additional_volumes: "{{ mastodon_backend_container_additional_volumes_auto + mastodon_backend_container_additional_volumes_custom }}"
-mastodon_backend_container_additional_volumes_auto: []
-mastodon_backend_container_additional_volumes_custom: []
+mastodon_sidekiq_container_additional_volumes: "{{ mastodon_sidekiq_container_additional_volumes_auto + mastodon_sidekiq_container_additional_volumes_custom }}"
+mastodon_sidekiq_container_additional_volumes_auto: []
+mastodon_sidekiq_container_additional_volumes_custom: []
 
-# mastodon_backend_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
-# See `../templates/labels_backend.j2` for details.
+# mastodon_sidekiq_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# See `../templates/labels_sidekiq.j2` for details.
 #
-# To inject your own other container labels, see `mastodon_backend_container_labels_additional_labels_custom`.
-mastodon_backend_container_labels_traefik_enabled: true
-mastodon_backend_container_labels_traefik_docker_network: "{{ mastodon_backend_container_network }}"
-mastodon_backend_container_labels_traefik_hostname: "{{ mastodon_backend_hostname }}"
-# The path prefix must either be `/` or not end with a slash (e.g. `/backend`).
-mastodon_backend_container_labels_traefik_path_prefix: "{{ mastodon_backend_path_prefix }}"
-mastodon_backend_container_labels_traefik_rule: "Host(`{{ mastodon_backend_container_labels_traefik_hostname }}`) && (PathPrefix(`/realtime`) || PathPrefix(`/api`) || PathPrefix(`/public`) || PathPrefix(`/uploads`) || PathPrefix(`/media`))"
-mastodon_backend_container_labels_traefik_priority: 0
-mastodon_backend_container_labels_traefik_entrypoints: web-secure
-mastodon_backend_container_labels_traefik_tls: "{{ mastodon_backend_container_labels_traefik_entrypoints != 'web' }}"
-mastodon_backend_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+# To inject your own other container labels, see `mastodon_sidekiq_container_labels_additional_labels_custom`.
+mastodon_sidekiq_container_labels_traefik_enabled: true
+mastodon_sidekiq_container_labels_traefik_docker_network: "{{ mastodon_sidekiq_container_network }}"
+mastodon_sidekiq_container_labels_traefik_hostname: "{{ mastodon_sidekiq_hostname }}"
+# The path prefix must either be `/` or not end with a slash (e.g. `/sidekiq`).
+mastodon_sidekiq_container_labels_traefik_path_prefix: "{{ mastodon_sidekiq_path_prefix }}"
+mastodon_sidekiq_container_labels_traefik_rule: "Host(`{{ mastodon_sidekiq_container_labels_traefik_hostname }}`) && (PathPrefix(`/realtime`) || PathPrefix(`/api`) || PathPrefix(`/public`) || PathPrefix(`/uploads`) || PathPrefix(`/media`))"
+mastodon_sidekiq_container_labels_traefik_priority: 0
+mastodon_sidekiq_container_labels_traefik_entrypoints: web-secure
+mastodon_sidekiq_container_labels_traefik_tls: "{{ mastodon_sidekiq_container_labels_traefik_entrypoints != 'web' }}"
+mastodon_sidekiq_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 
 # Controls which additional headers to attach to all HTTP requests.
-# To add your own custom request headers, use `mastodon_backend_container_labels_traefik_additional_request_headers_custom`
-mastodon_backend_container_labels_traefik_additional_request_headers: "{{ mastodon_backend_container_labels_traefik_additional_request_headers_auto | combine(mastodon_backend_container_labels_traefik_additional_request_headers_custom) }}"
-mastodon_backend_container_labels_traefik_additional_request_headers_auto: {}
-mastodon_backend_container_labels_traefik_additional_request_headers_custom: {}
+# To add your own custom request headers, use `mastodon_sidekiq_container_labels_traefik_additional_request_headers_custom`
+mastodon_sidekiq_container_labels_traefik_additional_request_headers: "{{ mastodon_sidekiq_container_labels_traefik_additional_request_headers_auto | combine(mastodon_sidekiq_container_labels_traefik_additional_request_headers_custom) }}"
+mastodon_sidekiq_container_labels_traefik_additional_request_headers_auto: {}
+mastodon_sidekiq_container_labels_traefik_additional_request_headers_custom: {}
 
 # Controls which additional headers to attach to all HTTP responses.
-# To add your own custom response headers, use `mastodon_backend_container_labels_traefik_additional_response_headers_custom`
-mastodon_backend_container_labels_traefik_additional_response_headers: "{{ mastodon_backend_container_labels_traefik_additional_response_headers_auto | combine(mastodon_backend_container_labels_traefik_additional_response_headers_custom) }}"
-mastodon_backend_container_labels_traefik_additional_response_headers_auto: |
+# To add your own custom response headers, use `mastodon_sidekiq_container_labels_traefik_additional_response_headers_custom`
+mastodon_sidekiq_container_labels_traefik_additional_response_headers: "{{ mastodon_sidekiq_container_labels_traefik_additional_response_headers_auto | combine(mastodon_sidekiq_container_labels_traefik_additional_response_headers_custom) }}"
+mastodon_sidekiq_container_labels_traefik_additional_response_headers_auto: |
   {{
     {}
-    | combine ({'X-XSS-Protection': mastodon_backend_http_header_xss_protection} if mastodon_backend_http_header_xss_protection else {})
-    | combine ({'X-Content-Type-Options': mastodon_backend_http_header_content_type_options} if mastodon_backend_http_header_content_type_options else {})
-    | combine ({'Content-Security-Policy': mastodon_backend_http_header_content_security_policy} if mastodon_backend_http_header_content_security_policy else {})
-    | combine ({'Permissions-Policy': mastodon_backend_http_header_permissions_policy} if mastodon_backend_http_header_permissions_policy else {})
-    | combine ({'Strict-Transport-Security': mastodon_backend_http_header_strict_transport_security} if mastodon_backend_http_header_strict_transport_security and mastodon_backend_container_labels_traefik_tls else {})
+    | combine ({'X-XSS-Protection': mastodon_sidekiq_http_header_xss_protection} if mastodon_sidekiq_http_header_xss_protection else {})
+    | combine ({'X-Content-Type-Options': mastodon_sidekiq_http_header_content_type_options} if mastodon_sidekiq_http_header_content_type_options else {})
+    | combine ({'Content-Security-Policy': mastodon_sidekiq_http_header_content_security_policy} if mastodon_sidekiq_http_header_content_security_policy else {})
+    | combine ({'Permissions-Policy': mastodon_sidekiq_http_header_permissions_policy} if mastodon_sidekiq_http_header_permissions_policy else {})
+    | combine ({'Strict-Transport-Security': mastodon_sidekiq_http_header_strict_transport_security} if mastodon_sidekiq_http_header_strict_transport_security and mastodon_sidekiq_container_labels_traefik_tls else {})
   }}
-mastodon_backend_container_labels_traefik_additional_response_headers_custom: {}
+mastodon_sidekiq_container_labels_traefik_additional_response_headers_custom: {}
 
-# mastodon_backend_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
-# See `../templates/labels_backend.j2` for details.
-# To add your own custom labels, use `mastodon_backend_container_labels_additional_labels_custom`
+# mastodon_sidekiq_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `../templates/labels_sidekiq.j2` for details.
+# To add your own custom labels, use `mastodon_sidekiq_container_labels_additional_labels_custom`
 #
 # Example:
-# mastodon_backend_container_labels_additional_labels_custom:
+# mastodon_sidekiq_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
-mastodon_backend_container_labels_additional_labels: "{{ mastodon_backend_container_labels_additional_labels_auto + mastodon_backend_container_labels_additional_labels_custom }}"
-mastodon_backend_container_labels_additional_labels_auto: []
-mastodon_backend_container_labels_additional_labels_custom: []
+mastodon_sidekiq_container_labels_additional_labels: "{{ mastodon_sidekiq_container_labels_additional_labels_auto + mastodon_sidekiq_container_labels_additional_labels_custom }}"
+mastodon_sidekiq_container_labels_additional_labels_auto: []
+mastodon_sidekiq_container_labels_additional_labels_custom: []
 
 # A list of extra arguments to pass to the container (`docker create` command)
-mastodon_backend_container_extra_arguments: "{{ mastodon_backend_container_extra_arguments_auto + mastodon_backend_container_extra_arguments_custom }}"
-mastodon_backend_container_extra_arguments_auto: []
-mastodon_backend_container_extra_arguments_custom: []
+mastodon_sidekiq_container_extra_arguments: "{{ mastodon_sidekiq_container_extra_arguments_auto + mastodon_sidekiq_container_extra_arguments_custom }}"
+mastodon_sidekiq_container_extra_arguments_auto: []
+mastodon_sidekiq_container_extra_arguments_custom: []
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
@@ -161,23 +161,23 @@ mastodon_backend_container_extra_arguments_custom: []
 # Learn more about it is here:
 # - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
 # - https://portswigger.net/web-security/cross-site-scripting/reflected
-mastodon_backend_http_header_xss_protection: "1; mode=block"
+mastodon_sidekiq_http_header_xss_protection: "1; mode=block"
 
 # Specifies the value of the `X-Content-Type-Options` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
-mastodon_backend_http_header_content_type_options: nosniff
+mastodon_sidekiq_http_header_content_type_options: nosniff
 
 # Specifies the value of the `Content-Security-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-mastodon_backend_http_header_content_security_policy: frame-ancestors 'self'
+mastodon_sidekiq_http_header_content_security_policy: frame-ancestors 'self'
 
 # Specifies the value of the `Permissions-Policy` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
-mastodon_backend_http_header_permissions_policy: "{{ 'interest-cohort=()' if mastodon_backend_floc_optout_enabled else '' }}"
+mastodon_sidekiq_http_header_permissions_policy: "{{ 'interest-cohort=()' if mastodon_sidekiq_floc_optout_enabled else '' }}"
 
 # Specifies the value of the `Strict-Transport-Security` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-mastodon_backend_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if mastodon_backend_hsts_preload_enabled else '' }}"
+mastodon_sidekiq_http_header_strict_transport_security: "max-age=31536000; includeSubDomains{{ '; preload' if mastodon_sidekiq_hsts_preload_enabled else '' }}"
 
 # Controls whether to send a "Permissions-Policy interest-cohort=();" header along with all responses
 #
@@ -187,8 +187,8 @@ mastodon_backend_http_header_strict_transport_security: "max-age=31536000; inclu
 # - https://amifloced.org/
 #
 # Of course, a better solution is to just stop using browsers (like Chrome), which participate in such tracking practices.
-# See: `mastodon_backend_http_header_permissions_policy`
-mastodon_backend_floc_optout_enabled: true
+# See: `mastodon_sidekiq_http_header_permissions_policy`
+mastodon_sidekiq_floc_optout_enabled: true
 
 # Controls if HSTS preloading is enabled
 #
@@ -200,54 +200,54 @@ mastodon_backend_floc_optout_enabled: true
 # - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
 # - https://hstspreload.org/#opt-in
 # See: `mastodon_http_header_strict_transport_security`
-mastodon_backend_hsts_preload_enabled: false
+mastodon_sidekiq_hsts_preload_enabled: false
 
-# List of systemd services that the Mastodon backend systemd service depends on
-mastodon_backend_systemd_required_services_list: "{{ mastodon_backend_systemd_required_services_list_default + mastodon_backend_systemd_required_services_list_auto + mastodon_backend_systemd_required_services_list_custom }}"
-mastodon_backend_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
-mastodon_backend_systemd_required_services_list_auto: []
-mastodon_backend_systemd_required_services_list_custom: []
+# List of systemd services that the Mastodon Sidekiq systemd service depends on
+mastodon_sidekiq_systemd_required_services_list: "{{ mastodon_sidekiq_systemd_required_services_list_default + mastodon_sidekiq_systemd_required_services_list_auto + mastodon_sidekiq_systemd_required_services_list_custom }}"
+mastodon_sidekiq_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
+mastodon_sidekiq_systemd_required_services_list_auto: []
+mastodon_sidekiq_systemd_required_services_list_custom: []
 
-# List of systemd services that the Mastodon backend systemd service wants
-mastodon_backend_systemd_wanted_services_list: "{{ mastodon_backend_systemd_wanted_services_list_default + mastodon_backend_systemd_wanted_services_list_auto + mastodon_backend_systemd_wanted_services_list_custom }}"
-mastodon_backend_systemd_wanted_services_list_default: []
-mastodon_backend_systemd_wanted_services_list_auto: []
-mastodon_backend_systemd_wanted_services_list_custom: []
+# List of systemd services that the Mastodon Sidekiq systemd service wants
+mastodon_sidekiq_systemd_wanted_services_list: "{{ mastodon_sidekiq_systemd_wanted_services_list_default + mastodon_sidekiq_systemd_wanted_services_list_auto + mastodon_sidekiq_systemd_wanted_services_list_custom }}"
+mastodon_sidekiq_systemd_wanted_services_list_default: []
+mastodon_sidekiq_systemd_wanted_services_list_auto: []
+mastodon_sidekiq_systemd_wanted_services_list_custom: []
 
 # Controls how long to wait for the container to stop gracefully before killing it.
-mastodon_backend_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
+mastodon_sidekiq_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
 
 # Controls how long the pre-start cleanup should wait for stale container-name release
 # before failing startup explicitly.
-mastodon_backend_container_cleanup_timeout_seconds: "{{ devture_systemd_docker_base_container_cleanup_timeout_seconds }}"
+mastodon_sidekiq_container_cleanup_timeout_seconds: "{{ devture_systemd_docker_base_container_cleanup_timeout_seconds }}"
 
 # Controls the delay between pre-start cleanup retries.
-mastodon_backend_container_cleanup_retry_delay_seconds: "{{ devture_systemd_docker_base_container_cleanup_retry_delay_seconds }}"
+mastodon_sidekiq_container_cleanup_retry_delay_seconds: "{{ devture_systemd_docker_base_container_cleanup_retry_delay_seconds }}"
 
 # Shell command used in the systemd pre-start phase to deterministically remove a stale
 # container and wait until Docker releases its name.
-mastodon_backend_container_cleanup_command: |
+mastodon_sidekiq_container_cleanup_command: |
   i=0;
-  while [ "$i" -lt {{ mastodon_backend_container_cleanup_timeout_seconds }} ]; do
-  {{ devture_systemd_docker_base_host_command_docker }} stop -t {{ mastodon_backend_container_stop_grace_time_seconds }} {{ mastodon_backend_identifier }} >/dev/null 2>&1 || true;
-  {{ devture_systemd_docker_base_host_command_docker }} rm -f {{ mastodon_backend_identifier }} >/dev/null 2>&1 || true;
-  if {{ devture_systemd_docker_base_host_command_docker }} container inspect {{ mastodon_backend_identifier }} >/dev/null 2>&1; then
+  while [ "$i" -lt {{ mastodon_sidekiq_container_cleanup_timeout_seconds }} ]; do
+  {{ devture_systemd_docker_base_host_command_docker }} stop -t {{ mastodon_sidekiq_container_stop_grace_time_seconds }} {{ mastodon_sidekiq_identifier }} >/dev/null 2>&1 || true;
+  {{ devture_systemd_docker_base_host_command_docker }} rm -f {{ mastodon_sidekiq_identifier }} >/dev/null 2>&1 || true;
+  if {{ devture_systemd_docker_base_host_command_docker }} container inspect {{ mastodon_sidekiq_identifier }} >/dev/null 2>&1; then
   i=$((i + 1));
-  sleep {{ mastodon_backend_container_cleanup_retry_delay_seconds }};
+  sleep {{ mastodon_sidekiq_container_cleanup_retry_delay_seconds }};
   continue;
   fi;
   if {{ devture_systemd_docker_base_host_command_docker }} info >/dev/null 2>&1; then
   exit 0;
   fi;
-  echo "Failed to query Docker daemon while cleaning up {{ mastodon_backend_identifier }}" >&2;
+  echo "Failed to query Docker daemon while cleaning up {{ mastodon_sidekiq_identifier }}" >&2;
   exit 1;
   done;
-  echo "Failed to remove stale container {{ mastodon_backend_identifier }} after {{ mastodon_backend_container_cleanup_timeout_seconds }} attempts" >&2;
+  echo "Failed to remove stale container {{ mastodon_sidekiq_identifier }} after {{ mastodon_sidekiq_container_cleanup_timeout_seconds }} attempts" >&2;
   exit 1
 
 ########################################################################
 #                                                                      #
-# /backend                                                             #
+# /sidekiq                                                             #
 #                                                                      #
 ########################################################################
 
