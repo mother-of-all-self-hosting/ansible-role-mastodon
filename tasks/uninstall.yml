@@ -11,6 +11,8 @@
       path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_sidekiq_identifier }}.service"
     - service: "{{ mastodon_streaming_identifier }}.service"
       path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_streaming_identifier }}.service"
+    - service: "{{ mastodon_web_identifier }}.service"
+      path: "{{ devture_systemd_docker_base_systemd_path }}/{{ mastodon_web_identifier }}.service"
 
 - name: Ensure Mastodon container network does not exist
   when: mastodon_container_network_deletion_enabled

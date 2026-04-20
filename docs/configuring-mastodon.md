@@ -85,7 +85,7 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 
 After running the command for installation, Mastodon instance becomes available at `https://example.com`.
 
-To get started, open the the streaming API server's URL with a web browser, and register the account.
+To get started, open the URL with a web browser, and log in to the instance with a user account.
 
 Since account registration is disabled by default, you need to enable it first by setting `mastodon_sidekiq_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
 
