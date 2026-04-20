@@ -30,9 +30,6 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --cap-drop=ALL \
       --read-only \
       --network={{ mastodon_sidekiq_container_network }} \
-      {% if mastodon_sidekiq_container_http_host_bind_port %}
-      -p {{ mastodon_sidekiq_container_http_host_bind_port }}:{{ mastodon_sidekiq_container_http_port }} \
-      {% endif %}
       --env-file={{ mastodon_base_path }}/env \
       --label-file={{ mastodon_sidekiq_base_path }}/labels \
       --mount type=bind,src={{ mastodon_data_path }},dst=/mastodon/public/system \
