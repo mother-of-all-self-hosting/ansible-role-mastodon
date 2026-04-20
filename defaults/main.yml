@@ -13,10 +13,9 @@ mastodon_enabled: true
 
 mastodon_identifier: mastodon
 mastodon_base_path: "/{{ mastodon_identifier }}"
-mastodon_sidekiq_base_path: "{{ mastodon_base_path }}/sidekiq"
-mastodon_sidekiq_data_path: "{{ mastodon_sidekiq_base_path }}/data"
-mastodon_sidekiq_uploads_path: "{{ mastodon_sidekiq_base_path }}/uploads"
+mastodon_data_path: "{{ mastodon_base_path }}/data"
 mastodon_frontend_base_path: "{{ mastodon_base_path }}/frontend"
+mastodon_sidekiq_base_path: "{{ mastodon_base_path }}/sidekiq"
 
 mastodon_uid: ""
 mastodon_gid: ""
