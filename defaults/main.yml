@@ -604,6 +604,9 @@ mastodon_web_systemd_wanted_services_list_default: []
 mastodon_web_systemd_wanted_services_list_auto: []
 mastodon_web_systemd_wanted_services_list_custom: []
 
+# Control if "bundle exec rake db:migrate && bundle exec rake db:seed" runs on start up
+mastodon_web_migration_enabled: true
+
 # Controls how long to wait for the container to stop gracefully before killing it.
 mastodon_web_container_stop_grace_time_seconds: "{{ devture_systemd_docker_base_container_stop_grace_time_seconds }}"
 

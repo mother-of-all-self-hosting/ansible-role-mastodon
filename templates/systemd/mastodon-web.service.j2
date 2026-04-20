@@ -43,7 +43,11 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {{ arg }} \
       {% endfor %}
       {{ mastodon_web_container_image }} \
+      {% if mastodon_web_migration_enabled %}
+      /bin/bash -c "bundle exec rake db:migrate && bundle exec rake db:seed && bundle exec puma -C config/puma.rb"
+      {% else %}
       bundle exec puma -C config/puma.rb
+      {% endif %}
 
 {% for network in mastodon_web_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ mastodon_web_identifier }}
