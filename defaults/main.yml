@@ -50,14 +50,75 @@ mastodon_users: "{{ mastodon_users_auto + mastodon_users_custom }}"
 mastodon_users_auto: []
 mastodon_users_custom: []
 
-mastodon_database_postgres_hostname: ""
-mastodon_database_postgres_port: 5432
-mastodon_database_postgres_username: mastodon
-mastodon_database_postgres_password: ""
+# Specify database configuration
+mastodon_database_hostname: ""
+mastodon_database_port: 5432
+mastodon_database_username: mastodon
+mastodon_database_password: ""
+# Specify SSL mode for Postgres database server
+# By default, we expect a local container (without SSL), so attempting SSL connections is not necessary.
+# Valid values: see https://www.postgresql.org/docs/11/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS
+mastodon_database_sslmode: disable
 mastodon_database_name: mastodon
+
+# Specify Redis configuration
+mastodon_redis_hostname: ""
+mastodon_redis_port: 6379
+mastodon_redis_username: ""
+mastodon_redis_password: ""
 
 # Specify the timezone
 mastodon_environment_variables_tz: UTC
+
+# Specify LOCAL_DOMAIN
+# This identifies your server and cannot be changed safely later
+# See: https://docs.joinmastodon.org/admin/config/#local_domain
+mastodon_environment_variables_local_domain: ""
+
+# Control if SINGLE_USER_MODE is enabled
+# See: https://docs.joinmastodon.org/admin/config/#single_user_mode
+mastodon_environment_variables_single_user_mode: false
+
+# Specify SECRET_KEY_BASE
+# Use `bundle exec rails secret` to generate secrets
+# See: https://docs.joinmastodon.org/admin/config/#secret_key_base
+mastodon_environment_variables_secret_key_base: ""
+
+# Specify OTP_SECRET
+# See: https://docs.joinmastodon.org/admin/config/#otp_secret
+mastodon_environment_variables_otp_secret: ""
+
+# Specify secret values
+# Do not share outside hosting environment!
+# Use `bin/rails db:encryption:init` to generate fresh secrets
+mastodon_environment_variables_active_record_encryption_deterministic_key: ""
+mastodon_environment_variables_active_record_encryption_key_derivation_salt: ""
+mastodon_environment_variables_active_record_encryption_primary_key: ""
+
+# Specify VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY
+# Use `bundle exec rails mastodon:webpush:generate_vapid_key` to generate ones
+mastodon_environment_variables_vapid_private_key: ""
+mastodon_environment_variables_vapid_public_key: ""
+
+# Specify RAILS_LOG_LEVEL
+# See: https://docs.joinmastodon.org/admin/config/#rails_log_level
+mastodon_environment_variables_rails_log_level: info
+
+# Specify LOG_LEVEL
+# See: https://docs.joinmastodon.org/admin/config/#log_level
+mastodon_environment_variables_log_level: info
+
+# Specify NODE_ENV
+# See: https://docs.joinmastodon.org/admin/config/#node_env
+mastodon_environment_variables_node_env: production
+
+# Specify the mailer's configuration
+mastodon_environment_variables_smtp_server: ""
+mastodon_environment_variables_smtp_port: ""
+mastodon_environment_variables_smtp_login: ""
+mastodon_environment_variables_smtp_password: ""
+mastodon_environment_variables_smtp_from_address: ""
+mastodon_environment_variables_smtp_enable_starttls: auto
 
 # Additional environment variables.
 mastodon_environment_variables_additional_variables: ""

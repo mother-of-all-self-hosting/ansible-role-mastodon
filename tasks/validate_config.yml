@@ -18,8 +18,10 @@
     - mastodon_streaming_path_prefix
     - mastodon_web_path_prefix
     - mastodon_container_network
-    - mastodon_database_postgres_hostname
-    - mastodon_database_postgres_password
+    - mastodon_database_hostname
+    - mastodon_database_password
+    - mastodon_redis_hostname
+    - mastodon_environment_variables_local_domain
 
 - name: Fail if required Mastodon secrets and keys not defined
   ansible.builtin.fail:
