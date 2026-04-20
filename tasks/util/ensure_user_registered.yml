@@ -1,0 +1,58 @@
+# SPDX-FileCopyrightText: 2023 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+- name: "Ensure Mastodon user registered — {{ user.username }}"
+  ansible.builtin.command:
+    cmd: >-
+      {{ devture_systemd_docker_base_host_command_docker }} exec
+      -e RAILS_ENV=production
+      {{ mastodon_web_identifier }}
+      bin/tootctl accounts
+      create
+      {{ user.username }}
+      --email {{ user.initial_email }}
+      --confirmed
+      {% if user.initial_role == 'owner' %}
+      --role Owner
+      {% elif user.initial_role == 'admin' %}
+      --role Admin
+      {% elif user.initial_role == 'moderator' %}
+      --role Moderator
+      {% elif user.initial_role == 'user' %}
+      {# set nothing #}
+      {% endif %}
+  register: mastodon_tootctl_accounts_create_result
+  failed_when: mastodon_tootctl_accounts_create_result.rc != 0
+
+- name: Extract the Mastodon user password
+  # Passwords cannot be pre-defined
+  ansible.builtin.set_fact:
+    mastodon_account_password: "{{ mastodon_tootctl_accounts_create_result.stdout | regex_search('New password: \\w+') | regex_replace('New password: ', '') }}"
+
+- name: Run Mastodon 'tootctl accounts modify' command to approve the user
+  when: user.approve | bool
+  ansible.builtin.command:
+    cmd: |-
+      {{ devture_systemd_docker_base_host_command_docker }} exec
+      -e RAILS_ENV=production
+      {{ mastodon_web_identifier }}
+      bin/tootctl accounts
+      modify
+      {{ user.username }}
+      --approve
+  register: mastodon_tootctl_accounts_approve_result
+  failed_when: mastodon_tootctl_accounts_approve_result.rc != 0
+
+- name: Inject a message about the extracted Mastodon user password
+  ansible.builtin.set_fact:
+    devture_playbook_runtime_messages_list: |
+      {{
+        devture_playbook_runtime_messages_list | default([])
+        +
+        [
+          "The initial password for `" + user.username + "` (" + user.initial_email + ", role: " + user.initial_role + ") is `" + mastodon_account_password + "`. Make sure not to lose it until you log in to the instance. Do not forget to change it with yours."
+        ]
+      }}

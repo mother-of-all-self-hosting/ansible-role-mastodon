@@ -45,6 +45,26 @@
     - name: Run Mastodon 'bundle exec rails mastodon:webpush:generate_vapid_key' to generate web push keys
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_secrets_webpush.yml"
 
+- name: Perform tasks to add users automatically to Mastodon
+  when: mastodon_enabled | bool
+  tags:
+    - ensure-mastodon-users-created
+    - ensure-users-created
+  block:
+    - name: Add users to Mastodon automatically
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_users_auto.yml"
+
+- name: Perform tasks to add users manually to Mastodon
+  when: mastodon_enabled | bool
+  tags:
+    - create-user-mastodon
+    - create-owner-mastodon
+    - create-admin-mastodon
+    - create-moderator-mastodon
+  block:
+    - name: Add users to Mastodon manually
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_user_manual.yml"
+
 - name: Perform Mastodon uninstallation tasks
   when: not mastodon_enabled | bool
   tags:

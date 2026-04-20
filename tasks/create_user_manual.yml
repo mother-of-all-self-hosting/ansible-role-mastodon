@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: 2023 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+# The command to create an owner: `ansible-playbook -i inventory/hosts setup.yml --tags=create-owner-account-mastodon -e username=USERNAME_HERE -e email=EMAIL_ADDRESS_HERE`
+
+- name: Fail if playbook called incorrectly for Mastodon
+  ansible.builtin.fail:
+    msg: "The `username` and `email` variables need to be provided via --extra-vars"
+  when: >-
+    username is not defined or username == 'USERNAME_HERE' or
+    email is not defined or email == 'EMAIL_ADDRESS_HERE'
+
+- name: Set the initial role to 'user' when running 'create-user-mastodon' for Mastodon
+  ansible.builtin.set_fact:
+    initial_role: user
+  when: "'create-user-mastodon' in ansible_run_tags"
+
+- name: Set the initial role to 'owner' when running 'create-owner-mastodon' for Mastodon
+  ansible.builtin.set_fact:
+    initial_role: owner
+  when: "'create-owner-mastodon' in ansible_run_tags"
+
+- name: Set the initial role to 'admin' when running 'create-admin-mastodon' for Mastodon
+  ansible.builtin.set_fact:
+    initial_role: admin
+  when: "'create-admin-mastodon' in ansible_run_tags"
+
+- name: Set the initial role to 'moderator' when running 'create-moderator-mastodon' for Mastodon
+  ansible.builtin.set_fact:
+    initial_role: moderator
+  when: "'create-moderator-mastodon' in ansible_run_tags"
+
+- name: Set user details for Mastodon
+  ansible.builtin.set_fact:
+    user:
+      username: "{{ username }}"
+      initial_email: "{{ email }}"
+      initial_role: "{{ initial_role }}"
+      approve: "{{ approve }}"
+
+- name: Ensure Mastodon web service is started
+  ansible.builtin.service:
+    name: "{{ mastodon_web_identifier }}"
+    state: started
+    daemon_reload: true
+  register: mastodon_web_start
+
+- name: Wait a while, so that Mastodon web can manage to start
+  ansible.builtin.pause:
+    seconds: 7
+  when: mastodon_web_start.changed | bool
+
+- name: "Ensure Mastodon user is created — {{ user.username }}"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/util/ensure_user_registered.yml"

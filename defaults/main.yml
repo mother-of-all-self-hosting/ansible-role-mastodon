@@ -33,6 +33,23 @@ mastodon_container_network: "{{ mastodon_identifier }}"
 # Control if the container network is deleted on uninstalling.
 mastodon_container_network_deletion_enabled: true
 
+# mastodon_users contains a list of users that should be created automatically
+# To add your own users for specific host, use `mastodon_users_custom`
+#
+# Example:
+# mastodon_users_custom:
+#   - username: admin
+#     initial_email: admin@example.com
+#     initial_role: admin
+#     approve: true
+#   - username: user
+#     initial_email: user@example.com
+#     initial_role: user
+#     approve: true
+mastodon_users: "{{ mastodon_users_auto + mastodon_users_custom }}"
+mastodon_users_auto: []
+mastodon_users_custom: []
+
 mastodon_database_postgres_hostname: ""
 mastodon_database_postgres_port: 5432
 mastodon_database_postgres_username: mastodon

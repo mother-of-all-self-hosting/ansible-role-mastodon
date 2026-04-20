@@ -12,7 +12,9 @@ SPDX-FileCopyrightText: 2023 Antonis Christofides
 SPDX-FileCopyrightText: 2023 Felix Stupp
 SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
 SPDX-FileCopyrightText: 2023 Pierre 'McFly' Marty
+SPDX-FileCopyrightText: 2023-2025 MASH project contributors
 SPDX-FileCopyrightText: 2024 Thomas Miceli
+SPDX-FileCopyrightText: 2024 noah
 SPDX-FileCopyrightText: 2024-2026 Suguru Hirahara
 
 SPDX-License-Identifier: AGPL-3.0-or-later
@@ -113,6 +115,46 @@ After running the command for installation, Mastodon instance becomes available 
 To get started, open the URL with a web browser, and log in to the instance with a user account.
 
 Since account registration is disabled by default, you need to enable it first by setting `mastodon_sidekiq_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
+
+### Creating users
+
+#### Creating a user manually
+
+You can create a user by running the command below:
+
+```sh
+ansible-playbook -i inventory/hosts setup.yml --tags=create-user-mastodon -e username=USERNAME_HERE -e email=EMAIL_ADDRESS_HERE
+```
+
+Run `create-owner-mastodon` to create an owner, `create-admin-mastodon` to create an administrator, and `create-moderator-mastodon` to create a moderator, respectively.
+
+See [this page](https://docs.joinmastodon.org/entities/Role/) for details about those roles.
+
+#### Creating users automatically
+
+It is also possible to create muitiple users specified with `mastodon_users_custom` on your `vars.yml` file by running the command below:
+
+```sh
+ansible-playbook -i inventory/hosts setup.yml --tags=ensure-mastodon-users-created
+```
+
+Those users can be specified like below:
+
+```yaml
+mastodon_users_custom:
+  - username: YOUR_OWNER_USERNAME_HERE
+    initial_email: YOUR_OWNER_EMAIL_ADDRESS_HERE
+    initial_role: owner
+    approve: true
+  - username: YOUR_ADMIN_USERNAME_HERE
+    initial_email: YOUR_ADMIN_EMAIL_ADDRESS_HERE
+    initial_role: admin
+    approve: true
+  - username: YOUR_MODERATOR_USERNAME_HERE
+    initial_email: YOUR_MODERATOR_EMAIL_ADDRESS_HERE
+    initial_role: moderator
+    approve: true
+```
 
 ## Troubleshooting
 
