@@ -41,7 +41,8 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% for arg in mastodon_streaming_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}
-      {{ mastodon_streaming_container_image }}
+      {{ mastodon_streaming_container_image }} \
+      node ./streaming/index.js
 
 {% for network in mastodon_streaming_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ mastodon_streaming_identifier }}
