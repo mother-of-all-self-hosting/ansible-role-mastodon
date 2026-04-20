@@ -22,16 +22,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Setting up Mastodon
 
-This is an [Ansible](https://www.ansible.com/) role which installs [Mastodon](https://docs.mastodon.dev/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
+This is an [Ansible](https://www.ansible.com/) role which installs [Mastodon](https://joinmastodon.org/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
 
-Mastodon is a self-hosted collaborative online markdown editor.
+Mastodon is a free decentralized social media platform.
 
-See the project's [documentation](https://docs.mastodon.dev/) to learn what Mastodon does and why it might be useful to you.
-
->[!WARNING]
-> Mastodon is currently alpha. Alpha releases come with no guarantees regarding upgradeability. It is very likely that you will need to wipe the database between alpha releases. As there is currently no migration path from Mastodon 1, it is recommended to set up a separate instance to test Mastodon.
+See the project's [documentation](https://docs.joinmastodon.org) to learn what Mastodon does and why it might be useful to you.
 
 ## Prerequisites
+
+### Prepare mail server
+
+To create users (including owners and administrators) it is necessary to prepare a mail server for sending and receiving messages. Please note that it is not possible to create users with a dummy email address.
+
+### Set up Postgres and Redis server
 
 To run a Mastodon instance it is necessary to prepare a [Postgres](https://www.postgresql.org/) database server and [Redis](https://redis.io/) database for managing cache data.
 
@@ -67,7 +70,10 @@ To enable Mastodon you need to set the hostname as well. To do so, add the follo
 mastodon_hostname: "example.com"
 ```
 
-After adjusting the hostname, make sure to adjust your DNS records to point the domain to your backend.
+> [!WARNING]
+> Do not replace the value after the Mastodon instance has already run once. If changed, it stops working properly.
+
+After adjusting the hostname, make sure to adjust your DNS records to point the domain to your server.
 
 **Note**: hosting Mastodon under a subpath (by configuring the `mastodon_path_prefix` variable) does not seem to be possible due to Mastodon's technical limitations.
 
@@ -213,8 +219,6 @@ After running the command for installation, Mastodon instance becomes available 
 
 To get started, open the URL with a web browser, and log in to the instance with a user account.
 
-Since account registration is disabled by default, you need to enable it first by setting `mastodon_sidekiq_environment_variables_hd_auth_local_enable_register` to `false` temporarily in order to create your own account.
-
 ### Creating users
 
 #### Creating a user manually
@@ -225,7 +229,7 @@ You can create a user by running the command below:
 ansible-playbook -i inventory/hosts setup.yml --tags=create-user-mastodon -e username=USERNAME_HERE -e email=EMAIL_ADDRESS_HERE
 ```
 
-Run `create-owner-mastodon` to create an owner, `create-admin-mastodon` to create an administrator, and `create-moderator-mastodon` to create a moderator, respectively.
+Run the playbook with the `create-owner-mastodon` tag to create an owner, `create-admin-mastodon` to create an administrator, and `create-moderator-mastodon` to create a moderator, respectively.
 
 See [this page](https://docs.joinmastodon.org/entities/Role/) for details about those roles.
 
@@ -259,7 +263,7 @@ mastodon_users_custom:
 
 ### Check the service's logs
 
-You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the Sidekiq and `journalctl -fu mastodon-streaming` (or how you/your playbook named the service, e.g. `mash-mastodon-streaming`) for the the streaming API server, respectively.
+You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the Sidekiq instance, `journalctl -fu mastodon-streaming` (or how you/your playbook named the service, e.g. `mash-mastodon-streaming`) for the the streaming API server, and `journalctl -fu mastodon-web` (or how you/your playbook named the service, e.g. `mash-mastodon-web`) for the the web process, respectively.
 
 #### Increase logging verbosity
 

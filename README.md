@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Mastodon Ansible role
 
-This is an [Ansible](https://www.ansible.com/) role which installs [Mastodon](https://docs.mastodon.dev/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
+This is an [Ansible](https://www.ansible.com/) role which installs [Mastodon](https://joinmastodon.org/) to run as [Docker](https://www.docker.com/) containers wrapped in systemd services.
 
 This role *implicitly* depends on:
 
