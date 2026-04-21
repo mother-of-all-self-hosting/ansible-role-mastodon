@@ -55,8 +55,12 @@ mastodon_environment_variables_tz: UTC
 
 # Specify LOCAL_DOMAIN
 # This identifies your server and cannot be changed safely later
+# It has to be the domain name you are running the server under
 # See: https://docs.joinmastodon.org/admin/config/#local_domain
-mastodon_environment_variables_local_domain: ""
+mastodon_environment_variables_local_domain: "{{ mastodon_hostname }}"
+
+# TODO: Specify WEB_DOMAIN
+# See: https://docs.joinmastodon.org/admin/config/#web_domain
 
 # Control if SINGLE_USER_MODE is enabled
 # See: https://docs.joinmastodon.org/admin/config/#single_user_mode
