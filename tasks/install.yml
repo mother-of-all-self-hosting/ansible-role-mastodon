@@ -35,9 +35,9 @@
   register: mastodon_support_files_result
 
 - name: Ensure Mastodon container images are pulled
-  community.docker.docker_image:
+  community.docker.docker_image_pull:
     name: "{{ item }}"
-    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+    pull: always
   with_items:
     - "{{ mastodon_sidekiq_container_image }}"
     - "{{ mastodon_streaming_container_image }}"

@@ -214,7 +214,6 @@ mastodon_sidekiq_container_image_tag: "{{ mastodon_sidekiq_version }}"
 mastodon_sidekiq_container_image_registry_prefix: "{{ mastodon_sidekiq_container_image_registry_prefix_upstream }}"
 mastodon_sidekiq_container_image_registry_prefix_upstream: "{{ mastodon_sidekiq_container_image_registry_prefix_upstream_default }}"
 mastodon_sidekiq_container_image_registry_prefix_upstream_default: ghcr.io/
-mastodon_sidekiq_container_image_force_pull: "{{ mastodon_sidekiq_container_image.endswith(':latest') }}"
 
 mastodon_sidekiq_container_network: "{{ mastodon_container_network }}"
 
@@ -404,7 +403,6 @@ mastodon_streaming_container_image_tag: "{{ mastodon_streaming_version }}"
 mastodon_streaming_container_image_registry_prefix: "{{ mastodon_streaming_container_image_registry_prefix_upstream }}"
 mastodon_streaming_container_image_registry_prefix_upstream: "{{ mastodon_streaming_container_image_registry_prefix_upstream_default }}"
 mastodon_streaming_container_image_registry_prefix_upstream_default: ghcr.io/
-mastodon_streaming_container_image_force_pull: "{{ mastodon_streaming_container_image.endswith(':latest') }}"
 
 mastodon_streaming_container_network: "{{ mastodon_container_network }}"
 
@@ -607,7 +605,6 @@ mastodon_web_container_image_tag: "{{ mastodon_web_version }}"
 mastodon_web_container_image_registry_prefix: "{{ mastodon_web_container_image_registry_prefix_upstream }}"
 mastodon_web_container_image_registry_prefix_upstream: "{{ mastodon_web_container_image_registry_prefix_upstream_default }}"
 mastodon_web_container_image_registry_prefix_upstream_default: ghcr.io/
-mastodon_web_container_image_force_pull: "{{ mastodon_web_container_image.endswith(':latest') }}"
 
 mastodon_web_container_network: "{{ mastodon_container_network }}"
 
