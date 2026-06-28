@@ -19,7 +19,7 @@ mastodon_streaming_base_path: "{{ mastodon_base_path }}/streaming"
 mastodon_web_base_path: "{{ mastodon_base_path }}/web"
 
 # renovate: datasource=docker depName=ghcr.io/mastodon/mastodon
-mastodon_version: v4.5.9
+mastodon_version: v4.6.2
 
 mastodon_uid: ""
 mastodon_gid: ""
