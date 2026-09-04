@@ -263,7 +263,7 @@ mastodon_users_custom:
 
 ### Check the service's logs
 
-You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the Sidekiq instance, `journalctl -fu mastodon-streaming` (or how you/your playbook named the service, e.g. `mash-mastodon-streaming`) for the the streaming API server, and `journalctl -fu mastodon-web` (or how you/your playbook named the service, e.g. `mash-mastodon-web`) for the the web process, respectively.
+You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH, and running `journalctl -fu mastodon-sidekiq` (or how you/your playbook named the service, e.g. `mash-mastodon-sidekiq`) for the Sidekiq instance, `journalctl -fu mastodon-streaming` (or how you/your playbook named the service, e.g. `mash-mastodon-streaming`) for the streaming API server, and `journalctl -fu mastodon-web` (or how you/your playbook named the service, e.g. `mash-mastodon-web`) for the web process, respectively.
 
 #### Increase logging verbosity
 
