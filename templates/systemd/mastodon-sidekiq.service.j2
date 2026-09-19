@@ -48,7 +48,9 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {{ arg }} \
       {% endfor %}
       {{ mastodon_sidekiq_container_image }} \
-      bundle exec sidekiq
+      {% for arg in mastodon_sidekiq_process_extra_arguments %}
+      {{ arg }} \
+      {% endfor %}
 
 {% for network in mastodon_sidekiq_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ mastodon_sidekiq_identifier }}

@@ -285,6 +285,13 @@ mastodon_sidekiq_container_extra_arguments: "{{ mastodon_sidekiq_container_extra
 mastodon_sidekiq_container_extra_arguments_auto: []
 mastodon_sidekiq_container_extra_arguments_custom: []
 
+# A list of extra arguments to pass to the process inside the container
+# Example: ['--SOME_ARGUMENT']
+mastodon_sidekiq_process_extra_arguments: "{{ mastodon_sidekiq_process_extra_arguments_auto + mastodon_sidekiq_process_extra_arguments_custom }}"
+mastodon_sidekiq_process_extra_arguments_auto:
+  - bundle exec sidekiq
+mastodon_sidekiq_process_extra_arguments_custom: []
+
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
 #
@@ -481,6 +488,13 @@ mastodon_streaming_container_labels_additional_labels_custom: []
 mastodon_streaming_container_extra_arguments: "{{ mastodon_streaming_container_extra_arguments_auto + mastodon_streaming_container_extra_arguments_custom }}"
 mastodon_streaming_container_extra_arguments_auto: []
 mastodon_streaming_container_extra_arguments_custom: []
+
+# A list of extra arguments to pass to the process inside the container
+# Example: ['--SOME_ARGUMENT']
+mastodon_streaming_process_extra_arguments: "{{ mastodon_streaming_process_extra_arguments_auto + mastodon_streaming_process_extra_arguments_custom }}"
+mastodon_streaming_process_extra_arguments_auto:
+  - node ./streaming/index.js
+mastodon_streaming_process_extra_arguments_custom: []
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
@@ -683,6 +697,18 @@ mastodon_web_container_labels_additional_labels_custom: []
 mastodon_web_container_extra_arguments: "{{ mastodon_web_container_extra_arguments_auto + mastodon_web_container_extra_arguments_custom }}"
 mastodon_web_container_extra_arguments_auto: []
 mastodon_web_container_extra_arguments_custom: []
+
+# A list of extra arguments to pass to the process inside the container
+# Example: ['--SOME_ARGUMENT']
+mastodon_web_process_extra_arguments: "{{ mastodon_web_process_extra_arguments_auto + mastodon_web_process_extra_arguments_custom }}"
+mastodon_web_process_extra_arguments_auto:
+  - >-
+      {% if mastodon_web_migration_enabled %}
+      /bin/bash -c "bundle exec rake db:migrate && bundle exec rake db:seed && bundle exec puma -C config/puma.rb"
+      {% else %}
+      bundle exec puma -C config/puma.rb
+      {% endif %}
+mastodon_web_process_extra_arguments_custom: []
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
