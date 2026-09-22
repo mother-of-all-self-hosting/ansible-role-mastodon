@@ -190,7 +190,7 @@ mastodon_environment_variables_smtp_from_address: YOUR_EMAIL_ADDRESS_HERE
 mastodon_environment_variables_smtp_enable_starttls: auto
 ```
 
-See [this page](https://docs.joinmastodon.org/admin/config/#smtp) on the official documentation for details about how to configure the mailer.
+Refer to [this page](https://docs.joinmastodon.org/admin/config/#smtp) on the official documentation for details about how to configure the mailer.
 
 >[!WARNING]
 > Without setting an authentication method such as DKIM, SPF, and DMARC for your hostname, emails are most likely to be quarantined as spam at recipient's mail servers. The worst scenario is that your server's IP address or hostname will be included in the spam list such as the one managed by [Spamhaus](https://www.spamhaus.org/). If you have set up a mail server with the [MASH project's exim-relay Ansible role](https://github.com/mother-of-all-self-hosting/ansible-role-exim-relay), you can enable DKIM signing with it. Refer [its documentation](https://github.com/mother-of-all-self-hosting/ansible-role-exim-relay/blob/main/docs/configuring-exim-relay.md#enable-dkim-support-optional) for details.
@@ -231,7 +231,7 @@ ansible-playbook -i inventory/hosts setup.yml --tags=create-user-mastodon -e use
 
 Run the playbook with the `create-owner-mastodon` tag to create an owner, `create-admin-mastodon` to create an administrator, and `create-moderator-mastodon` to create a moderator, respectively.
 
-See [this page](https://docs.joinmastodon.org/entities/Role/) for details about those roles.
+Refer to [this page](https://docs.joinmastodon.org/entities/Role/) for details about those roles.
 
 #### Creating users automatically
 
