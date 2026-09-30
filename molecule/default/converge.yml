@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: 2026 spatterlight
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+- name: Include roles for Mastodon Molecule tests
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Include roles for Mastodon Molecule tests
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"
+        public: true
+      loop:
+        - com.devture.ansible.role.playbook_help
+        - com.devture.ansible.role.systemd_docker_base
+        - ansible-role-postgres
+        - ansible-role-valkey
+        - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+      loop_control:
+        loop_var: role_name
+
+- name: Ensure services are started
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure systemd daemon is reloaded
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+
+    - name: Ensure Postgres systemd service is started
+      ansible.builtin.systemd_service:
+        name: postgres.service
+        state: started
+
+    - name: Ensure Valkey systemd service is started
+      ansible.builtin.systemd_service:
+        name: valkey.service
+        state: started
+
+    # Started in dependency order: streaming requires web, web requires Sidekiq.
+    - name: Ensure Mastodon systemd services are started
+      ansible.builtin.systemd_service:
+        name: "{{ item }}.service"
+        state: started
+      loop:
+        - mastodon-sidekiq
+        - mastodon-web
+        - mastodon-streaming
+
+    # `state: started` leaves an already-running service alone, so on a second
+    # converge against the same instance it would keep running the previous
+    # unit file and `verify.yml` would be probing something the role no longer
+    # generates. The role works out whether anything it manages changed;
+    # acting on that here is what a playbook's systemd service manager role
+    # does, and it stays idempotent because an unchanged run computes `false`.
+    - name: Ensure Mastodon systemd services are restarted if necessary
+      when: mastodon_restart_necessary | bool
+      ansible.builtin.systemd_service:
+        name: "{{ item }}.service"
+        state: restarted
+      loop:
+        - mastodon-sidekiq
+        - mastodon-web
+        - mastodon-streaming
