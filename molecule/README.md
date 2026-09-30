@@ -61,7 +61,7 @@ The verification does not stop at "the systemd services are active". It:
 
 The scenario deliberately uses a database name and a Redis database number that are not the role's defaults, so that a configuration which never reached the processes shows up as a failure rather than as a pass.
 
-The user and secret-generation tasks in `tasks/main.yml` are tagged `molecule-notest`: the former runs mid-role, before the services it needs are started, and the latter only print values for an operator to copy. The scenario supplies fixed throwaway secrets instead.
+The manual user-creation tasks in `tasks/main.yml` are tagged `molecule-notest`, since they need `username` and `email` passed with `--extra-vars` and fail without them. The secret-generation tasks do run during converge, but they only print values for an operator to copy; the scenario supplies fixed throwaway secrets instead.
 
 ## Running
 

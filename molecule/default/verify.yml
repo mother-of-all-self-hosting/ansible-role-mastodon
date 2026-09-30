@@ -214,9 +214,9 @@
         # An account and a status make the round trip
         # ------------------------------------------------------------------
 
-        # The same invocation as tasks/util/ensure_user_registered.yml, which the
-        # scenario skips (molecule-notest) because it runs mid-role, before the
-        # services it needs are started.
+        # The same invocation as tasks/util/ensure_user_registered.yml. The scenario
+        # configures no `mastodon_users`, so converge never reaches it, and the
+        # account is created here, once every service it needs is running.
         - name: Create the Mastodon owner account with tootctl
           ansible.builtin.command:
             argv: >-

@@ -23,7 +23,6 @@
   tags:
     - create-secrets-all-mastodon
     - create-secret-mastodon
-    - molecule-notest
   block:
     - name: Run Mastodon 'bundle exec rails secret' to generate secrets
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_secret.yml"
@@ -33,7 +32,6 @@
   tags:
     - create-secrets-all-mastodon
     - create-secrets-encryption-mastodon
-    - molecule-notest
   block:
     - name: Run Mastodon 'bin/rails db:encryption:init' to generate encryption secrets
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_secrets_encryption.yml"
@@ -43,7 +41,6 @@
   tags:
     - create-secrets-all-mastodon
     - create-secrets-webpush-mastodon
-    - molecule-notest
   block:
     - name: Run Mastodon 'bundle exec rails mastodon:webpush:generate_vapid_key' to generate web push keys
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_secrets_webpush.yml"
@@ -53,7 +50,6 @@
   tags:
     - ensure-mastodon-users-created
     - ensure-users-created
-    - molecule-notest
   block:
     - name: Add users to Mastodon automatically
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_users_auto.yml"
