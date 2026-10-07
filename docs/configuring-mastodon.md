@@ -173,7 +173,7 @@ To configure a SMTP server, add the following configuration to your `vars.yml` f
 # Specify SMTP server hostname
 mastodon_environment_variables_smtp_server: ""
 
-# Specify SMTP server port
+# Specify SMTP server port number
 mastodon_environment_variables_smtp_port: 587
 
 # Specify SMTP server username
