@@ -1,0 +1,133 @@
+# SPDX-FileCopyrightText: 2026 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2026 spatterlight
+# SPDX-FileCopyrightText: 2026 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+    force: true
+driver:
+  name: docker
+platforms:
+  - name: mastodon-${MOLECULE_DISTRO:-ubuntu2604}-default
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2604}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    # Also what gives the inner Docker a /dev/fuse to hand to fuse-overlayfs.
+    # See prepare.yml for why that storage driver is not the fleet's usual vfs.
+    privileged: true
+    pre_build_image: true
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callback_result_format: yaml
+  inventory:
+    group_vars:
+      all:
+        # Helper variables
+        mastodon_debug_service_enabled: false
+        mastodon_restarts_check_enabled: true
+
+        # The account the verification creates with the same `tootctl accounts create`
+        # invocation the role's user tasks use, and the status it then posts.
+        # Distinctive enough that reading them back cannot be a coincidence.
+        mastodon_molecule_username: moleculeowner
+        mastodon_molecule_email: moleculeowner@mastodon-molecule.example.com
+        mastodon_molecule_status_text: molecule round trip status 5d91e7b3
+
+        # Variables for Mastodon
+        mastodon_uid: 1000
+        mastodon_gid: 1000
+
+        # LOCAL_DOMAIN, which Mastodon reports back as `domain` from /api/v2/instance.
+        mastodon_hostname: mastodon-molecule.example.com
+
+        mastodon_web_container_labels_traefik_enabled: false
+        mastodon_streaming_container_labels_traefik_enabled: false
+        mastodon_web_container_http_host_bind_port: 127.0.0.1:38300
+        mastodon_streaming_container_http_host_bind_port: 127.0.0.1:38400
+
+        # Passed through templates/env.j2 into the containers' environment.
+        mastodon_environment_variables_tz: Pacific/Kiritimati
+
+        # Mastodon refuses to create an account whose email domain cannot receive mail
+        # (EmailMxValidator), and example.com publishes a null MX. An allowlisted domain
+        # skips that DNS lookup.
+        mastodon_environment_variables_additional_variables: |
+          EMAIL_DOMAIN_ALLOWLIST=mastodon-molecule.example.com
+
+        # Throwaway values for this scenario only. The VAPID pair is a real P-256
+        # keypair, since Mastodon parses it.
+        mastodon_environment_variables_secret_key_base: ca1c14782f6c97dcbec24d41f943ef32cce56fda59e1491bcd773c438841c74b86f4fcdb44956c6a82e83aa7ec8c43a2f9338759c78b5fa1246720c9b3f34028
+        mastodon_environment_variables_active_record_encryption_deterministic_key: 6c0e2b9f4a7d13e85f2c9b6a0d4e7f31
+        mastodon_environment_variables_active_record_encryption_key_derivation_salt: 91d3f7a2c5e8b04163a9e2d7f5c1b8a0
+        mastodon_environment_variables_active_record_encryption_primary_key: e4b7a1d9c3f60528b7e1a4d9c2f6b035
+        mastodon_environment_variables_vapid_private_key: 6rJG5FnvffIAI9Um5SBXxfoBOM2BU5laHl96qPEhIqg=
+        mastodon_environment_variables_vapid_public_key: BBvdVPmIiAIP5cHLK3SzluIz0jlrKMgHlyuXYVk_72r_BoCK4yjD6SXur7xF2HLapPcVJ9moXwDAhMdCVi1wvlo=
+
+        # Variables required for Mastodon to connect to the Postgres database (via Unix socket)
+        mastodon_database_username: mastodon_molecule_user
+        mastodon_database_password: mastodon-molecule-database-password
+        # Deliberately not the role's default of `mastodon`.
+        mastodon_database_name: mastodon_molecule
+        mastodon_database_socket_enabled: true
+        mastodon_database_socket_path_host: "{{ postgres_run_path }}"
+
+        # Variables required for Mastodon to connect to the Valkey data-store (via Unix socket)
+        mastodon_redis_socket_enabled: true
+        mastodon_redis_socket_path_host: "{{ valkey_run_path }}"
+        # Deliberately not Redis' default database 0.
+        mastodon_redis_database: "5"
+
+        # Sidekiq is the root of the role's dependency chain
+        # (streaming requires web, web requires Sidekiq).
+        mastodon_sidekiq_systemd_required_services_list_custom:
+          - "{{ postgres_identifier }}.service"
+          - "{{ valkey_identifier }}.service"
+
+        # Variables for Postgres
+        postgres_uid: 1000
+        postgres_gid: 1000
+        postgres_connection_password: postgres_password
+        postgres_container_unix_socket_enabled: true
+        postgres_managed_databases: |
+          {{
+            [{
+              'name': mastodon_database_name,
+              'username': mastodon_database_username,
+              'password': mastodon_database_password,
+            }]
+          }}
+
+        # Variables for Valkey
+        valkey_uid: 1000
+        valkey_gid: 1000
+        valkey_arch: amd64
+  env:
+    # Workaround for https://github.com/ansible/molecule/issues/4391
+    ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles
+scenario:
+  # See: https://docs.ansible.com/projects/molecule/configuration/?h=test_sequence#scenario
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    # Disable idempotence test for now due to ansible-role-postgres
+    # - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
+verifier:
+  name: ansible
