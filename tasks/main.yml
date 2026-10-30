@@ -61,6 +61,7 @@
     - create-owner-mastodon
     - create-admin-mastodon
     - create-moderator-mastodon
+    - molecule-notest
   block:
     - name: Add users to Mastodon manually
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/create_user_manual.yml"
