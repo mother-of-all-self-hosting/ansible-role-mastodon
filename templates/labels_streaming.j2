@@ -16,7 +16,7 @@ traefik.docker.network={{ mastodon_streaming_container_labels_traefik_docker_net
 {% set middlewares = [] %}
 
 {% if mastodon_streaming_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ mastodon_streaming_identifier }}-slashless-redirect.redirectregex.regex=^({{ mastodon_streaming_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ mastodon_streaming_identifier }}-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ mastodon_streaming_container_labels_traefik_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ mastodon_streaming_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [mastodon_streaming_identifier + '-slashless-redirect'] %}
 {% endif %}
