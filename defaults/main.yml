@@ -181,9 +181,9 @@ mastodon_redis_socket_path_host: ""
 
 mastodon_environment_variables_redis_url: |-
   {% if mastodon_redis_socket_enabled %}
-  unix://{{ mastodon_redis_socket_path_container }}{{ mastodon_redis_socket_path }}?db={{ mastodon_redis_database }}{{ '&password=' + mastodon_redis_password if mastodon_redis_password }}
+  unix://{{ mastodon_redis_socket_path_container }}{{ mastodon_redis_socket_path }}?db={{ mastodon_redis_database }}{{ '&password=' + (mastodon_redis_password | urlencode | replace('/', '%2F')) if mastodon_redis_password }}
   {%- else -%}
-  redis://{{ mastodon_redis_username }}:{{ mastodon_redis_password }}@{{ mastodon_redis_hostname }}:{{ mastodon_redis_port }}
+  redis://{{ mastodon_redis_username | urlencode | replace('/', '%2F') }}:{{ mastodon_redis_password | urlencode | replace('/', '%2F') }}@{{ mastodon_redis_hostname }}:{{ mastodon_redis_port }}
   {%- endif -%}
 
 ########################################################################
