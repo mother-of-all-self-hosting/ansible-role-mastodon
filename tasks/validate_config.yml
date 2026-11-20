@@ -24,11 +24,6 @@
   with_items:
     - { "name": "mastodon_uid", when: true }
     - { "name": "mastodon_gid", when: true }
-    - { "name": "mastodon_hostname", when: true }
-    - { "name": "mastodon_sidekiq_path_prefix", when: true }
-    - { "name": "mastodon_streaming_path_prefix", when: true }
-    - { "name": "mastodon_web_path_prefix", when: true }
-    - { "name": "mastodon_container_network", when: true }
     - { "name": "mastodon_database_socket_path_host", when: "{{ mastodon_database_socket_enabled }}" }
     - { "name": "mastodon_database_hostname", when: "{{ not mastodon_database_socket_enabled }}" }
     - { "name": "mastodon_database_password", when: true }
